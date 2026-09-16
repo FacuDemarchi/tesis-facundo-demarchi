@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mockup editable · Mapa de correlatividades</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="period-bar">
+    <div class="period-context">
+      <span>Plan académico</span>
+      <strong>Ingeniería en Software</strong>
+    </div>
+    <nav class="period-navigation" aria-label="Navegación entre períodos académicos">
+      <button type="button" id="period-prev" disabled aria-label="Ver período anterior">← Anterior</button>
+      <div class="period-display" aria-live="polite">
+        <span id="period-kind">Período actual</span>
+        <strong id="period-label">2B · 2026</strong>
+      </div>
+      <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
+    </nav>
+  </header>
+  <main class="canvas">
+    <div id="graph-frame" class="graph-frame">
+      <section class="graph-region" id="graph-region" aria-label="Grafo editable de materias y correlatividades">
+        <div class="year-row" aria-hidden="true">
+          <span>1.er año</span><span>2.º año</span><span>3.er año</span><span>4.º año</span><span>5.º año</span>
+        </div>
+        <div class="graph-stage" id="graph-stage">
+          <svg id="connections" class="connections" aria-hidden="true"></svg>
+          <div id="columns" class="columns"></div>
+        </div>
+      </section>
+    </div>
+
+    <p id="selection-status" class="sr-only" aria-live="polite"></p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
