@@ -31,6 +31,7 @@ Luego abrir `http://localhost:8080/mockup/` o el escenario correspondiente. No h
 ```text
 .
 ├── README.md                          # este archivo
+├── decisiones.md                      # registro autoritativo de decisiones de diseño
 ├── propuesta-capitulos-6-y-7.md       # propuesta de avance, pendiente de aprobación
 ├── Mapa horizontal · ... .svg         # mapa original de la carrera (referencia visual)
 ├── mockup/                            # escenario previo a las inscripciones de 2A
@@ -55,13 +56,17 @@ No contiene paneles de planificación, preferencias, restricciones, resultados d
 
 ## Documentos de referencia
 
+- [`decisiones.md`](decisiones.md) — registro autoritativo de decisiones de diseño: cuándo se ejecuta CP-SAT, qué declara marcar una materia, vocabulario de la fase de planificación y tope de materias por bimestre.
 - [`propuesta-capitulos-6-y-7.md`](propuesta-capitulos-6-y-7.md) — propuesta de avance para los capítulos 6 y 7, con requerimientos preliminares, candidatos y casos de prueba. Pendiente de aprobación.
 - [`discoveries.md`](mockup/discoveries.md) — hallazgos del mockup: decisiones representadas, estados de CP-SAT que la interfaz debe distinguir y preguntas abiertas para la elicitación.
 
 ## Próximos pasos
 
-1. Unificar los tres escenarios en uno solo con datos estructurados y un selector de período que efectivamente cambie el escenario.
-2. Corregir el pie de tarjeta del mockup, que hoy muestra `Disponible` sin importar el estado real de la materia.
-3. Incorporar la matriz de trazabilidad entre requerimientos y casos de prueba.
-4. Archivar el relevamiento estudiantil y registrar las limitaciones de validez del caso de estudio.
-5. Aplicar en el documento de tesis únicamente los cambios confirmados en la propuesta.
+El orden es deliberado: la interfaz de planificación depende de las decisiones de diseño, y la unificación de los escenarios depende de que la interfaz exista.
+
+1. Cerrar las decisiones pendientes de [`decisiones.md`](decisiones.md): clasificación del tope de materias y rol de la carga máxima personal.
+2. Construir la superficie de planificación: intención por materia, advertencias locales inmediatas, restricciones, preferencias, acción explícita y resultados.
+3. Converger los tres escenarios en una sola página con datos estructurados y un selector de período.
+4. Corregir el pie de tarjeta del mockup, que hoy muestra `Disponible` sin importar el estado real de la materia.
+5. Incorporar la matriz de trazabilidad entre requerimientos y casos de prueba, y archivar el relevamiento estudiantil.
+6. Aplicar en el documento de tesis únicamente los cambios confirmados en la propuesta.

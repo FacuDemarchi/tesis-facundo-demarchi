@@ -277,6 +277,16 @@ Ampliar el contenido actual con:
 
 Estos casos deberán utilizar escenarios sintéticos para no depender todavía de datos institucionales.
 
+1. Alcance de la planificación
+
+> El prototipo no contempla inscripciones de más de tres materias por bimestre, equivalentes a seis materias por cuatrimestre. La planificación se limita a ese máximo y no se modelan escenarios con una carga mayor.
+>
+> Esta limitación responde al alcance definido para el prototipo y no constituye una afirmación sobre la regla académica vigente en la universidad.
+
+Corresponde a la decisión **D-04** de [`decisiones.md`](decisiones.md), donde se registra el contexto. La segunda oración evita presentar el tope como una regla de la universidad sin fuente que la respalde.
+
+**No confundir con RF-05.** RF-05 establece *hasta tres alternativas de cursado*; este tope establece *hasta tres materias por bimestre*. Conviene nombrarlos de forma inequívoca en todo el documento.
+
 ---
 
 # Elementos que deben permanecer pendientes
