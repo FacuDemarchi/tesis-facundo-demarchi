@@ -227,6 +227,19 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 
 **Convención de tablas del documento, medida y no supuesta.** La primera columna va en negrita por el estilo de tabla del documento, la fila de encabezado también, y la nota al pie va en cursiva. Conviene saberlo antes de crear cualquier tabla nueva.
 
+## Metodología actualizada de SDD a ODD, 2026-09-18
+
+La sección 7.1 describía el proceso con desarrollo dirigido por especificaciones (Spec-Driven Development, SDD). Se reemplazó por el flujo orgánico de desarrollo (Organic Driven Development, ODD), que es el que se aplica:
+
+- **El párrafo de metodología** ahora describe ODD como el flujo que aplica el registro y las verificaciones **en proporción a la complejidad** de cada cambio, y los incrementos de mayor alcance parten de un documento de tareas con objetivo, alcance y lista ordenada de tareas, más las decisiones de diseño.
+- **La lista de evidencia formal** decía «las especificaciones versionadas»; ahora dice «los documentos de tareas versionados», porque las especificaciones eran artefactos de SDD. Sin este segundo cambio, la sección habría quedado pidiendo evidencia de un proceso que ya no describe.
+
+Verificación: dos líneas cambiadas y ninguna mención de SDD restante en el documento.
+
+**Matiz que conviene confirmar.** En la definición de ODD, SDD no desaparece: es **una rama dentro de ODD**, que se entra solo por pedido explícito. Si para los incrementos de mayor complejidad se sigue usando la especificación previa, el texto más fiel sería mencionarlo como rama y no borrarlo. La redacción actual lo omite, siguiendo tu indicación. Si preferís la variante, el párrafo puede cerrar con: «Cuando el incremento lo justifique, y por pedido explícito, se aplicará además desarrollo dirigido por especificaciones (Spec-Driven Development, SDD) como rama dentro de ese flujo».
+
+**Sobre la página.** Indicaste la página 31, donde el índice ubica 6.2.2 «Requerimientos no funcionales»; la mención de SDD estaba en 7.1, que el índice ubica en la 34. Cambié la única mención del documento, así que el destino es inequívoco, pero vale que lo confirmes por si tu vista tenía otra paginación.
+
 ## Revisión de la Tabla 1, 2026-09-18
 
 La Tabla 1 es la síntesis del stack tecnológico en 4.2. Se revisó contra la prosa que la precede, y aparecieron dos defectos reales.
