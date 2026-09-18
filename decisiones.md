@@ -162,7 +162,7 @@ Resuelto el 2026-09-16; ubicación de la herramienta actualizada el 2026-09-17. 
 
 ## Huecos estructurales detectados
 
-- **Granularidad de bimestre inexistente.** `courses.term` identifica un **cuatrimestre** (1 a 10, hasta 6 materias por columna) y el grafo rotula esas columnas como "Cuatrimestre N". No existe ningún atributo que indique si una materia se dicta en el bimestre A o B. Sin él, el tope de 3 por bimestre no puede evaluarse y el solver podría ubicar cualquier materia en cualquier bimestre. Se necesita un atributo de oferta por bimestre.
+- **Granularidad de bimestre: resuelta el 2026-09-18 en el vocabulario, no en los datos.** `courses.term` identifica un **cuatrimestre** (1 a 10, hasta 6 materias por columna) y el grafo rotula esas columnas como "Cuatrimestre N". El atributo que dice en qué bimestre se ofrece cada materia **no existe en el modelo del mockup**, y sin él el tope de 3 por bimestre no puede evaluarse. §3.3 ahora define que el período **es** el bimestre, así que el atributo ya no hace falta en la materia: es una propiedad de la **oferta**, y la capa de datos simulados lo lleva en el período de cada cátedra (`comun/datos-simulados.js`). Consecuencia de diseño que queda anotada: una materia **sin oferta publicada no tiene bimestre conocido**, de modo que el tope de tres solo es verificable para materias con oferta publicada.
 - **Ausencia de comisiones, horarios y cupos.** El modelo actual de cada materia es `id`, `term`, `slot`, `name`, `state`, `category`. No hay horarios ni cupos, por lo que las advertencias de superposición horaria y de cupo simulado no pueden implementarse sin agregar datos simulados y etiquetarlos como tales.
 - **Estados sin uso.** `no-capacity` y `review` están definidos y estilizados pero ninguna materia los usa; falta además un estado para "límite de tiempo sin alternativa", exigido por `discoveries.md`.
 - **Duplicación de este registro.** El mapa y los datos están replicados en `mockup/`, `periodo-2A/` y `periodo-2B/`. Este archivo es única fuente a propósito: las decisiones no deben duplicarse.
@@ -226,6 +226,20 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 **Cobertura lograda.** De los 20 requerimientos funcionales quedan con caso 16, y de los 12 no funcionales, 8. Los que no tienen caso propio —RF-01, RF-02, RF-05, RF-09 y RNF-01, RNF-02, RNF-05, RNF-08, RNF-09, RNF-10— se verifican en su mayoría por otros mecanismos ya previstos en 7.3.1: análisis estático, contratos, pruebas unitarias y de integración con Pytest y Hypothesis, y la integración continua.
 
 **Convención de tablas del documento, medida y no supuesta.** La primera columna va en negrita por el estilo de tabla del documento, la fila de encabezado también, y la nota al pie va en cursiva. Conviene saberlo antes de crear cualquier tabla nueva.
+
+## El período y el bimestre definidos en §3.3, 2026-09-18
+
+**Qué se agregó.** Al final de la viñeta de §3.3 que introduce los períodos, una definición:
+
+> Cada período académico corresponde a un bimestre. Las materias se dictan durante dos meses, de modo que el año académico comprende cuatro bimestres, y el número del período indica el cuatrimestre al que pertenece: el período 1A es el primer bimestre del año, y el 1B el segundo, que conserva el número 1 por continuar dentro del primer cuatrimestre. Los períodos 2A y 2B son, del mismo modo, los dos bimestres del segundo cuatrimestre. En consecuencia, el límite de tres materias por bimestre equivale al límite de tres materias por período.
+
+**Por qué.** El documento usaba **«período»** en §1 y §3.3 («los períodos 1A, 1B, 2A y 2B») y **«bimestre»** en §3.4 y D-04 («tres materias por bimestre»), **para la misma unidad**, sin establecer nunca la equivalencia. El hueco se descubrió al construir la capa de datos simulados de los mockups: el escritor concluyó que eran dos dimensiones distintas y produjo cátedras con `periodo: '1B · 2026'` y `bimestre: 'A'`, que es contradictorio.
+
+**Los dos términos se conservan, y no se unifican.** Decisión del usuario: la facultad nombra así los períodos en su propio sistema, y el vocabulario se hereda de esa fuente. «Bimestre» es además el término preciso para la unidad de dos meses, y CP-11 ya dice «en el mismo bimestre». La oración final de la definición cierra la equivalencia, así que las dos palabras conviven sin ambigüedad en lugar de obligar a renombrar §3.4, D-04 y CP-11.
+
+**Ubicación elegida.** En §3.3 y no en «No contempla», porque es donde el lector se topa con `1A`, `1B`, `2A` y `2B` por primera vez. Ponerla en §3.4 obligaría a leer primero la restricción para entender el vocabulario.
+
+**Verificación.** Una línea cambiada en el documento, y la anterior es prefijo exacto de la nueva: no se perdió contenido. §3.4 y CP-11 quedaron intactos, como se buscaba.
 
 ## Declaración de uso de IA actualizada, 2026-09-18
 
