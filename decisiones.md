@@ -135,6 +135,8 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 # Pendientes
 
+- **P-07 — Recomendaciones y priorización sin caso de uso.** RF-15 y RF-16 no aparecen en la Figura 5 ni tienen caso de prueba. Agregar los casos de uso CU-15 y CU-16, sus casos de prueba, y regenerar la figura.
+
 ## Decisiones por tomar
 
 - **P-06 — Convivencia del tope de 3 con la carga máxima configurable.** D-04 fija 3 materias por bimestre como límite no contemplado, y la tesis (§1) define la carga máxima como restricción dura si existe un límite institucional validado, o configurable por el estudiante si no. Falta precisar cómo conviven: ¿el límite configurable puede llegar hasta 3 y no más, y qué se muestra cuando el estudiante intenta una cuarta?
@@ -224,9 +226,26 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 
 **Convención de tablas del documento, medida y no supuesta.** La primera columna va en negrita por el estilo de tabla del documento, la fila de encabezado también, y la nota al pie va en cursiva. Conviene saberlo antes de crear cualquier tabla nueva.
 
+## Trazabilidad cargada el 2026-09-17
+
+**Tabla 10** en 7.3.1: `Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba`, con una fila por requerimiento. 38 filas, 156 celdas.
+
+**Por qué hacía falta.** Al reemplazar la Tabla 7 por la Figura 5, los casos de uso **perdieron su columna de requerimientos**: la relación entre caso de uso y requerimiento dejó de existir en el texto del documento, y 7.3.1 declara que el plan de pruebas debe incluirla. La matriz la restituye y la completa con los casos de prueba.
+
+**Hallazgos que la matriz deja visibles.**
+
+- **Doce requerimientos no tienen caso de prueba propio.** Nueve tienen un medio alternativo declarado en la cuarta columna (pruebas de integración, verificación manual, análisis estático, protocolo de rendimiento, inspección de datos o la propia integración continua).
+- **RF-15 y RF-16 no tienen caso de uso ni caso de prueba.** Son capacidades visibles para el usuario —recomendar materias no seleccionadas y priorizar por impacto en el avance curricular— que §1 compromete y que no están representadas en la Figura 5. Requieren agregar dos casos de uso, sus casos de prueba, y regenerar la figura. Queda como P-07.
+- **RF-09, RF-18 y RF-20 no tienen caso de uso** pero sí un medio de verificación. RF-18 y RF-20 tienen caso de prueba; RF-09 no, porque es un requerimiento de infraestructura de datos y no de comportamiento visible.
+- Los doce requerimientos no funcionales no tienen caso de uso, como corresponde a atributos de calidad; siete tienen caso de prueba y cinco un medio alternativo.
+
+**Numeración de tablas pendiente.** La Tabla 10 se insertó en 7.3.1, que aparece **antes** de la Tabla 6 en 7.3.2. El documento numera 1, 2, 3, 4, 5, 9, 6, 10, fuera del orden de aparición. Se deja sin tocar por decisión del usuario, que resolverá el formato cerca de la entrega.
+
 ## Capítulo 7.2 cargado el 2026-09-17
 
 Cuatro tablas con su párrafo de introducción cada una: **Tabla 7** en 7.2.1, **Tabla 8** en 7.2.2, **Tabla 9** en 7.2.3 y **Tabla 10** en 7.2.4. Otras 97 líneas agregadas y 0 borradas.
+
+> Nota de sincronización: de esas cuatro tablas, las de 7.2.1, 7.2.2 y 7.2.4 fueron **reemplazadas después por las Figuras 2 a 5** del pipeline nuevo (D-09), con la numeración correlativa definitiva. La Tabla 9, de descripción de casos de uso, sigue en el documento como tabla. Y la matriz de trazabilidad que se menciona arriba también se rotuló «Tabla 10», así que ese número está usado dos veces y hay que resolverlo en la pasada de formato.
 
 ### D-06 — Actor institucional documentado como provisional
 

@@ -421,7 +421,49 @@ La gestión asistida de demanda insatisfecha incorporará un segundo escenario d
 ### 7.3.1. Plan de pruebas
 Las pruebas producidas mediante TDD y los comprobantes generados por RDD formarán parte de la evidencia de verificación técnica del prototipo (Beck, 2002; Gentleman Programming, 2026). La integración continua conservará los resultados de las pruebas, el análisis estático, la cobertura y la compilación de cada versión evaluada.
 Pytest verificará las reglas del dominio, la persistencia, la API y los escenarios controlados del solver. Hypothesis comprobará invariantes generales de las alternativas generadas. Schemathesis verificará los contratos publicados mediante OpenAPI y Playwright cubrirá los recorridos críticos de la interfaz, incluyendo verificaciones automáticas y manuales de accesibilidad.
-La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas.
+La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas. La Tabla 10 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
+Tabla 10
+Trazabilidad entre requerimientos, casos de uso y casos de prueba
+| Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba |
+| RF-01 | CU-01 |  | Prueba de integración del endpoint del plan |
+| RF-02 | CU-01 |  | Verificación manual de la interfaz y revisión con axe-core |
+| RF-03 | CU-03, CU-04 |  | Prueba de interfaz de configuración |
+| RF-04 | CU-05 | CP-01, CP-02, CP-11 |  |
+| RF-05 | CU-06 |  | Escenario con múltiples soluciones equivalentes |
+| RF-06 | CU-06, CU-07 | CP-07 |  |
+| RF-07 | CU-09 | CP-03, CP-16 |  |
+| RF-08 | CU-08 | CP-07 |  |
+| RF-09 |  |  | Prueba de integración del mecanismo de carga |
+| RF-10 | CU-05 | CP-10 |  |
+| RF-11 | CU-04, CU-12 | CP-09, CP-10, CP-12 |  |
+| RF-12 | CU-02 | CP-02, CP-09 |  |
+| RF-13 | CU-06 | CP-12 |  |
+| RF-14 | CU-03 | CP-11 |  |
+| RF-15 | Pendiente de definir |  | Pendiente de definir |
+| RF-16 | Pendiente de definir |  | Pendiente de definir |
+| RF-17 | CU-10, CU-11 | CP-15 |  |
+| RF-18 |  | CP-04 |  |
+| RF-19 | CU-09 | CP-16 |  |
+| RF-20 |  | CP-18 |  |
+| RF-21 | CU-12 | CP-19 |  |
+| RF-22 | CU-12 | CP-19 |  |
+| RF-23 | CU-13 | CP-20 |  |
+| RF-24 | CU-13 | CP-20 |  |
+| RF-25 | CU-11, CU-13 | CP-21 |  |
+| RF-26 | CU-14 | CP-22 |  |
+| RNF-01 |  |  | Protocolo de medición del percentil 95 |
+| RNF-02 |  | CP-01 |  |
+| RNF-03 |  | CP-03 |  |
+| RNF-04 |  | CP-05 |  |
+| RNF-05 |  |  | Análisis estático y revisión de la estructura de módulos |
+| RNF-06 |  | CP-06 |  |
+| RNF-07 |  | CP-08 |  |
+| RNF-08 |  |  | Inspección del conjunto de datos y de la configuración |
+| RNF-09 |  |  | Análisis estático y revisión de la configuración de integración continua |
+| RNF-10 |  |  | La propia ejecución de la integración continua |
+| RNF-11 |  | CP-04, CP-17 |  |
+| RNF-12 |  | CP-17 |  |
+Nota. Elaboración propia.
 ### 7.3.2. Diseño de casos de pruebas
 Tabla 6
 Diseño de casos de prueba
