@@ -7,12 +7,29 @@ se pueda regenerar y su cambio se vea en un diff, en lugar de ser un binario opa
 ## Renderizar
 
 ```bash
-./render.sh          # recorre figura-*.mmd y genera figura-*.png
+./render.sh                    # renderiza todas y después verifica el tamaño
+python3 verificar-tamanos.py   # solo la verificación, sobre los PNG que haya
 ```
 
-El script, después de cada render, **verifica el tamaño final** y avisa si el texto
-aparente queda por debajo de 8,5 pt. Las cinco figuras actuales pasan ese control
-salvo la 3, que queda en 8,3 pt y por eso aparece marcada.
+`render.sh` renderiza cada figura a un archivo temporal oculto y recién después
+reemplaza al PNG definitivo. Así un render fallido no destruye la figura anterior
+ni deja un archivo viejo haciéndose pasar por nuevo. Si `mmdc` falla, el script
+aborta y el PNG anterior queda intacto.
+
+La verificación es un **paso aparte, al final**, y es **informativa**: el código de
+salida de `render.sh` refleja si los renders salieron bien, nunca el tamaño de las
+figuras. Una figura por debajo del mínimo produce un aviso, no un fallo, porque el
+tamaño depende del diseño del diagrama y no de que el render haya funcionado. El
+propio script omite la verificación, con un aviso, si no encuentra `python3`.
+
+Quien quiera usarla como puerta puede invocar `verificar-tamanos.py` por separado:
+devuelve **1** si alguna figura queda por debajo del mínimo y **2** si no pudo leer
+alguna.
+
+`verificar-tamanos.py` informa el tamaño de inserción y el texto aparente de cada
+figura, y devuelve 1 si alguna queda por debajo de 8,5 pt o si no puede leer su
+encabezado. Las cinco figuras actuales pasan el control **salvo la 3**, que queda en
+8,3 pt y por eso aparece marcada: es una deuda conocida, no un fallo del script.
 
 El comando de cada figura es:
 
