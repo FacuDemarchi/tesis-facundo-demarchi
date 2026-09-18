@@ -181,9 +181,9 @@ Leído completo el 2026-09-17. Los capítulos 1 a 5 tienen contenido desarrollad
 | 6.2.1 Requerimientos funcionales | **cargada** el 2026-09-17: RF-01 a RF-20 (Tabla 3) |
 | 6.2.2 Requerimientos no funcionales | **cargada** el 2026-09-17: RNF-01 a RNF-12 (Tabla 4) |
 | 6.2.3 Requerimientos candidatos | **cargada** el 2026-09-17: RC-01 a RC-08 (Tabla 5) |
-| 7.2.1 a 7.2.4 | **cargadas** el 2026-09-17: Tabla 7 (casos de uso), Tabla 8 (entidades), Tabla 9 (descripción de los casos centrales), Tabla 10 (colaboración) |
+| 7.2.1 a 7.2.4 | **cargadas** el 2026-09-17: las tablas de casos de uso, entidades, descripción de los casos centrales y colaboración. De esas cuatro, tres fueron reemplazadas después por las Figuras 2 a 5; la descripción de casos de uso quedó como **Tabla 6** |
 | 7.2.5 Interfaz gráfica | vacía; depende de los mockups |
-| 7.3.2 Diseño de casos de pruebas | **cargada** el 2026-09-17: CP-01 a CP-18 (Tabla 6) |
+| 7.3.2 Diseño de casos de pruebas | **cargada** el 2026-09-17: CP-01 a CP-22 (**Tabla 8**) |
 | Anexo D | **ya estaba completo**: contiene la figura del mapa desde antes de esta revisión |
 
 Es el destino de lo ya redactado en [`propuesta-capitulos-6-y-7.md`](propuesta-capitulos-6-y-7.md): RF-01 a RF-09 en 6.2.1, RNF-01 a RNF-10 en 6.2.2, RC-01 a RC-08 en 6.2.3 y CP-01 a CP-08 en 7.3.2.
@@ -212,11 +212,11 @@ Las tres tablas se insertaron con el CLI `gdocs-api`, replicando la convención 
 
 - Seis referencias internas quedaron sin destino: "se documenta en , documento de trabajo", "continúa mediante .", "la encuesta documentada en .", "El documento  concentra el relevamiento", y el campo "Recuperado de " de Demarchi (2026) en Referencias.
 - Cifras escritas entre paréntesis —"(45 respuestas)", "(35 estudiantes)", "(11 estudiantes)", "(41 respuestas)"— que se leen como marcadores de plantilla sin limpiar. Lo natural sería "para 35 estudiantes, equivalentes al 77,8 %".
-- **La Tabla 2 tiene el encabezado sin negrita**, a diferencia de la Tabla 1 y de las tablas 3 a 6. La primera columna sí está en negrita, porque eso proviene del estilo de tabla del documento; lo que falta es la negrita en la fila de encabezado. Inconsistencia de formato, no de contenido.
+- **La Tabla 2 tiene el encabezado sin negrita**, a diferencia de la Tabla 1 y del resto de las tablas. La primera columna sí está en negrita, porque eso proviene del estilo de tabla del documento; lo que falta es la negrita en la fila de encabezado. Inconsistencia de formato, no de contenido.
 
 ## Casos de prueba cargados el 2026-09-17
 
-**Tabla 6**, en 7.3.2, con **cuatro columnas** (`ID | Caso | Resultado esperado | Requerimientos`) y **agrupación por tipo de prueba** en cinco filas de grupo: reglas de dominio y solver, API, persistencia y datos, interfaz, y accesibilidad. Total: 18 casos.
+**Tabla 8**, en 7.3.2, con **cuatro columnas** (`ID | Caso | Resultado esperado | Requerimientos`) y **agrupación por tipo de prueba** en cinco filas de grupo: reglas de dominio y solver, API, persistencia y datos, interfaz, y accesibilidad. Total: 18 casos.
 
 Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para cubrir requerimientos que quedaban sin caso. El más importante es **CP-09**, el recálculo de una precorrelativa aprobada y otra no: no estaba en el borrador y está pedido de forma explícita por el objetivo específico 5 de la sección 2.2.
 
@@ -247,25 +247,25 @@ Verificación: seis líneas cambiadas y ninguna otra tocada.
 
 ## Trazabilidad cargada el 2026-09-17
 
-**Tabla 10** en 7.3.1: `Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba`, con una fila por requerimiento. 38 filas, 156 celdas.
+**Tabla 7** en 7.3.1: `Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba`, con una fila por requerimiento. 38 filas, 156 celdas.
 
-**Por qué hacía falta.** Al reemplazar la Tabla 7 por la Figura 5, los casos de uso **perdieron su columna de requerimientos**: la relación entre caso de uso y requerimiento dejó de existir en el texto del documento, y 7.3.1 declara que el plan de pruebas debe incluirla. La matriz la restituye y la completa con los casos de prueba.
+**Por qué hacía falta.** Al reemplazar la tabla de casos de uso por la Figura 2, los casos de uso **perdieron su columna de requerimientos**: la relación entre caso de uso y requerimiento dejó de existir en el texto del documento, y 7.3.1 declara que el plan de pruebas debe incluirla. La matriz la restituye y la completa con los casos de prueba.
 
 **Hallazgos que la matriz deja visibles.**
 
 - **Doce requerimientos no tienen caso de prueba propio.** Diez tienen un medio alternativo declarado en la cuarta columna (pruebas de integración, verificación manual, análisis estático, protocolo de rendimiento, inspección de datos o la propia integración continua).
-- **Corrección del 2026-09-17 sobre RF-15 y RF-16.** Este registro afirmó que no tenían caso de uso ni caso de prueba, y era **falso en las dos partes**: la Tabla 6 los asocia a CP-13 y CP-14, y los casos de uso a los que corresponden son CU-04 para RF-15 y CU-06 para RF-16. El hueco era de este mapeo, escrito a mano, no del modelo de la tesis. La matriz quedó corregida y ya no contiene ninguna celda marcada como pendiente.
+- **Corrección del 2026-09-17 sobre RF-15 y RF-16.** Este registro afirmó que no tenían caso de uso ni caso de prueba, y era **falso en las dos partes**: la **Tabla 8** los asocia a CP-13 y CP-14, y los casos de uso a los que corresponden son CU-04 para RF-15 y CU-06 para RF-16. El hueco era de este mapeo, escrito a mano, no del modelo de la tesis. La matriz quedó corregida y ya no contiene ninguna celda marcada como pendiente.
 - **Mapeo interpretativo que conviene que revises.** RF-15 quedó asociado a CU-04 «Seleccionar materias y declarar intención», bajo la lectura de que la recomendación se incorpora al conjunto de materias que el motor usa para generar alternativas, según §1, y que ese conjunto se arma en la selección. Si preferís que recibir y aceptar recomendaciones sea una interacción propia, corresponde un CU-15 aparte y regenerar la Figura 2; no lo hice por mi cuenta porque agrega un caso de uso al alcance.
 - **RF-09, RF-18 y RF-20 no tienen caso de uso**, pero sí un medio de verificación declarado. RF-18 y RF-20 tienen caso de prueba.
 - Los doce requerimientos no funcionales no tienen caso de uso, como corresponde a atributos de calidad; siete tienen caso de prueba y cinco un medio alternativo.
 
-**Numeración de tablas pendiente.** La Tabla 10 se insertó en 7.3.1, que aparece **antes** de la Tabla 6 en 7.3.2. El documento numera 1, 2, 3, 4, 5, 9, 6, 10, fuera del orden de aparición. Se deja sin tocar por decisión del usuario, que resolverá el formato cerca de la entrega.
+**Numeración resuelta el 2026-09-17.** El documento quedó con las tablas de 1 a 8 y las figuras de 1 a 5, ambas series en orden de aparición. El renombrado movió tres tablas: la descripción de casos de uso pasó a **Tabla 6**, la matriz de trazabilidad a **Tabla 7** y la de casos de prueba a **Tabla 8**; también se actualizó la referencia en prosa a la matriz, que nombraba el número viejo. Verificado por diferencia de texto: cuatro líneas cambiadas, ninguna otra.
 
 ## Capítulo 7.2 cargado el 2026-09-17
 
-Cuatro tablas con su párrafo de introducción cada una: **Tabla 7** en 7.2.1, **Tabla 8** en 7.2.2, **Tabla 9** en 7.2.3 y **Tabla 10** en 7.2.4. Otras 97 líneas agregadas y 0 borradas.
+Cuatro tablas con su párrafo de introducción cada una, en 7.2.1, 7.2.2, 7.2.3 y 7.2.4. Otras 97 líneas agregadas y 0 borradas.
 
-> Nota de sincronización: de esas cuatro tablas, las de 7.2.1, 7.2.2 y 7.2.4 fueron **reemplazadas después por las Figuras 2 a 5** del pipeline nuevo (D-09), con la numeración correlativa definitiva. Eso liberó los números 7, 8 y 10 que esas tablas tenían asignados. El número 10 quedó reutilizado por la matriz de trazabilidad de 7.3.1 y no hay colisión, pero la secuencia del documento quedó fuera de orden de aparición: 1, 2, 3, 4, 5, 9, 10 y 6, porque la Tabla 6 aparece en 7.3.2, después de la 9 y la 10.
+> Nota de sincronización: de esas cuatro tablas, las de 7.2.1, 7.2.2 y 7.2.4 fueron **reemplazadas después por las Figuras 2 a 5** del pipeline nuevo (D-09), con la numeración correlativa definitiva. Eso liberó los números 7, 8 y 10 que esas tablas tenían asignados. El número 10 quedó reutilizado por la matriz de trazabilidad y no hubo colisión. La secuencia del documento quedó desordenada en ese momento —1, 2, 3, 4, 5, 9, 10 y 6— y se corrigió después: ver «Numeración resuelta el 2026-09-17».
 
 ### D-06 — Actor institucional documentado como provisional
 

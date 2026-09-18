@@ -374,7 +374,7 @@ Figura 4. Entidades de planificación y gestión de demanda.
 Nota. Elaboración propia.
 ### 7.2.3. Descripción de casos de uso
 Se describen los cuatro casos de uso centrales del recorrido del estudiante. Cada uno registra los siete campos previstos en el diseño: objetivo, actor, precondiciones, flujo principal, flujos alternativos, postcondiciones y requerimientos relacionados.
-Tabla 9
+Tabla 6
 Descripción de los casos de uso centrales
 | Campo | Contenido |
 | CU-01 · Consultar el plan de estudios |  |
@@ -421,8 +421,8 @@ La gestión asistida de demanda insatisfecha incorporará un segundo escenario d
 ### 7.3.1. Plan de pruebas
 Las pruebas producidas mediante TDD y los comprobantes generados por RDD formarán parte de la evidencia de verificación técnica del prototipo (Beck, 2002; Gentleman Programming, 2026). La integración continua conservará los resultados de las pruebas, el análisis estático, la cobertura y la compilación de cada versión evaluada.
 Pytest verificará las reglas del dominio, la persistencia, la API y los escenarios controlados del solver. Hypothesis comprobará invariantes generales de las alternativas generadas. Schemathesis verificará los contratos publicados mediante OpenAPI y Playwright cubrirá los recorridos críticos de la interfaz, incluyendo verificaciones automáticas y manuales de accesibilidad.
-La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas. La Tabla 10 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
-Tabla 10
+La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas. La Tabla 7 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
+Tabla 7
 Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba |
 | RF-01 | CU-01 |  | Prueba de integración del endpoint del plan |
@@ -465,7 +465,7 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RNF-12 |  | CP-17 |  |
 Nota. Elaboración propia.
 ### 7.3.2. Diseño de casos de pruebas
-Tabla 6
+Tabla 8
 Diseño de casos de prueba
 | ID | Caso | Resultado esperado | Requerimientos |
 | Reglas de dominio y solver |  |  |  |
