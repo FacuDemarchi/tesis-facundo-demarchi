@@ -226,6 +226,21 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 
 **Convención de tablas del documento, medida y no supuesta.** La primera columna va en negrita por el estilo de tabla del documento, la fila de encabezado también, y la nota al pie va en cursiva. Conviene saberlo antes de crear cualquier tabla nueva.
 
+## Ajustes de coherencia aplicados el 2026-09-17
+
+Seis correcciones de texto para alinear secciones que quedaron atrás cuando se incorporó la gestión de demanda insatisfecha.
+
+| Dónde | Qué se agregó | Por qué |
+| --- | --- | --- |
+| RF-26 | Que cada decisión registre actor, fecha y motivo | El requerimiento exigía la aprobación institucional pero no dejaba rastro verificable, y la tesis cita la Ley 25.326 |
+| 2.1 | La asistencia a la institución en la evaluación de alternativas | El objetivo general solo prometía «información trazable sobre la demanda», no la evaluación |
+| 2.2, objetivo 4 | La evaluación asistida de alternativas de resolución | El objetivo específico enumeraba visualización, planificación, demanda y motor, sin la capacidad nueva |
+| 5.3 | Las propuestas de cambio de aula o apertura entre las capacidades priorizadas | El diagnóstico priorizaba registrar la demanda, que ahora es solo el insumo de la propuesta |
+| 3.2 | Que el prototipo no asignará docentes ni contratará personal | La cláusula se perdió al reescribir el límite sobre decisiones administrativas |
+| 4.3 | Que la evaluación de aulas se limita a soportar la decisión institucional | El valor agregado no distinguía esa evaluación del timetabling, y el prototipo ahora toca ese terreno frente a UniTime |
+
+Verificación: seis líneas cambiadas y ninguna otra tocada.
+
 ## Trazabilidad cargada el 2026-09-17
 
 **Tabla 10** en 7.3.1: `Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba`, con una fila por requerimiento. 38 filas, 156 celdas.
