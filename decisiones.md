@@ -241,6 +241,12 @@ La sección 7.1 declaraba el uso de ChatGPT (modelo Sol). Se reemplazó por la m
 
 **Redacción propia.** El texto de la declaración lo redacté yo, conservando las cuatro actividades que enumeraba la versión anterior y la misma salvedad sobre responsabilidad autoral. Conviene que lo confirmes.
 
+**Segunda vuelta: los modelos.** La primera versión nombraba cuatro proveedores, y eso dejaba dos imprecisiones. Trataba a **OpenCode como fabricante de modelos** cuando es una vía de acceso, y omitía los modelos que hicieron la mayor parte del trabajo. La configuración real tiene **tres vías**: OpenAI Codex (modelos GPT), un proxy local (Gemini y Claude Opus) y OpenCode (DeepSeek, GLM y MiMo). La declaración ahora las nombra, y aclara que las versiones concretas variaron entre sesiones y quedaron en la configuración versionada del proyecto.
+
+**No se fijan versiones a propósito.** La configuración de modelos cambia: en este mismo proyecto una sesión anterior rebalanceó el perfil mixto de 19/6 a 16/9 roles entre OpenAI y no-OpenAI. Enumerar versiones exactas dejaría la declaración desactualizada en cuanto se toque la configuración, y la tesis debe ser exacta el día de la entrega. Las familias y las vías son estables; las versiones no.
+
+Se agregaron las referencias de **DeepSeek**, **Xiaomi (MiMo)** y **Z.AI (GLM)**, con las cuatro direcciones verificadas, y la bibliografía pasó de 20 a **23 entradas**, sin ninguna fuera de orden.
+
 ## Metodología actualizada de SDD a ODD, 2026-09-18
 
 La sección 7.1 describía el proceso con desarrollo dirigido por especificaciones (Spec-Driven Development, SDD). Se reemplazó por el flujo orgánico de desarrollo (Organic Driven Development, ODD), que es el que se aplica:
