@@ -12,56 +12,56 @@ Viabilidad económica	7
 2.2. Objetivos específicos	8
 3. Delimitación del sistema de información	8
 3.1. Objetivo del sistema	8
-3.2. Límites del sistema	8
+3.2. Límites del sistema	9
 3.3. Alcances del sistema	9
-3.4. No contempla	10
-4. Elicitación	11
-4.1. Actividad del cliente	12
-4.2. TIC	12
-Lenguajes de programación y runtimes	13
-Frameworks y librerías principales	13
-Bases de datos y almacenamiento	13
-Arquitectura y despliegue	14
-Entornos de desarrollo y control de versiones	15
-4.3. Competencia	16
-4.4. Relevamiento de la organización	18
-4.4.1. Relevamiento estructural	18
-4.4.2. Relevamiento funcional	18
-4.4.3. Procesos de negocio	19
-5. Diagnóstico	20
-5.1. Cierre y alcance del relevamiento a estudiantes	20
-5.2. Resultados finales y conclusiones	20
-5.2.1. Visibilidad de la oferta e incertidumbre	20
-5.2.2. Restricciones de planificación y oferta académica	20
-5.2.3. Carga operativa y dependencia de asistencia	21
-5.2.4. Diferencias según el avance en la carrera	21
-5.3. Conclusión diagnóstica e implicancias para el prototipo	21
-6. Propuesta de solución	22
-6.1. Descripción general de la propuesta	22
-6.1.1. A nivel funcional	22
-6.1.2. A nivel técnico	22
-6.1.3. Diagrama de arquitectura	22
-6.2. Requerimientos	22
-6.2.1. Requerimientos funcionales	22
-6.2.2. Requerimientos no funcionales	22
-6.2.3. Requerimientos candidatos	22
-7. Desarrollo del prototipo	22
-7.1. Metodología y proceso de construcción asistido por IA	22
-7.2. Análisis y Diseño	24
-7.2.1. Diagrama de casos de uso	24
-7.2.2. Diagrama de clases / Entidad relación	24
-7.2.3. Descripción de casos de uso	24
-7.2.4. Diagrama de colaboración	24
-7.2.5. Interfaz gráfica	24
-7.3. Proceso de V&V	24
-7.3.1. Plan de pruebas	24
-7.3.2. Diseño de casos de pruebas	24
-8. Referencias	24
-9. Anexos	26
-Anexo A. Registro de elicitación	26
-Anexo B. Instrumentos de relevamiento	26
-Anexo C. Evidencias del proceso actual	26
-Anexo D. Mapa horizontal de correlatividades de Ingeniería en Software	26
+3.4. No contempla	11
+4. Elicitación	12
+4.1. Actividad del cliente	13
+4.2. TIC	13
+Lenguajes de programación y runtimes	14
+Frameworks y librerías principales	14
+Bases de datos y almacenamiento	14
+Arquitectura y despliegue	15
+Entornos de desarrollo y control de versiones	16
+4.3. Competencia	17
+4.4. Relevamiento de la organización	19
+4.4.1. Relevamiento estructural	19
+4.4.2. Relevamiento funcional	19
+4.4.3. Procesos de negocio	20
+5. Diagnóstico	22
+5.1. Cierre y alcance del relevamiento a estudiantes	22
+5.2. Resultados finales y conclusiones	22
+5.2.1. Visibilidad de la oferta e incertidumbre	22
+5.2.2. Restricciones de planificación y oferta académica	22
+5.2.3. Carga operativa y dependencia de asistencia	23
+5.2.4. Diferencias según el avance en la carrera	23
+5.3. Conclusión diagnóstica e implicancias para el prototipo	23
+6. Propuesta de solución	24
+6.1. Descripción general de la propuesta	24
+6.1.1. A nivel funcional	24
+6.1.2. A nivel técnico	24
+6.1.3. Diagrama de arquitectura	26
+6.2. Requerimientos	28
+6.2.1. Requerimientos funcionales	28
+6.2.2. Requerimientos no funcionales	31
+6.2.3. Requerimientos candidatos	33
+7. Desarrollo del prototipo	34
+7.1. Metodología y proceso de construcción asistido por IA	34
+7.2. Análisis y Diseño	35
+7.2.1. Diagrama de casos de uso	35
+7.2.2. Diagrama de clases / Entidad relación	37
+7.2.3. Descripción de casos de uso	38
+7.2.4. Diagrama de colaboración	41
+7.2.5. Interfaz gráfica	43
+7.3. Proceso de V&V	43
+7.3.1. Plan de pruebas	43
+7.3.2. Diseño de casos de pruebas	45
+8. Referencias	49
+9. Anexos	50
+Anexo A. Registro de elicitación	50
+Anexo B. Instrumentos de relevamiento	50
+Anexo C. Evidencias del proceso actual	50
+Anexo D. Mapa horizontal de correlatividades de Ingeniería en Software	50
 # 1. Introducción
 ### Escenario tecnológico
 Los sistemas de información constituyen el soporte de la gestión académica universitaria, centralizando elementos esenciales como planes de estudio, correlatividades, períodos académicos, oferta de cátedras, horarios, cupos e inscripciones. Desde la perspectiva del estudiante, el canal principal de interacción es un portal web autenticado que permite examinar la oferta vigente y seleccionar las asignaturas que se desean cursar. En este dominio confluyen diversos actores institucionales: estudiantes, Bedelía, coordinación de carrera, autoridades académicas, docentes y administradores de sistemas.
@@ -207,12 +207,11 @@ Síntesis del stack tecnológico propuesto
 | Pruebas del backend | Pytest, Hypothesis y HTTPX | Verificación del dominio, propiedades y API |
 | Contratos de API | Schemathesis | Pruebas automáticas derivadas de OpenAPI |
 | Interfaz y accesibilidad | Playwright y axe-core | Verificación de flujos completos y accesibilidad |
-| Calidad del backend | Ruff y Pyright | Análisis estático, formato y verificación de tipos |
+| Calidad del backend | Ruff y mypy | Análisis estático, formato y verificación de tipos |
 | Calidad del frontend | ESLint y TypeScript | Análisis estático y verificación de tipos |
 | Infraestructura local | Docker Compose | Ejecución reproducible de los componentes |
 | Control e integración | Git, GitHub y GitHub Actions | Versionado, revisión e integración continua |
 | Configuración | Variables de entorno y secretos externos | Separación segura entre código y configuración |
-| Evidencia | Cobertura y resultados automatizados | Trazabilidad de la verificación técnica |
 Nota. Elaboración propia.
 ## 4.3. Competencia
 Se compararon tres soluciones que cubren partes del problema: un planificador orientado al alumno, una plataforma universitaria de horarios y una suite institucional comercial. La comparación se basa en información pública de cada proveedor y no sustituye una prueba de integración.
@@ -284,7 +283,7 @@ La propuesta quedará sujeta a revisión y aprobación institucional. El MVP reg
 El prototipo se implementará como una aplicación web desacoplada compuesta por un frontend React con TypeScript, una API REST desarrollada con FastAPI y una base de datos PostgreSQL. La API publicará sus contratos mediante OpenAPI y mantendrá separados los módulos de dominio académico, planificación, explicación, optimización y persistencia.
 El modelo CP-SAT de OR-Tools recibirá una representación validada del escenario académico y devolverá hasta tres alternativas junto con su estado de factibilidad y la información necesaria para explicar restricciones y conflictos. Su ejecución estará sujeta a límites temporales y se aislará del procesamiento principal de la API.
 El entorno local se reproducirá mediante contenedores y migraciones versionadas. La integración continua verificará el análisis estático, los contratos, las pruebas del dominio, los escenarios del solver y los flujos críticos de la interfaz.
-### 6.1.3. Diagrama de arquitectura
+6.1.3. Diagrama de arquitectura
 Figura 1. Arquitectura lógica del prototipo.
 Nota. Elaboración propia.
 ## 6.2. Requerimientos

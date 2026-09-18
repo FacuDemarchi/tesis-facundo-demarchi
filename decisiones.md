@@ -136,6 +136,7 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 # Pendientes
 
 - **P-07 — Recomendaciones como interacción propia.** Resuelta el 2026-09-17 en lo que respecta a la trazabilidad: RF-15 quedó en CU-04 y CP-13, RF-16 en CU-06 y CP-14. Queda abierto **solo si preferís** que recibir y aceptar recomendaciones sea un caso de uso propio, lo que exigiría agregar CU-15 y regenerar la Figura 2.
+- **P-08 — Herramienta de cobertura sin nombrar.** 7.3.1 afirma que la integración continua conservará la cobertura como evidencia, y ninguna sección nombra la herramienta que la produce. Agregarla al stack de 4.2 y a la Tabla 1, o quitar la afirmación.
 
 ## Decisiones por tomar
 
@@ -225,6 +226,20 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 **Cobertura lograda.** De los 20 requerimientos funcionales quedan con caso 16, y de los 12 no funcionales, 8. Los que no tienen caso propio —RF-01, RF-02, RF-05, RF-09 y RNF-01, RNF-02, RNF-05, RNF-08, RNF-09, RNF-10— se verifican en su mayoría por otros mecanismos ya previstos en 7.3.1: análisis estático, contratos, pruebas unitarias y de integración con Pytest y Hypothesis, y la integración continua.
 
 **Convención de tablas del documento, medida y no supuesta.** La primera columna va en negrita por el estilo de tabla del documento, la fila de encabezado también, y la nota al pie va en cursiva. Conviene saberlo antes de crear cualquier tabla nueva.
+
+## Revisión de la Tabla 1, 2026-09-18
+
+La Tabla 1 es la síntesis del stack tecnológico en 4.2. Se revisó contra la prosa que la precede, y aparecieron dos defectos reales.
+
+**1. Contradicción en el verificador de tipos.** La prosa de 4.2 dice «Ruff y **mypy** verificarán el código Python»; la tabla decía «Ruff y **Pyright**». Son dos implementaciones distintas, con configuración y manejo de errores distintos, y la tesis no puede comprometer las dos. Se corrigió **la tabla**, no la prosa, porque la tabla aparece después y sintetiza ese mismo stack: un resumen no puede contradecir su fuente. Si en realidad se prefiere Pyright, el cambio es la palabra inversa en la prosa, y conviene decidirlo antes de implementar.
+
+**2. Una fila que no respondía a su columna.** La última fila decía «Evidencia | Cobertura y resultados automatizados | Trazabilidad de la verificación técnica». La columna se llama **Tecnologías** y las otras dieciséis filas nombran herramientas; esa nombraba artefactos. Se eliminó en lugar de inventar una herramienta, porque nombrar `coverage` o `pytest-cov` sería una decisión de stack que no me corresponde tomar.
+
+**Hueco que la fila dejó al descubierto.** La sección 7.3.1 afirma que la integración continua conservará «la cobertura» entre las evidencias de cada versión, pero **el documento no nombra ninguna herramienta que la produzca**. O se agrega al stack, o la afirmación queda sin respaldo. Queda como P-08.
+
+**Lo que se dejó sin tocar.** «ELK» y «SQLAlchemy 2» son más específicos en la tabla que en la prosa («un algoritmo de disposición jerárquica», «SQLAlchemy»). No son contradicciones: son afirmaciones más fuertes en el cuadro que en el texto. Conviene confirmar que están decididas. Y el orden de las filas mezcla criterios, así que un agrupamiento por bloques mejoraría la lectura; se dejó por ser cosmético y requerir mover filas en el documento.
+
+Verificación: tres líneas cambiadas en el documento, ninguna otra. El formato de la tabla ya era el correcto y es la referencia del resto: encabezado en negrita, primera columna en negrita por el estilo del documento y nota en cursiva.
 
 ## Ajustes de coherencia aplicados el 2026-09-17
 
