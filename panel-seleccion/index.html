@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de selección · Mapa de correlatividades</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="period-bar">
+    <div class="period-context">
+      <span>Plan académico</span>
+      <strong>Ingeniería en Software</strong>
+    </div>
+    <nav class="period-navigation" aria-label="Navegación entre períodos académicos">
+      <button type="button" id="period-prev" disabled aria-label="Ver período anterior">← Anterior</button>
+      <div class="period-display" aria-live="polite">
+        <span id="period-kind">Período actual</span>
+        <strong id="period-label">1B · 2026</strong>
+      </div>
+      <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
+      <button type="button" id="primary-action" class="primary-action">Iniciar la inscripción</button>
+    </nav>
+  </header>
+
+  <main class="canvas">
+    <div id="graph-frame" class="graph-frame">
+      <section class="graph-region" id="graph-region" aria-label="Grafo seleccionable de materias y correlatividades">
+        <div class="year-row" aria-hidden="true">
+          <span>1.er año</span><span>2.º año</span><span>3.er año</span><span>4.º año</span><span>5.º año</span>
+        </div>
+        <div class="graph-stage" id="graph-stage">
+          <svg id="connections" class="connections" aria-hidden="true"></svg>
+          <div id="columns" class="columns"></div>
+        </div>
+      </section>
+    </div>
+
+    <aside id="selection-panel" class="selection-panel" aria-labelledby="selection-title" hidden>
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Borrador de planificación</p>
+          <h1 id="selection-title">Selección</h1>
+        </div>
+        <span id="selected-count" class="count-badge">0 materias</span>
+      </div>
+      <p id="selection-help" class="panel-help">Marque una tarjeta para agregarla al borrador; vuelva a marcarla para quitarla. La intención es informada por el sistema.</p>
+
+      <section class="panel-section" aria-labelledby="cap-title">
+        <h2 id="cap-title">Carga conocida</h2>
+        <div id="cap-summary" class="cap-summary"></div>
+        <p class="cap-note">Solo cuentan las materias con oferta publicada en este período. Las demás no tienen bimestre conocido.</p>
+      </section>
+
+      <section class="panel-section" aria-labelledby="subjects-title">
+        <h2 id="subjects-title">Materias marcadas</h2>
+        <ul id="selected-subjects" class="selected-subjects" aria-describedby="selection-help"></ul>
+      </section>
+
+      <section class="panel-section warnings-section" aria-labelledby="warnings-title">
+        <h2 id="warnings-title">Comprobaciones locales</h2>
+        <ul id="warnings" class="warnings" aria-live="polite"></ul>
+      </section>
+
+      <button type="button" id="panel-primary-action" class="panel-primary-action">Inscribir</button>
+      <p class="action-note">Esta acción cierra la selección y solicita una única optimización global; las advertencias no son alternativas.</p>
+    </aside>
+
+    <section id="optimization-stage" class="optimization-stage" aria-labelledby="optimization-title" hidden>
+      <p class="eyebrow">Etapa siguiente</p>
+      <h1 id="optimization-title">Optimización CP-SAT pendiente</h1>
+      <p>El borrador fue aceptado. Esta maqueta todavía no ejecuta ni simula resultados.</p>
+      <p>Quedan pendientes los seis resultados documentados: alternativas de cursado, solución óptima, solución factible, infactibilidad explicada, estado indeterminado por límite temporal y oferta pendiente a nivel de materia.</p>
+    </section>
+
+    <p id="selection-status" class="sr-only" aria-live="polite"></p>
+    <p id="warning-status" class="sr-only" aria-live="polite"></p>
+  </main>
+
+  <script src="../comun/datos-simulados.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

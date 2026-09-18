@@ -45,9 +45,13 @@ Tomadas el 2026-09-18. Registradas en memoria como `tesis/interfaz-diseno-cerrad
   **Evidencia**: `node --check` pasa; doce verificaciones propias pasan, incluidas cinco materias seleccionables con oferta en `1B · 2026` y cuatro en `2A · 2026` (mínimo cuatro para poder intentar la cuarta materia que exige CP-11), C20 con dos cátedras, C27 sin cupo, C24 sin cátedra, una superposición real de franjas entre C19 y C20, y un candidato de traslado de aula.
 
   **Hallazgo que produjo**: el período **es** el bimestre. Ver abajo.
-- [ ] **T2 — Mockup del panel de selección sobre el grafo** (`panel-seleccion/`). El grafo del mockup actual más el panel flotante: materias con su intención, contador contra el tope de 3 por bimestre, indicador de granularidad, advertencias locales, y el botón primario.
+- [x] **T2 — Mockup del panel de selección sobre el grafo** (`panel-seleccion/`, 422 líneas). El grafo del mockup actual más el panel flotante: materias marcadas, contador contra el tope por bimestre y cuatrimestre, advertencias locales y el botón que cierra la etapa.
+
+  **Corregido tras la revisión del autor**, con seis observaciones: el panel no se muestra hasta apretar el botón de la barra; el clic agrega o quita y no recorre intenciones; el sistema deriva la intención y el estudiante no la elige; el indicador de granularidad salió del panel porque es del resultado (RF-13); el botón del panel dice «Inscribir» en el período actual y «Aceptar» en el siguiente (D-03); y el estado de la tarjeta se deriva del borrador y no del escenario estático.
+
+  **Evidencia**: `node --check` pasa; verificación propia sobre el mockup servido, con los ocho puntos comprobados, incluidos los borradores separados por período y el plan del escenario cargado en el período que se planifica. Revisión nativa aprobada (riesgo medio, lente de confiabilidad) con cuatro hallazgos no bloqueantes.
 - [ ] **T3 — Regla de reposicionamiento del panel.** Anclaje a la derecha al inicio, migración a la izquierda sobre las columnas resueltas, en **zonas discretas con transición**, escuchando foco y scroll.
-- [ ] **T4 — Botón de entrada en la barra de período**, con etiqueta según el período: «Iniciar la inscripción» en el actual, «Generar alternativas» en el siguiente.
+- [x] **T4 — Botón de entrada en la barra de período**, con etiqueta según el período: «Iniciar la inscripción» en el actual, «Generar alternativas» en el siguiente. Entrega junto con T2, porque comparten los mismos archivos.
 - [ ] **T5 — Registro de hallazgos y README** (`panel-seleccion/discoveries.md` y `panel-seleccion/README.md`), con los requerimientos candidatos derivados.
 
 ## Hallazgos de la capa de datos (T1)
