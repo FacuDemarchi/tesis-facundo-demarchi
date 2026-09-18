@@ -1,0 +1,20 @@
+flowchart TB
+  FE["Frontend React + TypeScript · grafo curricular · preferencias · calendario"]
+  API["API FastAPI · REST / OpenAPI"]
+  subgraph MOD["Backend · monolito modular"]
+    direction LR
+    D1["Dominio académico"]
+    D2["Planificación"]
+    D3["Explicación de conflictos"]
+    D4["Adaptador de optimización"]
+    D5["Persistencia"]
+  end
+  SOLVER["OR-Tools CP-SAT · límite temporal"]
+  DB[("PostgreSQL")]
+  INST["Integración institucional futura · pendiente de relevamiento"]
+  FE --> API --> MOD
+  MOD --> SOLVER
+  MOD --> DB
+  INST -.->|"pendiente"| API
+  classDef ext fill:#fef3c7,stroke:#d97706,stroke-dasharray:5 4,color:#0f172a
+  class INST ext

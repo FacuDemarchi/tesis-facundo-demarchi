@@ -1,0 +1,15 @@
+flowchart TB
+  P1["1 · Estudiante → Interfaz · declara materias y preferencias"]
+  P2["2 · Interfaz → API · envía la solicitud con el escenario"]
+  P3["3 · API → Dominio académico · verifica restricciones duras"]
+  P4["4 · Dominio → Interfaz · advertencias inmediatas"]
+  P5["5 · API → Planificación · construye el escenario y registra su origen"]
+  P6["6 · Planificación → Adaptador CP-SAT · traduce el modelo"]
+  P7["7 · Adaptador → Solver · ejecuta la optimización"]
+  P8["8 · Solver → Planificación · devuelve alternativas y estado"]
+  P9["9 · Explicación · traduce conflictos y exclusiones"]
+  P10["10 · API → Interfaz · presenta alternativas y explicaciones"]
+  P11["11 · API → Persistencia · registra escenario, intención y demanda"]
+  P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> P10 --> P11
+  classDef adv fill:#fef3c7,stroke:#d97706,color:#0f172a
+  class P4 adv

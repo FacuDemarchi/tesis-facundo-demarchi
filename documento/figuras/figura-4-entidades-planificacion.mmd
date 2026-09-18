@@ -1,0 +1,18 @@
+classDiagram
+  direction TB
+  class Preferencia
+  class Restriccion
+  class SolicitudPlanificacion
+  class Alternativa
+  class IntencionDeCursado
+  class ExplicacionConflicto
+  class DemandaAgregada
+  class PropuestaResolucionDemanda
+  class DecisionInstitucional
+  SolicitudPlanificacion "1" --> "N" Alternativa
+  SolicitudPlanificacion "1" --> "N" Preferencia
+  SolicitudPlanificacion "1" --> "N" Restriccion
+  Alternativa "1" --> "N" ExplicacionConflicto
+  IntencionDeCursado "N" --> "1" DemandaAgregada : consolida
+  DemandaAgregada "1" --> "N" PropuestaResolucionDemanda
+  PropuestaResolucionDemanda "1" --> "1" DecisionInstitucional

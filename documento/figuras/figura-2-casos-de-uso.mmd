@@ -1,0 +1,31 @@
+flowchart TB
+  E(["Estudiante"])
+  I(["Actor institucional · provisional"])
+  T1["Recorrido del estudiante"]
+  U1(["CU-01 Consultar el plan de estudios"])
+  U2(["CU-02 Consultar el estado de una materia"])
+  U3(["CU-03 Configurar preferencias y restricciones"])
+  U4(["CU-04 Seleccionar materias y declarar intención"])
+  U5(["CU-05 Asistir a la inscripción del período actual"])
+  U6(["CU-06 Solicitar alternativas de cursado"])
+  U7(["CU-07 Visualizar la distribución semanal"])
+  U8(["CU-08 Comparar alternativas"])
+  U9(["CU-09 Consultar la explicación de conflictos"])
+  U12(["CU-12 Registrar una materia sin cupo"])
+  T2["Gestión institucional"]
+  U10(["CU-10 Consultar la demanda agregada"])
+  U11(["CU-11 Simular la apertura de una cátedra"])
+  U13(["CU-13 Evaluar la resolución de demanda"])
+  U14(["CU-14 Aprobar o rechazar una propuesta"])
+  T1 ~~~ U1 ~~~ U2 ~~~ U3 ~~~ U4 ~~~ U5 ~~~ U6 ~~~ U7 ~~~ U8 ~~~ U9 ~~~ U12 ~~~ T2
+  T2 ~~~ U10 ~~~ U11 ~~~ U13 ~~~ U14
+  E --- U1
+  E --- U5
+  E --- U6
+  E --- U9
+  E --- U12
+  I --- U10
+  I --- U13
+  I --- U14
+  classDef grp fill:#0f172a,stroke:#0f172a,color:#ffffff,font-weight:bold
+  class T1,T2 grp

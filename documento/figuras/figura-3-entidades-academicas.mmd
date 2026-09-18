@@ -1,0 +1,24 @@
+classDiagram
+  direction TB
+  class PlanDeEstudios
+  class Materia
+  class Correlatividad
+  class PeriodoAcademico
+  class Oferta
+  class Catedra
+  class Comision
+  class Docente
+  class Horario
+  class Cupo
+  class Aula
+  class DisponibilidadAula
+  PlanDeEstudios "1" --> "N" Materia
+  Materia "1" --> "N" Correlatividad
+  Materia "N" --> "N" PeriodoAcademico : vía Oferta
+  Oferta "1" --> "N" Catedra
+  Catedra "1" --> "N" Comision
+  Comision "N" --> "1" Docente
+  Comision "1" --> "N" Horario
+  Catedra "N" --> "1" Aula
+  Aula "1" --> "1" Cupo : determina su capacidad
+  Aula "1" --> "N" DisponibilidadAula
