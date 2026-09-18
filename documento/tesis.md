@@ -106,12 +106,12 @@ Validar el prototipo con alumnos mediante tareas comparativas y evaluar de maner
 Documentar los resultados, las limitaciones y las condiciones necesarias para una futura integración institucional.
 # 3. Delimitación del sistema de información
 ## 3.1. Objetivo del sistema
-La finalidad del sistema es asistir al alumno en dos momentos: la inscripción del período académico actual y la planificación condicionada del siguiente período soportado por el MVP. Para ello deberá ofrecer una vista completa del plan de estudios, explicar el estado de cada materia, distinguir una opción habilitada de una intención condicionada, conservar las intenciones de cursado y generar combinaciones de cátedras cuando exista oferta suficiente. Paralelamente, deberá consolidar datos de demanda que permitan a la institución reconocer materias sin oferta compatible y analizar escenarios de apertura.
+La finalidad del sistema es asistir al alumno en dos momentos: la inscripción del período académico actual y la planificación condicionada del siguiente período soportado por el MVP. Para ello deberá ofrecer una vista completa del plan de estudios, explicar el estado de cada materia, distinguir una opción habilitada de una intención condicionada, conservar las intenciones de cursado y generar combinaciones de cátedras cuando exista oferta suficiente. Paralelamente, deberá consolidar la demanda insatisfecha y asistir a la institución en la evaluación de alternativas de cambio de aula o apertura de cátedra, sin reemplazar la decisión administrativa ni ejecutar modificaciones sobre el sistema académico oficial.
 ## 3.2. Límites del sistema
 La validez de las propuestas del período actual dependerá de que el plan de estudios, las correlatividades, los horarios, los cupos, las modalidades y las reglas del período hayan sido cargados correctamente. Las propuestas del período siguiente deberán identificarse como condicionadas mientras dependan de resultados académicos u oferta todavía no confirmados.
 El prototipo no reemplazará al sistema académico institucional ni efectuará inscripciones definitivas.
 No reservará cupos; una intención de cursado condicionada para el período siguiente será informativa, deberá revalidarse antes de una inscripción real y no representará una vacante garantizada ni un derecho adquirido.
-No tomará decisiones administrativas sobre la apertura de cátedras ni asignará docentes.
+No adoptará ni ejecutará decisiones administrativas sobre cambios de aula o apertura de cátedras. Podrá generar propuestas y simulaciones, pero su aprobación y aplicación corresponderán al actor institucional autorizado.
 El motor podrá devolver una solución óptima, factible, infactible o indeterminada por límite temporal; nunca deberá presentar como válida una combinación que infrinja una restricción dura.
 La evaluación se limitará a Ingeniería en Software y a datos del caso de estudio 2027, simulados o anonimizados cuando contengan información personal. Para verificar la continuidad de la secuencia operativa soportada, se incluirá la transición desde 2B hacia 1A del año académico siguiente únicamente como escenario límite simulado.
 La interfaz se orientará a navegadores modernos de escritorio y diseño web adaptable; no se garantizará compatibilidad con navegadores descontinuados.
@@ -119,32 +119,34 @@ Las notificaciones se simularán dentro del prototipo y no implicarán un servic
 ## 3.3. Alcances del sistema
 Representar el 100 % de las materias del plan de Ingeniería en Software y sus correlatividades disponibles para el caso de estudio.
 Representar y permitir consultar los períodos 1A, 1B, 2A y 2B, sin modificar la posición estructural de las materias en el grafo. Para las acciones de inscripción y planificación, el MVP aplicará una ventana móvil formada por el período actual y el siguiente dentro de la secuencia operativa soportada: 1A → 1B → 2A → 2B → 1A del año académico siguiente. Los demás períodos soportados continuarán visibles para consulta, oferta, antecedentes y reportes, pero sin acciones operativas habilitadas.
-Calcular y explicar el estado de cada materia: aprobada, habilitada para inscripción, condicionada para el período siguiente, bloqueada por correlatividad o no disponible por falta de cátedra o de cupo.
+Calcular y explicar el estado de cada materia: aprobada, habilitada para inscripción, condicionada para el período siguiente, bloqueada por correlatividad o no disponible por falta de cátedra o de cupo. Cuando el estudiante seleccione una materia sin cupo del período actual, podrá incorporarla a su planificación con estado planificada y motivo falta de cupo.
 Permitir la selección múltiple de materias y el registro de preferencias obligatorias o deseables de cátedra, profesor, modalidad, días y franjas horarias.
 Generar hasta tres alternativas ordenadas cuando existan combinaciones válidas; si existen menos, mostrar todas las disponibles.
 Garantizar en los casos de prueba que el 100 % de las alternativas presentadas para el período actual respete correlatividades, cupos, período, el límite de carga aplicable y la ausencia de superposición; las alternativas futuras que aún dependan de una precorrelativa cursada u oferta no confirmada deberán quedar clasificadas como condicionadas y no como válidas para inscripción.
 Resolver en cinco segundos o menos al menos el 95 % de las ejecuciones de escenarios controlados, conforme al protocolo de evaluación definido para el caso de estudio.
 Detectar escenarios infactibles e identificar las restricciones, materias y cátedras involucradas.
-Registrar una única intención vigente por alumno, materia y período, con estado y motivo explícitos, evitando duplicaciones en la demanda.
-Mostrar por materia la demanda total, la demanda habilitada para el período actual, la demanda condicionada del período siguiente y las causas de bloqueo o falta de oferta.
-Simular la apertura de una cátedra y recalcular cuántos alumnos podrían incorporarse sin conflictos.
+Registrar una única intención vigente por alumno, materia y período, con estado y motivo explícitos, incluyendo las intenciones planificadas por falta de cupo y evitando duplicaciones en la demanda.
+Mostrar por materia la demanda total, la demanda habilitada para el período actual, la demanda condicionada del período siguiente, la demanda planificada por falta de cupo y las causas correspondientes.
+Cuando una cátedra del período actual no posea cupo, conservar la materia en la planificación del estudiante con estado planificada y motivo falta de cupo, sin confirmar una inscripción ni reservar una vacante.
+Consolidar esas intenciones como demanda insatisfecha y evaluar si una cátedra existente puede trasladarse a un aula disponible de mayor capacidad.
+Cuando no exista un aula compatible, generar una propuesta de apertura de una nueva cátedra y recalcular cuántos estudiantes podrían incorporarse, sujeta a aprobación institucional.
 ## 3.4. No contempla
 Integración productiva con el sistema académico de la universidad.
 Autenticación institucional, inicio de sesión único o gestión real de permisos.
 Confirmación legal o administrativa de inscripciones.
 Reserva, asignación o liberación real de cupos.
-Creación, modificación, cancelación o apertura automática de cátedras, junto con la contratación o asignación de profesores.
+Aplicación automática de cambios sobre la oferta académica institucional. El prototipo podrá generar propuestas de traslado de aula o apertura de cátedra, pero no ejecutarlas ni contratar o asignar profesores.
 Notificaciones productivas por correo, SMS o aplicaciones móviles.
 Desarrollo de aplicaciones móviles nativas para iOS o Android.
 Migración histórica de expedientes o datos académicos.
 El prototipo se implementará y evaluará exclusivamente para la carrera Ingeniería en Software y el período académico definido como caso de estudio. No se contempla la carga, administración ni visualización de otras carreras, ni la gestión de equivalencias entre planes de estudio o reformas curriculares. Sin embargo, el modelo de datos y la arquitectura evitarán dependencias exclusivas con esta carrera para permitir una futura ampliación.
 Operación de alta disponibilidad, acuerdos de nivel de servicio o despliegue institucional definitivo.
-Asignación institucional de aulas y horarios a las cátedras.
-Validación de conflictos internos de programación institucional, como dos cátedras en la misma aula al mismo tiempo o un docente asignado simultáneamente a dos cátedras.
-Administración de capacidad de aulas, disponibilidad física y otros recursos institucionales.
+Asignación institucional real de aulas y horarios a las cátedras. El prototipo podrá simular un traslado y generar una propuesta sujeta a autorización.
+Programación institucional completa de aulas y docentes: asignación de docentes a cátedras y detección de conflictos entre cátedras que el prototipo no gestiona. El prototipo sí verificará que el aula propuesta esté disponible en la franja horaria de la cátedra, según los datos de oferta que recibe.
+Administración productiva del inventario de aulas, su disponibilidad física y otros recursos institucionales. El prototipo utilizará datos simulados o provistos por la universidad para evaluar escenarios.
 Período académico de Verano, ubicado entre 2B y 1A del año académico siguiente. Su oferta, reglas especiales, correlatividades e inscripción quedan fuera del MVP actual, aunque su incorporación se considera una evolución futura del sistema.
 El prototipo no contempla inscripciones de más de tres materias por bimestre, equivalentes a seis materias por cuatrimestre. La planificación se limita a ese máximo y no se modelan escenarios con una carga mayor. Esta limitación responde al alcance definido para el prototipo y no constituye una afirmación sobre la regla académica vigente en la universidad.
-Estas exclusiones se refieren exclusivamente a la programación institucional. El prototipo recibirá la oferta académica como dato de entrada y asumirá que ya fue validada por la universidad; sí comprobará que las cátedras seleccionadas para un mismo estudiante no presenten superposiciones horarias.
+Estas exclusiones se refieren a la operación productiva de los sistemas y recursos institucionales. El prototipo podrá modelar aulas y cátedras con datos simulados o provistos mediante un mecanismo desacoplado, generar propuestas y registrar decisiones en un escenario de prueba; no aplicará cambios reales sobre la oferta académica. También comprobará que las cátedras seleccionadas para un mismo estudiante no presenten superposiciones horarias.
 # 4. Elicitación
 La elicitación se realizará mediante revisión documental, observación del portal, pruebas de caja negra, encuesta cuantitativa, entrevistas semiestructuradas con alumnos y entrevistas con personal universitario. Los resultados se convertirán en reglas de negocio, historias de usuario, restricciones, criterios de aceptación y modelos AS-IS y TO-BE.
 La especificación tomará como referencia ISO/IEC/IEEE 29148:2018 para definir requerimientos trazables y verificables, e ISO/IEC 25010:2023 para clasificar atributos de calidad. El diseño web considerará WCAG 2.2, nivel AA, para no depender exclusivamente del color y mantener navegación por teclado y mensajes comprensibles (World Wide Web Consortium [W3C], 2024).
@@ -177,7 +179,7 @@ FastAPI proveerá los endpoints REST, la validación de solicitudes y respuestas
 OR-Tools CP-SAT implementará las restricciones obligatorias, las preferencias ponderadas, los límites temporales y la generación de alternativas. El solver permanecerá desacoplado de la API mediante una interfaz perteneciente al dominio, de modo que pueda probarse independientemente y compararse con estrategias deterministas.
 SQLAlchemy se utilizará para el acceso a los datos y Alembic para administrar migraciones versionadas del esquema de PostgreSQL.
 ### Bases de datos y almacenamiento
-PostgreSQL almacenará los planes de estudio, materias, correlatividades, períodos académicos, cátedras, horarios, cupos, preferencias, intenciones de cursado y demanda agregada. Se selecciona por su soporte transaccional, integridad referencial, consultas relacionales y madurez.
+PostgreSQL almacenará los planes de estudio, materias, correlatividades, períodos académicos, cátedras, horarios, cupos, aulas y su disponibilidad, preferencias, intenciones de cursado, demanda agregada, propuestas de resolución de demanda y decisiones institucionales. Se selecciona por su soporte transaccional, integridad referencial, consultas relacionales y madurez.
 Las correlatividades se representarán como relaciones entre materias y podrán recorrerse mediante consultas recursivas. Debido al alcance acotado del prototipo, no se incorporará una base de datos de grafos adicional.
 SQLAlchemy proporcionará la capa de acceso a datos y Alembic administrará las modificaciones versionadas del esquema. Los datos utilizados durante el desarrollo serán simulados o seudonimizados y no contendrán credenciales académicas reales. La eventual validación con usuarios deberá definir mecanismos de autorización, retención y eliminación de los datos recolectados.
 ### Arquitectura y despliegue
@@ -236,13 +238,15 @@ Alumnos de Ingeniería en Software.
 La relación exacta entre estas dependencias, su jerarquía formal y la unidad que decide la apertura de cátedras permanecen pendientes de confirmación institucional.
 ### 4.4.2. Relevamiento funcional
 Alumno: consulta la oferta, selecciona materias y cátedras, expresa preferencias, resuelve conflictos y confirma o solicita alternativas.
-Bedelía o gestión académica: recibe consultas y solicitudes, verifica documentación, deriva trámites y comunica resoluciones según el procedimiento vigente.
+Bedelía o gestión académica: recibe las solicitudes de estudiantes cuando una cátedra alcanza su cupo, registra cada caso mediante un ticket en el CRM institucional y utiliza esas solicitudes para conocer la demanda adicional. El circuito posterior del ticket, sus estados y responsables todavía deben relevarse.
 Coordinación de carrera: analiza necesidades académicas, oferta, correlatividades y disponibilidad de recursos; su participación exacta en las aperturas debe validarse.
 Autoridad académica competente: autoriza o rechaza cambios de oferta y apertura de cátedras conforme a criterios institucionales todavía en relevamiento.
 Docente o responsable de cátedra: aporta disponibilidad, modalidad, horarios y condiciones de cursado cuando corresponda.
 Administrador del sistema: mantiene parámetros, períodos, catálogos, roles y trazabilidad técnica; este rol pertenece a la solución propuesta y no implica que exista con igual alcance en el proceso actual.
 ### 4.4.3. Procesos de negocio
-El relevamiento de los procesos institucionales que conforman el ciclo de vida de las materias y su oferta académica se encuentra en curso. Comprenderá la definición y modificación de materias curriculares, la planificación de la oferta, la creación y configuración de cátedras o comisiones, su publicación, inscripción, mantenimiento, cierre y seguimiento. La información será obtenida mediante entrevistas con Bedelía y con las demás áreas que la universidad identifique como participantes.
+El relevamiento permitió confirmar parcialmente el tratamiento de la demanda que excede el cupo de una cátedra. El cupo se determina por la capacidad del aula asignada y la inscripción se cierra automáticamente cuando se alcanza. Los estudiantes interesados solicitan su incorporación a través de Bedelía, que registra cada caso como un ticket en el CRM institucional.
+A partir de la cantidad de solicitudes recibidas, se verifica si existe un aula disponible con capacidad suficiente. Cuando existe, la cátedra se traslada a esa aula y se amplía el cupo. Si no existe un aula adecuada, se gestiona la apertura de una nueva cátedra.
+Permanecen pendientes de confirmación el área y los responsables que evalúan y autorizan cada alternativa, las reglas complementarias sobre disponibilidad docente y horarios, y el circuito detallado del ticket en el CRM.
 Hasta finalizar la elicitación, los responsables, actividades, reglas, estados, plazos, criterios de decisión, sistemas y mecanismos de seguimiento no se considerarán definitivos. Los instrumentos y resultados se documentan en el documento de trabajo  (Demarchi, 2026), pestaña Entrevista a la universidad. Una vez validados institucionalmente, se incorporará en este apartado el modelo AS-IS correspondiente.
 Aspectos pendientes de relevamiento:
 Áreas responsables de definir, crear, modificar, publicar, mantener y cerrar materias, cátedras o comisiones y su oferta académica.
@@ -269,14 +273,20 @@ La dificultad media declarada fue mayor en el tramo inicial (3,00 sobre 5; 5 est
 ## 5.3. Conclusión diagnóstica e implicancias para el prototipo
 El relevamiento cerrado no demuestra que las proporciones observadas representen a todos los estudiantes, pero sí aporta evidencia consistente de un patrón recurrente entre las personas participantes: información incompleta sobre la oferta, necesidad de monitoreo reiterado, conflictos horarios y dependencia de asistencia administrativa. Por lo tanto, respalda la necesidad de mejorar la etapa de planificación e información previa a la inscripción y justifica avanzar con el relevamiento institucional para comprender sus causas operativas.
 Para el prototipo, el diagnóstico prioriza cinco capacidades: visualizar el plan completo y el motivo de disponibilidad de cada materia; conservar intenciones de cursado aunque la oferta aún no esté publicada; notificar cambios relevantes; generar alternativas sin superposición; y registrar demanda y solicitudes de apertura con trazabilidad. Las reglas, responsables, fuentes de datos e integraciones necesarias deberán validarse con las áreas de la universidad antes de considerar estas capacidades como una solución institucional definitiva.
+El relevamiento institucional permitió identificar que los tickets del CRM representan una fuente de demanda insatisfecha. Su incorporación conceptual al prototipo permite conservar la intención del estudiante, consolidar la demanda y asistir a la institución en la evaluación de un cambio de aula o de la apertura de una nueva cátedra. La automatización se limita al análisis, la generación de propuestas y la trazabilidad; la decisión y la ejecución permanecen bajo responsabilidad institucional.
 # 6. Propuesta de solución
 ## 6.1. Descripción general de la propuesta
 ### 6.1.1. A nivel funcional
+Cuando el estudiante seleccione una materia cuyas cátedras no posean cupo, el sistema conservará la materia con estado planificada y motivo falta de cupo. Esta acción no confirmará la inscripción ni reservará una vacante, pero incorporará la intención a la demanda agregada de la materia y el período.
+Cuando la demanda supere la capacidad disponible, el prototipo evaluará si existe un aula disponible con capacidad suficiente para trasladar la cátedra y ampliar su cupo. Si no encuentra una alternativa compatible, generará una propuesta de apertura de una nueva cátedra y calculará cuántos estudiantes podrían incorporarse.
+La propuesta quedará sujeta a revisión y aprobación institucional. El MVP registrará la decisión y recalculará el escenario, pero no modificará automáticamente la oferta ni el sistema académico oficial.
 ### 6.1.2. A nivel técnico
 El prototipo se implementará como una aplicación web desacoplada compuesta por un frontend React con TypeScript, una API REST desarrollada con FastAPI y una base de datos PostgreSQL. La API publicará sus contratos mediante OpenAPI y mantendrá separados los módulos de dominio académico, planificación, explicación, optimización y persistencia.
 El modelo CP-SAT de OR-Tools recibirá una representación validada del escenario académico y devolverá hasta tres alternativas junto con su estado de factibilidad y la información necesaria para explicar restricciones y conflictos. Su ejecución estará sujeta a límites temporales y se aislará del procesamiento principal de la API.
 El entorno local se reproducirá mediante contenedores y migraciones versionadas. La integración continua verificará el análisis estático, los contratos, las pruebas del dominio, los escenarios del solver y los flujos críticos de la interfaz.
 ### 6.1.3. Diagrama de arquitectura
+Figura 1. Arquitectura lógica del prototipo.
+Nota. Elaboración propia.
 ## 6.2. Requerimientos
 ### 6.2.1. Requerimientos funcionales
 Tabla 3
@@ -298,10 +308,16 @@ Requerimientos funcionales preliminares
 | RF-14 | El sistema deberá aplicar la carga académica máxima como restricción dura cuando exista un límite institucional validado, o como límite configurable por el estudiante en su ausencia. | Preliminar |
 | RF-15 | El sistema deberá poder recomendar materias no seleccionadas, con su justificación, e incorporarlas al conjunto considerado solo después de la aceptación expresa del estudiante. | Preliminar |
 | RF-16 | El sistema deberá priorizar las materias por impacto en el avance curricular: primero las que habilitan más materias pendientes, luego los descendientes pendientes en el grafo y finalmente las preferencias configuradas. | Preliminar |
-| RF-17 | El sistema deberá registrar la demanda agregada por materia y período y las solicitudes de apertura, sin ejecutar inscripciones, reservar vacantes ni decidir aperturas. | Preliminar |
+| RF-17 | El sistema deberá registrar la demanda agregada por materia y período y utilizarla para generar propuestas institucionales, sin ejecutar inscripciones, reservar vacantes ni aplicar decisiones sobre la oferta oficial. | Preliminar |
 | RF-18 | El sistema deberá informar el estado del resultado sin presentar como definitivo el obtenido por límite temporal. | Preliminar |
 | RF-19 | El sistema no deberá excluir materias de forma silenciosa: toda exclusión deberá explicarse y ofrecer alternativas de flexibilización. | Preliminar |
 | RF-20 | El sistema deberá preservar la trazabilidad del escenario utilizado, incluyendo período, versión del plan, origen y fecha de los datos, restricciones y preferencias. | Preliminar |
+| RF-21 | Cuando una materia del período actual no disponga de cátedras con cupo, el sistema deberá conservar la intención del estudiante con estado planificada y motivo falta de cupo, sin confirmarla como inscripción ni reservar una vacante. | Preliminar |
+| RF-22 | El sistema deberá incorporar las intenciones planificadas por falta de cupo al cálculo de demanda agregada de la materia y el período. | Preliminar |
+| RF-23 | Cuando la demanda supere el cupo disponible, el sistema deberá evaluar si existe un aula disponible cuya capacidad permita ampliar la cátedra sin generar incompatibilidades. | Preliminar |
+| RF-24 | Cuando exista un aula adecuada, el sistema deberá generar una propuesta de traslado de la cátedra e informar la nueva capacidad y la cantidad estimada de estudiantes incorporables. | Preliminar |
+| RF-25 | Cuando no exista un aula adecuada, el sistema deberá generar una propuesta de apertura de una nueva cátedra y simular su impacto sobre la demanda insatisfecha. | Preliminar |
+| RF-26 | Las propuestas deberán quedar pendientes de aprobación por un actor institucional autorizado y no producirán modificaciones automáticas en los sistemas oficiales. | Preliminar |
 Nota. Elaboración propia.
 ### 6.2.2. Requerimientos no funcionales
 Tabla 4
@@ -332,6 +348,9 @@ Requerimientos candidatos
 | RC-06 | Administrar planes, períodos y oferta académica. | Roles administrativos y reglas de autorización |
 | RC-07 | Enviar alertas de cupos o cambios de horarios. | Canales permitidos y política de comunicaciones |
 | RC-08 | Conservar información de uso y preferencias. | Finalidad, retención, eliminación y acceso |
+| RC-09 | Consultar aulas, capacidades y disponibilidad. | Fuente institucional, identificadores, horarios, modalidad y frecuencia de actualización |
+| RC-10 | Consultar disponibilidad docente y restricciones para abrir una nueva cátedra. | Área responsable, reglas de asignación y permisos |
+| RC-11 | Integrar el flujo con el CRM institucional. | Estructura del ticket, estados y mecanismos de consulta y actualización |
 Nota. Elaboración propia.
 # 7. Desarrollo del prototipo
 ## 7.1. Metodología y proceso de construcción asistido por IA
@@ -344,50 +363,14 @@ Gentle-AI proporcionará soporte operativo para la continuidad y la coordinació
 Declaración sobre el uso de inteligencia artificial generativa. Durante la elaboración de este trabajo se utilizó ChatGPT (modelo Sol) como apoyo para revisar la redacción, organizar contenidos, explorar alternativas y asistir en tareas técnicas (OpenAI, 2026). Las respuestas generadas fueron evaluadas, contrastadas y, cuando correspondió, modificadas por el autor. La herramienta no tomó decisiones autónomas ni sustituyó la responsabilidad autoral, el análisis crítico, la verificación de las fuentes o la validación de los resultados.
 ## 7.2. Análisis y Diseño
 ### 7.2.1. Diagrama de casos de uso
-El diagrama distingue dos actores. El estudiante es el actor confirmado por el relevamiento. Las funciones institucionales que el alcance incluye en 3.3 se atribuyen provisionalmente a Coordinación de carrera, área cuya participación exacta en la apertura de cátedras permanece pendiente de confirmación institucional según lo declarado en 4.4.1.
-Tabla 7
-Casos de uso preliminares
-| ID | Caso de uso | Actor | Requerimientos |
-| Estudiante |  |  |  |
-| CU-01 | Consultar el plan de estudios y las correlatividades | Estudiante | RF-01, RF-02 |
-| CU-02 | Consultar el estado y el motivo de disponibilidad de una materia | Estudiante | RF-12 |
-| CU-03 | Configurar preferencias y restricciones de cursado | Estudiante | RF-03, RF-14 |
-| CU-04 | Seleccionar materias y declarar su intención | Estudiante | RF-03, RF-11 |
-| CU-05 | Asistir a la inscripción del período académico actual | Estudiante | RF-10, RF-04 |
-| CU-06 | Solicitar alternativas de cursado para el período siguiente | Estudiante | RF-05, RF-06, RF-13 |
-| CU-07 | Visualizar la distribución semanal de una alternativa | Estudiante | RF-06 |
-| CU-08 | Comparar alternativas antes de seleccionar una | Estudiante | RF-08 |
-| CU-09 | Consultar la explicación de los conflictos detectados | Estudiante | RF-07, RF-19 |
-| Coordinación de carrera · provisional, ver 4.4.1 |  |  |  |
-| CU-10 | Consultar la demanda agregada por materia y período | Coordinación de carrera | RF-17 |
-| CU-11 | Simular la apertura de una cátedra y recalcular la incorporación | Coordinación de carrera | RF-17 |
+El diagrama distingue al estudiante y a un actor institucional autorizado. Bedelía queda identificada como responsable de registrar en el CRM las solicitudes originadas por falta de cupo. La evaluación y aprobación de cambios de aula o aperturas se atribuyen provisionalmente a un actor institucional, cuya denominación y nivel de autorización deberán confirmarse mediante la elicitación pendiente.
+Figura 2. Casos de uso del sistema.
 Nota. Elaboración propia.
 ### 7.2.2. Diagrama de clases / Entidad relación
-Las entidades se presentan como modelo preliminar del dominio, derivadas de los requerimientos del capítulo 6 y del alcance definido en 3.3. No se incluyen entidades de usuarios institucionales, inscripciones oficiales ni personal administrativo. Los nombres y las relaciones deberán contrastarse con la estructura que surja de la elicitación institucional.
-Tabla 8
-Entidades preliminares del modelo
-| Entidad | Descripción |
-| Dominio académico |  |
-| PlanDeEstudios | Plan vigente de la carrera del caso de estudio, con su versión |
-| Materia | Asignatura del plan, con su código, nombre, cuatrimestre y categoría |
-| Correlatividad | Precedencia entre materias, con la condición exigida de regularidad o aprobación |
-| PeriodoAcademico | Período académico 1A, 1B, 2A o 2B en el que se inscribe y se planifica |
-| Oferta y cursado |  |
-| Oferta | Materias efectivamente ofrecidas en un período; puede estar publicada o pendiente |
-| Catedra | Cátedra de una materia ofrecida en un período |
-| Comision | Comisión de una cátedra, con su modalidad y su docente responsable |
-| Docente | Responsable de una comisión, referenciado por las preferencias del estudiante |
-| Horario | Día y franja horaria en que se dicta una comisión |
-| Cupo | Capacidad declarada de una cátedra o comisión y su disponibilidad |
-| Planificación |  |
-| Preferencia | Preferencia del estudiante por cátedra, docente, modalidad, franja, cantidad de días u horas libres, con su nivel: restricción configurable o criterio de optimización |
-| Restriccion | Restricción obligatoria representada en el escenario, con su origen y su trazabilidad |
-| SolicitudPlanificacion | Solicitud de planificación de un período, con su escenario, origen y fecha de los datos, y su estado |
-| Alternativa | Combinación propuesta por el motor, con su granularidad y su estado de factibilidad |
-| IntencionDeCursado | Intención vigente por alumno, materia y período, con estado y motivo explícitos; única por esa terna |
-| ExplicacionConflicto | Explicación de un conflicto o de una materia excluida, trazable a las restricciones involucradas |
-| Demanda |  |
-| DemandaAgregada | Consolidado de intenciones por materia y período, presentado de forma agregada para el análisis institucional |
+Las entidades se presentan como un modelo preliminar del dominio, derivado de los requerimientos del capítulo 6 y del alcance definido en 3.3. Además del recorrido del estudiante, se incorporan las entidades necesarias para modelar aulas, disponibilidad y propuestas de resolución de demanda. No se representan inscripciones oficiales ni personal administrativo nominal; el actor institucional se modela mediante un rol provisional hasta completar la elicitación. El cupo de una cátedra se deriva de la capacidad del aula asignada, según lo relevado en 4.4.3, y mientras no exista aula asignada se conserva como capacidad declarada. Esta regla evita que la capacidad del aula y el cupo de la cátedra funcionen como dos fuentes de verdad independientes.
+Figura 3. Entidades del dominio y relaciones principales.
+Nota. Elaboración propia.
+Figura 4. Entidades de planificación y gestión de demanda.
 Nota. Elaboración propia.
 ### 7.2.3. Descripción de casos de uso
 Se describen los cuatro casos de uso centrales del recorrido del estudiante. Cada uno registra los siete campos previstos en el diseño: objetivo, actor, precondiciones, flujo principal, flujos alternativos, postcondiciones y requerimientos relacionados.
@@ -427,23 +410,12 @@ Descripción de los casos de uso centrales
 | Postcondiciones | El estudiante comprende el conflicto y sus opciones de flexibilización |
 | Requerimientos | RF-07, RF-19, RNF-03 |
 Nota. Elaboración propia.
+Para la rama institucional, el caso de uso central será Gestionar demanda insatisfecha. El actor institucional consultará la demanda acumulada, solicitará la evaluación de capacidad, revisará la propuesta de cambio de aula o apertura de cátedra y registrará su decisión. La aplicación conservará la trazabilidad de los datos y del resultado, pero no ejecutará cambios en el sistema académico oficial.
 ### 7.2.4. Diagrama de colaboración
 La colaboración representa el escenario Solicitar alternativas de cursado e incorpora el camino de verificación local inmediata previsto para la selección y el registro de demanda agregada al cierre.
-Tabla 10
-Colaboración del escenario «Solicitar alternativas de cursado»
-| Paso | Componente | Responsabilidad |
-| 1 | Estudiante → Interfaz | Declara las materias de interés y configura preferencias y restricciones |
-| 2 | Interfaz → API | Envía la solicitud de planificación con el escenario |
-| 3 | API → Dominio académico | Verifica correlatividades, oferta, cupos, límite de carga y superposición |
-| 4 | Dominio → Interfaz | Devuelve advertencias inmediatas, antes de ejecutar el motor |
-| 5 | API → Servicio de planificación | Construye el escenario validado y registra su origen y fecha |
-| 6 | Servicio de planificación → Adaptador CP-SAT | Traduce el escenario al modelo de restricciones y preferencias |
-| 7 | Adaptador → Solver | Ejecuta la optimización con límite temporal |
-| 8 | Solver → Servicio de planificación | Devuelve las alternativas y el estado de factibilidad |
-| 9 | Servicio de explicación | Traduce los conflictos y las exclusiones a mensajes comprensibles |
-| 10 | API → Interfaz | Presenta alternativas, granularidad y explicaciones |
-| 11 | API → Persistencia | Registra el escenario, la intención vigente y la demanda agregada |
+Figura 5. Colaboración del escenario «Solicitar alternativas de cursado».
 Nota. Elaboración propia.
+La gestión asistida de demanda insatisfecha incorporará un segundo escenario de colaboración: el módulo de demanda consolidará las intenciones planificadas por falta de cupo; el dominio institucional evaluará aulas compatibles y, según el resultado, generará una propuesta de traslado o de apertura; finalmente, el actor institucional registrará su decisión y el sistema recalculará el escenario sin modificar la oferta oficial.
 ### 7.2.5. Interfaz gráfica
 ## 7.3. Proceso de V&V
 ### 7.3.1. Plan de pruebas
@@ -477,6 +449,11 @@ Diseño de casos de prueba
 | CP-18 | Se consulta una planificación ya generada. | El sistema muestra el período, la versión del plan, el origen y la fecha de los datos, y las restricciones y preferencias usadas. | RF-20 |
 | Accesibilidad |  |  |  |
 | CP-08 | Se analiza una pantalla principal con axe-core. | No se detectan infracciones automáticas consideradas bloqueantes. | RNF-07 |
+| Gestión de demanda |  |  |  |
+| CP-19 | Todas las cátedras de una materia alcanzaron su cupo y el estudiante conserva su intención. | La materia queda planificada con motivo falta de cupo y la intención se incorpora una sola vez a la demanda agregada. | RF-21, RF-22 |
+| CP-20 | La demanda supera el cupo y existe un aula compatible de mayor capacidad. | El sistema propone el traslado, informa la capacidad resultante y calcula los estudiantes incorporables, sin aplicar el cambio. | RF-23, RF-24 |
+| CP-21 | La demanda supera el cupo y no existe un aula compatible. | El sistema genera una propuesta de nueva cátedra y simula su impacto sobre la demanda insatisfecha. | RF-25 |
+| CP-22 | El actor institucional aprueba o rechaza una propuesta. | La decisión queda registrada y el escenario se recalcula sin modificar el sistema académico oficial. | RF-26 |
 Nota. Elaboración propia.
 # 8. Referencias
 Beck, K. (2002). Test driven development: By example. Boston, MA: Addison-Wesley Professional.

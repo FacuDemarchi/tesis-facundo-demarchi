@@ -182,9 +182,17 @@ Leído completo el 2026-09-17. Los capítulos 1 a 5 tienen contenido desarrollad
 | 7.2.1 a 7.2.4 | **cargadas** el 2026-09-17: Tabla 7 (casos de uso), Tabla 8 (entidades), Tabla 9 (descripción de los casos centrales), Tabla 10 (colaboración) |
 | 7.2.5 Interfaz gráfica | vacía; depende de los mockups |
 | 7.3.2 Diseño de casos de pruebas | **cargada** el 2026-09-17: CP-01 a CP-18 (Tabla 6) |
-| Anexo D | vacío |
+| Anexo D | **ya estaba completo**: contiene la figura del mapa desde antes de esta revisión |
 
-Es el destino de lo ya redactado en [`propuesta-capitulos-6-y-7.md`](propuesta-capitulos-6-y-7.md): RF-01 a RF-09 en 6.2.1, RNF-01 a RNF-10 en 6.2.2, RC-01 a RC-08 en 6.2.3 y CP-01 a CP-08 en 7.3.2. El mapa del Anexo D es `Mapa horizontal · Ingeniería en Software-tesis (1).svg`, que ya está en el repositorio.
+Es el destino de lo ya redactado en [`propuesta-capitulos-6-y-7.md`](propuesta-capitulos-6-y-7.md): RF-01 a RF-09 en 6.2.1, RNF-01 a RNF-10 en 6.2.2, RC-01 a RC-08 en 6.2.3 y CP-01 a CP-08 en 7.3.2.
+
+**Corrección del 2026-09-17 sobre el Anexo D.** Este registro afirmó durante un rato que el Anexo D estaba vacío. Era falso: **la figura ya estaba insertada** desde antes de esta revisión, y lo que ocurre es que una imagen no aporta texto, y yo medía vacío por el texto extraído. La figura del anexo **no es el SVG del repositorio**: es una versión distinta y más rica, con encabezado propio, leyenda de los ocho estados visuales, badges de categoría y notas al pie. El SVG del repositorio quedó como material de trabajo de los mockups, no como fuente del anexo.
+
+**Lecciones de método que costó este error.**
+
+1. **El vacío no se mide por texto.** Una sección puede tener una figura y no tener una sola letra. Cualquier comprobación de contenido tiene que mirar párrafos, tablas **e imágenes**.
+2. **Un párrafo vacío con estilo de encabezado rompe cualquier recorrido por rangos**, porque parte la sección en dos. Eso fue lo que hizo fallar mi segundo intento de verificación, y me llevó a un tercero.
+3. **La detección correcta**: 64 encabezados, 10 tablas (las 2 originales más las 8 de esta revisión) y 1 imagen. Las únicas hojas vacías que quedan son **6.1.1**, **6.1.3** y **7.2.5**; los demás encabezados del listado son padres con subsecciones.
 
 ## Requerimientos cargados el 2026-09-17
 
@@ -255,4 +263,48 @@ Cuatro tablas con su párrafo de introducción cada una: **Tabla 7** en 7.2.1, *
 
 - No se derivaron atributos del resto de las entidades: eso es diseño pendiente y corresponde al modelado del esquema de 4.2.
 - Sigue faltando el atributo que dice en qué bimestre se ofrece cada materia, sin el cual el tope de D-04 no se evalúa. Queda como hueco estructural.
-- Las cuatro secciones tituladas «Diagrama de…» tienen su contenido estructurado en tablas, pero **las figuras no están**: insertar imágenes exige una URI pública y subir el SVG a Drive requiere el scope `drive.file`, que la autenticación actual no incluye.
+- Las cuatro secciones tituladas «Diagrama de…» tienen su contenido estructurado en tablas. Las figuras de 7.2.1, 7.2.2 y 7.2.4 siguen pendientes, pero **no por falta de permiso**: la inserción de imágenes ya está resuelta y probada (ver abajo). Lo que falta son los dibujos.
+
+### D-08 — La inserción de figuras requiere publicar la imagen
+
+**Fecha:** 2026-09-17 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+
+**Contexto.** Al ampliar el OAuth con `drive.file` se esperaba poder insertar imágenes alojadas en Drive. La verificación mostró que **no alcanza**: `insertInlineImage` busca la imagen **de forma anónima**, sin usar el token del llamador, así que el archivo tiene que ser público. Se probaron seis variantes de URI y todas fallaron con el PNG privado; con un permiso `anyone`/`reader` la URI `uc` es aceptada.
+
+**Decisión.** El procedimiento es: subir el archivo con `drive-upload`, crear el permiso abierto con `drive-share`, insertar con `insert-image`, y **cerrar la publicación después con `drive-unshare`**, porque Docs copia la imagen a su propio host y el documento deja de depender del archivo original.
+
+**Consecuencias.**
+
+- Publicar es un paso intermedio obligatorio, no un efecto permanente: la copia embebida sobrevive al cierre del permiso.
+- El permiso del `mapa-correlatividades.png` sigue abierto a la fecha de este registro y se cierra con `gdocs-api drive-unshare 1zZKxDxXlUfgic_svb53ZURSLPr6mXqxx`.
+- `drive.file` solo da acceso a lo que crea la propia aplicación, así que no sirve para leer archivos ajenos del Drive del usuario.
+
+### D-09 — Las figuras se generan en Mermaid y se versionan como fuente
+
+**Fecha:** 2026-09-17 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+
+**Contexto.** Google Docs no acepta SVG, así que las figuras tienen que llegar como raster. Las cuatro figuras que había en el documento se habían generado en Mermaid dentro de una conversación y sus fuentes no existían en disco: eran binarios opacos, no reproducibles, y una de ellas contenía una definición de `Cupo` que contradecía la regla de derivación de D-08.
+
+**Decisión.** Las figuras se generan con Mermaid CLI y **sus fuentes `.mmd` viven en `documento/figuras/`**, junto con la configuración y el script de render. El lazo completo es `mmd → PNG → insert-image`, y el pipeline está documentado en el README de esa carpeta. Las cinco figuras se regeneraron desde el contenido del documento y se renumeraron de forma correlativa por orden de aparición.
+
+**Alternativas descartadas.**
+
+- *Reutilizar las fuentes de Mermaid de la conversación:* no existían en disco y no se podían pedir sin perder la uniformidad con la paleta del documento.
+- *Escribir los SVG a mano:* evitaba la instalación, pero dejaba las figuras fuera del flujo reproducible y sin fuentes mantenibles.
+
+**Consecuencias.**
+
+- El render exige `--no-sandbox` en Chromium, por una restricción de AppArmor de la distribución. Está acotado a estas figuras propias y documentado en el README.
+- El tamaño aparente del texto depende de la proporción del diagrama, no de su resolución. La fórmula de control y el umbral de 8,5 pt quedaron en el README.
+- Las figuras 2 y 3 quedan en el límite inferior de legibilidad; la 5 requiere una inserción angosta de 140 pt para entrar en página.
+- Renumerar obligó a revisar cualquier referencia a figuras en el texto.
+
+### Corrección de un defecto propio en las inserciones de tabla
+
+**Fecha:** 2026-09-17
+
+**Qué pasó.** Cada inserción de tabla dejó **dos párrafos vacíos con estilo de encabezado**: uno por el salto de línea del bloque de captación y otro porque `insertTable` parte el párrafo donde se inserta. Fueron **16 párrafos** en las ocho tablas, y cuatro de ellos quedaron como `HEADING_1`, o sea a nivel de capítulo: aparecían en el esquema del documento y habrían aparecido como entradas en blanco si se regeneraba el índice. El respaldo previo tenía cero párrafos de ese tipo, lo que probó que eran todos de esta revisión.
+
+**Corrección.** Los 16 se devolvieron a `NORMAL_TEXT` y el CLI ganó una limpieza automática al final de cada inserción de tabla, para que no vuelva a ocurrir. El texto extraído quedó **idéntico**, lo que confirma que la corrección fue solo de estilo.
+
+**Cómo se detectó.** No lo encontré revisando el documento, sino porque mi propio recuento de secciones no cerraba: contaba 80 encabezados donde el texto extraído mostraba unos 50. La anomalía del instrumento reveló el defecto del documento.
