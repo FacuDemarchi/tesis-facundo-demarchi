@@ -126,7 +126,7 @@ Garantizar en los casos de prueba que el 100 % de las alternativas presentadas 
 Resolver en cinco segundos o menos al menos el 95 % de las ejecuciones de escenarios controlados, conforme al protocolo de evaluación definido para el caso de estudio.
 Detectar escenarios infactibles e identificar las restricciones, materias y cátedras involucradas.
 Registrar una única intención vigente por alumno, materia y período, con estado y motivo explícitos, incluyendo las intenciones planificadas por falta de cupo y evitando duplicaciones en la demanda.
-Mostrar por materia la demanda total, la demanda habilitada para el período actual, la demanda condicionada del período siguiente, la demanda planificada por falta de cupo y las causas correspondientes.
+Mostrar por materia la demanda total, la demanda habilitada para el período actual, la demanda condicionada del período siguiente, la demanda planificada por falta de cupo y las causas correspondientes. La demanda total de una materia resulta de sumar la demanda habilitada del período actual, la demanda condicionada del período siguiente y la demanda planificada por falta de cupo; esta última constituye la demanda insatisfecha que alimenta las propuestas de resolución.
 Cuando una cátedra del período actual no posea cupo, conservar la materia en la planificación del estudiante con estado planificada y motivo falta de cupo, sin confirmar una inscripción ni reservar una vacante.
 Consolidar esas intenciones como demanda insatisfecha y evaluar si una cátedra existente puede trasladarse a un aula disponible de mayor capacidad.
 Cuando no exista un aula compatible, generar una propuesta de apertura de una nueva cátedra y recalcular cuántos estudiantes podrían incorporarse, sujeta a aprobación institucional.

@@ -241,6 +241,10 @@ Seis correcciones de texto para alinear secciones que quedaron atrás cuando se 
 
 Verificación: seis líneas cambiadas y ninguna otra tocada.
 
+**Definición del vocabulario de demanda.** La sección 3.3 enumera cinco variantes de «demanda» sin definirlas, y en el document aparecen además «insatisfecha», «agregada» y usos informales. Se agregó una oración al final de esa viñeta que fija la relación: la demanda total resulta de sumar la habilitada del período actual, la condicionada del siguiente y la planificada por falta de cupo, y esta última constituye la demanda insatisfecha. Una línea cambiada.
+
+**Corrección de una afirmación propia.** Había listado «el solapamiento entre CU-11 y CU-13» como un defecto a corregir. **No lo es.** RF-25 dice «generar una propuesta de apertura de una nueva cátedra **y simular su impacto** sobre la demanda insatisfecha»: son dos capacidades dentro de un mismo requerimiento, y por eso la trazabilidad lo asocia a dos casos de uso. La matriz lo muestra en la fila RF-25, con `CU-11, CU-13`, y eso es correcto. Si se quisiera una correspondencia uno a uno habría que partir RF-25 en dos requerimientos, lo que renumeraría el capítulo 6 y sus tablas; no vale el costo.
+
 ## Trazabilidad cargada el 2026-09-17
 
 **Tabla 10** en 7.3.1: `Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba`, con una fila por requerimiento. 38 filas, 156 celdas.
