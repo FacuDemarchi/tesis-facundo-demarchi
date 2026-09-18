@@ -245,7 +245,7 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 
 Cuatro tablas con su párrafo de introducción cada una: **Tabla 7** en 7.2.1, **Tabla 8** en 7.2.2, **Tabla 9** en 7.2.3 y **Tabla 10** en 7.2.4. Otras 97 líneas agregadas y 0 borradas.
 
-> Nota de sincronización: de esas cuatro tablas, las de 7.2.1, 7.2.2 y 7.2.4 fueron **reemplazadas después por las Figuras 2 a 5** del pipeline nuevo (D-09), con la numeración correlativa definitiva. La Tabla 9, de descripción de casos de uso, sigue en el documento como tabla. Y la matriz de trazabilidad que se menciona arriba también se rotuló «Tabla 10», así que ese número está usado dos veces y hay que resolverlo en la pasada de formato.
+> Nota de sincronización: de esas cuatro tablas, las de 7.2.1, 7.2.2 y 7.2.4 fueron **reemplazadas después por las Figuras 2 a 5** del pipeline nuevo (D-09), con la numeración correlativa definitiva. Eso liberó los números 7, 8 y 10 que esas tablas tenían asignados. El número 10 quedó reutilizado por la matriz de trazabilidad de 7.3.1 y no hay colisión, pero la secuencia del documento quedó fuera de orden de aparición: 1, 2, 3, 4, 5, 9, 10 y 6, porque la Tabla 6 aparece en 7.3.2, después de la 9 y la 10.
 
 ### D-06 — Actor institucional documentado como provisional
 
