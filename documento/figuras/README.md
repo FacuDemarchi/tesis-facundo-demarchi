@@ -10,12 +10,26 @@ se pueda regenerar y su cambio se vea en un diff, en lugar de ser un binario opa
 ./render.sh          # recorre figura-*.mmd y genera figura-*.png
 ```
 
+El script, después de cada render, **verifica el tamaño final** y avisa si el texto
+aparente queda por debajo de 8,5 pt. Las cinco figuras actuales pasan ese control
+salvo la 3, que queda en 8,3 pt y por eso aparece marcada.
+
 El comando de cada figura es:
 
 ```bash
 mmdc -i figura-N-nombre.mmd -o figura-N-nombre.png \
      -w 1600 -b white -p puppeteer-config.json -c mermaid-config.json --scale 2
 ```
+
+## Sobre los PNG versionados
+
+Mermaid no es del todo determinista byte a byte: volver a renderizar una figura
+puede producir un archivo de **distinto tamaño con el mismo dibujo**. Comprobado en
+la figura 2, que tras un segundo render tenía las mismas dimensiones y seis bytes
+de diferencia. Consecuencia práctica: un `git diff` sobre un PNG no dice nada, y
+volver a renderizar marca los PNG como modificados sin que el diagrama haya
+cambiado. La referencia es el `.mmd` junto con la verificación de tamaño; el PNG
+versionado es el registro de lo que efectivamente está insertado en el documento.
 
 ## Por qué hay dos archivos de configuración
 
