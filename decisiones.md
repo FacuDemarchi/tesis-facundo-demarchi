@@ -227,6 +227,20 @@ Los ocho primeros provienen del borrador. **CP-09 a CP-18 los agregué yo** para
 
 **Convención de tablas del documento, medida y no supuesta.** La primera columna va en negrita por el estilo de tabla del documento, la fila de encabezado también, y la nota al pie va en cursiva. Conviene saberlo antes de crear cualquier tabla nueva.
 
+## Declaración de uso de IA actualizada, 2026-09-18
+
+La sección 7.1 declaraba el uso de ChatGPT (modelo Sol). Se reemplazó por la mención de los modelos realmente usados:
+
+- **La declaración** ahora dice que se utilizaron asistentes de programación basados en modelos de lenguaje provistos por **OpenAI, Anthropic (Claude), Google (Gemini) y OpenCode**, coordinados mediante el arnés Gentle-AI que la misma sección describe, y cita cada proveedor.
+- **La entrada de referencias de ChatGPT se generalizó** a «OpenAI. (2026). Modelos GPT [Modelo de lenguaje grande]», porque citar un producto que se dejó de usar sería falso.
+- **Se agregaron tres entradas nuevas**: Anthropic (Claude), Google (Gemini) y OpenCode. La bibliografía pasó de 17 a 20 entradas.
+
+**Defecto preexistente que apareció de paso: el orden alfabético.** OpenAI figuraba **después** de OWASP, y por APA le corresponde ir **antes** de OpenAPI Initiative: el orden correcto entre esas cuatro es `OpenAI · OpenAPI Initiative · OpenCode · OWASP`. Se corrigió con una rotación a través de un marcador temporal, porque los reemplazos de texto son globales y en el paso intermedio habría habido dos párrafos idénticos. Verificado: 20 entradas, ninguna fuera de orden.
+
+**Direcciones verificadas.** Los cuatro dominios resuelven. `claude.ai` y `openai.com` responden 403 a una consulta automatizada, lo que es protección contra bots y no un enlace roto.
+
+**Redacción propia.** El texto de la declaración lo redacté yo, conservando las cuatro actividades que enumeraba la versión anterior y la misma salvedad sobre responsabilidad autoral. Conviene que lo confirmes.
+
 ## Metodología actualizada de SDD a ODD, 2026-09-18
 
 La sección 7.1 describía el proceso con desarrollo dirigido por especificaciones (Spec-Driven Development, SDD). Se reemplazó por el flujo orgánico de desarrollo (Organic Driven Development, ODD), que es el que se aplica:

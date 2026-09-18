@@ -359,7 +359,7 @@ El trabajo se organizará con el flujo orgánico de desarrollo (Organic Driven D
 La implementación se complementará con desarrollo dirigido por pruebas (Test-Driven Development, TDD), siguiendo ciclos en los que primero se define una prueba que representa el comportamiento esperado, luego se implementa la solución mínima necesaria para satisfacerla y finalmente se refactoriza el código manteniendo las pruebas aprobadas (Beck, 2002).
 Una vez completado cada incremento relevante, se aplicará desarrollo dirigido por comprobantes (Receipt-Driven Development, RDD). Este mecanismo permitirá congelar el cambio evaluado, ejecutar una revisión independiente basada en el nivel de riesgo y conservar evidencia sobre los hallazgos, las correcciones efectuadas y el resultado final de la revisión (Gentleman Programming, 2026).
 Gentle-AI proporcionará soporte operativo para la continuidad y la coordinación del proceso, pero sus registros no se considerarán por sí mismos evidencia suficiente de V&V. La evidencia formal estará compuesta por los documentos de tareas versionados, los resultados de las pruebas automatizadas, el historial del repositorio, los registros de integración continua y los comprobantes producidos mediante RDD.
-Declaración sobre el uso de inteligencia artificial generativa. Durante la elaboración de este trabajo se utilizó ChatGPT (modelo Sol) como apoyo para revisar la redacción, organizar contenidos, explorar alternativas y asistir en tareas técnicas (OpenAI, 2026). Las respuestas generadas fueron evaluadas, contrastadas y, cuando correspondió, modificadas por el autor. La herramienta no tomó decisiones autónomas ni sustituyó la responsabilidad autoral, el análisis crítico, la verificación de las fuentes o la validación de los resultados.
+Declaración sobre el uso de inteligencia artificial generativa. Durante la elaboración de este trabajo se utilizaron asistentes de programación basados en modelos de lenguaje provistos por OpenAI, Anthropic (Claude), Google (Gemini) y OpenCode, coordinados mediante el arnés Gentle-AI descrito en esta sección (Anthropic, 2026; Google, 2026; OpenAI, 2026; OpenCode, 2026). Su uso se orientó a revisar la redacción, organizar contenidos, explorar alternativas y asistir en tareas técnicas. Las respuestas generadas fueron evaluadas, contrastadas y, cuando correspondió, modificadas por el autor. Ninguna de las herramientas tomó decisiones autónomas ni sustituyó la responsabilidad autoral, el análisis crítico, la verificación de las fuentes o la validación de los resultados.
 ## 7.2. Análisis y Diseño
 ### 7.2.1. Diagrama de casos de uso
 El diagrama distingue al estudiante y a un actor institucional autorizado. Bedelía queda identificada como responsable de registrar en el CRM las solicitudes originadas por falta de cupo. La evaluación y aprobación de cambios de aula o aperturas se atribuyen provisionalmente a un actor institucional, cuya denominación y nivel de autorización deberán confirmarse mediante la elicitación pendiente.
@@ -497,6 +497,7 @@ Diseño de casos de prueba
 | CP-22 | El actor institucional aprueba o rechaza una propuesta. | La decisión queda registrada y el escenario se recalcula sin modificar el sistema académico oficial. | RF-26 |
 Nota. Elaboración propia.
 # 8. Referencias
+Anthropic. (2026). Claude [Modelo de lenguaje grande]. Recuperado de https://claude.ai/
 Beck, K. (2002). Test driven development: By example. Boston, MA: Addison-Wesley Professional.
 Congreso de la Nación Argentina. (2000). Ley 25.326 de protección de los datos personales. Recuperado de https://www.argentina.gob.ar/normativa/nacional/ley-25326-64790/actualizacion
 Coursicle. (s. f.). College schedule maker. Recuperado de https://www.coursicle.com/college-schedule-maker/
@@ -506,11 +507,13 @@ FastAPI. (s. f.). Features. Recuperado de https://fastapi.tiangolo.com/features/
 Fielding, R., Nottingham, M., & Reschke, J. (2022). RFC 9110: HTTP semantics. Internet Engineering Task Force. Recuperado de https://www.rfc-editor.org/rfc/rfc9110.html
 Gentleman Programming. (2026). Gentle-AI (versión 2.3.0) [Software]. Recuperado de https://github.com/Gentleman-Programming/gentle-ai
 Google. (2024). CP-SAT solver. Google for Developers. Recuperado de https://developers.google.com/optimization/cp/cp_solver
+Google. (2026). Gemini [Modelo de lenguaje grande]. Recuperado de https://gemini.google.com/
 International Organization for Standardization. (2018). ISO/IEC/IEEE 29148:2018: Systems and software engineering—Life cycle processes—Requirements engineering. Recuperado de https://www.iso.org/standard/72089.html
 International Organization for Standardization. (2023). ISO/IEC 25010:2023: Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—Product quality model. Recuperado de https://www.iso.org/standard/78176.html
+OpenAI. (2026). Modelos GPT [Modelo de lenguaje grande]. Recuperado de https://openai.com/
 OpenAPI Initiative. (2021). OpenAPI Specification v3.1.0. Recuperado de https://spec.openapis.org/oas/v3.1.0.html
+OpenCode. (2026). OpenCode [Herramienta de codificación asistida]. Recuperado de https://opencode.ai/
 OWASP Foundation. (2025). OWASP Top 10:2025. Recuperado de https://owasp.org/Top10/2025/
-OpenAI. (2026). ChatGPT (modelo Sol) [Modelo de lenguaje grande]. Recuperado de https://chatgpt.com/
 React Team. (s. f.). React. Recuperado de https://react.dev/
 UniTime. (s. f.). UniTime highlights. Recuperado de https://www.unitime.org/present/unitime-highlights.pdf
 World Wide Web Consortium. (2024). Web Content Accessibility Guidelines (WCAG) 2.2. Recuperado de https://www.w3.org/TR/WCAG22/
