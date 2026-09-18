@@ -135,7 +135,7 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 # Pendientes
 
-- **P-07 — Recomendaciones y priorización sin caso de uso.** RF-15 y RF-16 no aparecen en la Figura 5 ni tienen caso de prueba. Agregar los casos de uso CU-15 y CU-16, sus casos de prueba, y regenerar la figura.
+- **P-07 — Recomendaciones como interacción propia.** Resuelta el 2026-09-17 en lo que respecta a la trazabilidad: RF-15 quedó en CU-04 y CP-13, RF-16 en CU-06 y CP-14. Queda abierto **solo si preferís** que recibir y aceptar recomendaciones sea un caso de uso propio, lo que exigiría agregar CU-15 y regenerar la Figura 2.
 
 ## Decisiones por tomar
 
@@ -253,9 +253,10 @@ Verificación: seis líneas cambiadas y ninguna otra tocada.
 
 **Hallazgos que la matriz deja visibles.**
 
-- **Doce requerimientos no tienen caso de prueba propio.** Nueve tienen un medio alternativo declarado en la cuarta columna (pruebas de integración, verificación manual, análisis estático, protocolo de rendimiento, inspección de datos o la propia integración continua).
-- **RF-15 y RF-16 no tienen caso de uso ni caso de prueba.** Son capacidades visibles para el usuario —recomendar materias no seleccionadas y priorizar por impacto en el avance curricular— que §1 compromete y que no están representadas en la Figura 5. Requieren agregar dos casos de uso, sus casos de prueba, y regenerar la figura. Queda como P-07.
-- **RF-09, RF-18 y RF-20 no tienen caso de uso** pero sí un medio de verificación. RF-18 y RF-20 tienen caso de prueba; RF-09 no, porque es un requerimiento de infraestructura de datos y no de comportamiento visible.
+- **Doce requerimientos no tienen caso de prueba propio.** Diez tienen un medio alternativo declarado en la cuarta columna (pruebas de integración, verificación manual, análisis estático, protocolo de rendimiento, inspección de datos o la propia integración continua).
+- **Corrección del 2026-09-17 sobre RF-15 y RF-16.** Este registro afirmó que no tenían caso de uso ni caso de prueba, y era **falso en las dos partes**: la Tabla 6 los asocia a CP-13 y CP-14, y los casos de uso a los que corresponden son CU-04 para RF-15 y CU-06 para RF-16. El hueco era de este mapeo, escrito a mano, no del modelo de la tesis. La matriz quedó corregida y ya no contiene ninguna celda marcada como pendiente.
+- **Mapeo interpretativo que conviene que revises.** RF-15 quedó asociado a CU-04 «Seleccionar materias y declarar intención», bajo la lectura de que la recomendación se incorpora al conjunto de materias que el motor usa para generar alternativas, según §1, y que ese conjunto se arma en la selección. Si preferís que recibir y aceptar recomendaciones sea una interacción propia, corresponde un CU-15 aparte y regenerar la Figura 2; no lo hice por mi cuenta porque agrega un caso de uso al alcance.
+- **RF-09, RF-18 y RF-20 no tienen caso de uso**, pero sí un medio de verificación declarado. RF-18 y RF-20 tienen caso de prueba.
 - Los doce requerimientos no funcionales no tienen caso de uso, como corresponde a atributos de calidad; siete tienen caso de prueba y cinco un medio alternativo.
 
 **Numeración de tablas pendiente.** La Tabla 10 se insertó en 7.3.1, que aparece **antes** de la Tabla 6 en 7.3.2. El documento numera 1, 2, 3, 4, 5, 9, 6, 10, fuera del orden de aparición. Se deja sin tocar por decisión del usuario, que resolverá el formato cerca de la entrega.

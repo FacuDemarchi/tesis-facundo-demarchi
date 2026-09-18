@@ -439,8 +439,8 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RF-12 | CU-02 | CP-02, CP-09 |  |
 | RF-13 | CU-06 | CP-12 |  |
 | RF-14 | CU-03 | CP-11 |  |
-| RF-15 | Pendiente de definir |  | Pendiente de definir |
-| RF-16 | Pendiente de definir |  | Pendiente de definir |
+| RF-15 | CU-04 | CP-13 |  |
+| RF-16 | CU-06 | CP-14 |  |
 | RF-17 | CU-10, CU-11 | CP-15 |  |
 | RF-18 |  | CP-04 |  |
 | RF-19 | CU-09 | CP-16 |  |
