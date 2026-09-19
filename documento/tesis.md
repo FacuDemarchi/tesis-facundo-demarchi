@@ -17,10 +17,10 @@ Viabilidad económica	7
 3.4. No contempla	11
 4. Elicitación	12
 4.1. Actividad del cliente	13
-4.2. TIC	13
+4.2. TIC	14
 Lenguajes de programación y runtimes	14
 Frameworks y librerías principales	14
-Bases de datos y almacenamiento	14
+Bases de datos y almacenamiento	15
 Arquitectura y despliegue	15
 Entornos de desarrollo y control de versiones	16
 4.3. Competencia	17
@@ -28,40 +28,39 @@ Entornos de desarrollo y control de versiones	16
 4.4.1. Relevamiento estructural	19
 4.4.2. Relevamiento funcional	19
 4.4.3. Procesos de negocio	20
-5. Diagnóstico	22
-5.1. Cierre y alcance del relevamiento a estudiantes	22
-5.2. Resultados finales y conclusiones	22
-5.2.1. Visibilidad de la oferta e incertidumbre	22
+5. Diagnóstico	21
+5.1. Cierre y alcance del relevamiento a estudiantes	21
+5.2. Resultados finales y conclusiones	21
+5.2.1. Visibilidad de la oferta e incertidumbre	21
 5.2.2. Restricciones de planificación y oferta académica	22
-5.2.3. Carga operativa y dependencia de asistencia	23
-5.2.4. Diferencias según el avance en la carrera	23
-5.3. Conclusión diagnóstica e implicancias para el prototipo	23
-6. Propuesta de solución	24
-6.1. Descripción general de la propuesta	24
-6.1.1. A nivel funcional	24
-6.1.2. A nivel técnico	24
-6.1.3. Diagrama de arquitectura	26
-6.2. Requerimientos	28
-6.2.1. Requerimientos funcionales	28
-6.2.2. Requerimientos no funcionales	31
-6.2.3. Requerimientos candidatos	33
-7. Desarrollo del prototipo	34
-7.1. Metodología y proceso de construcción asistido por IA	34
-7.2. Análisis y Diseño	35
-7.2.1. Diagrama de casos de uso	35
-7.2.2. Diagrama de clases / Entidad relación	37
-7.2.3. Descripción de casos de uso	38
-7.2.4. Diagrama de colaboración	41
-7.2.5. Interfaz gráfica	43
-7.3. Proceso de V&V	43
-7.3.1. Plan de pruebas	43
-7.3.2. Diseño de casos de pruebas	45
-8. Referencias	49
-9. Anexos	50
-Anexo A. Registro de elicitación	50
-Anexo B. Instrumentos de relevamiento	50
-Anexo C. Evidencias del proceso actual	50
-Anexo D. Mapa horizontal de correlatividades de Ingeniería en Software	50
+5.2.3. Carga operativa y dependencia de asistencia	22
+5.2.4. Diferencias según el avance en la carrera	22
+5.3. Conclusión diagnóstica e implicancias para el prototipo	22
+6. Propuesta de solución	23
+6.1. Descripción general de la propuesta	23
+6.1.1. A nivel funcional	23
+6.1.2. A nivel técnico	23
+6.2. Requerimientos	25
+6.2.1. Requerimientos funcionales	25
+6.2.2. Requerimientos no funcionales	29
+6.2.3. Requerimientos candidatos	31
+7. Desarrollo del prototipo	32
+7.1. Metodología y proceso de construcción asistido por IA	32
+7.2. Análisis y Diseño	33
+7.2.1. Diagrama de casos de uso	33
+7.2.2. Diagrama de clases / Entidad relación	35
+7.2.3. Descripción de casos de uso	36
+7.2.4. Diagrama de colaboración	39
+7.2.5. Interfaz gráfica	41
+7.3. Proceso de V&V	41
+7.3.1. Plan de pruebas	41
+7.3.2. Diseño de casos de pruebas	43
+8. Referencias	47
+9. Anexos	49
+Anexo A. Registro de elicitación	49
+Anexo B. Instrumentos de relevamiento	49
+Anexo C. Evidencias del proceso actual	49
+Anexo D. Mapa horizontal de correlatividades de Ingeniería en Software	49
 # 1. Introducción
 ### Escenario tecnológico
 Los sistemas de información constituyen el soporte de la gestión académica universitaria, centralizando elementos esenciales como planes de estudio, correlatividades, períodos académicos, oferta de cátedras, horarios, cupos e inscripciones. Desde la perspectiva del estudiante, el canal principal de interacción es un portal web autenticado que permite examinar la oferta vigente y seleccionar las asignaturas que se desean cursar. En este dominio confluyen diversos actores institucionales: estudiantes, Bedelía, coordinación de carrera, autoridades académicas, docentes y administradores de sistemas.
@@ -73,7 +72,7 @@ Desde la ingeniería de software, el problema no se define como una mera deficie
 Cierre del relevamiento estudiantil. El relevamiento cuantitativo a estudiantes se cerró con (45 respuestas) y se documenta en , documento de trabajo que concentra los instrumentos y las evidencias del proceso actual. Los resultados y sus limitaciones se presentan en la sección 5. Diagnóstico.
 ### Propuesta de solución general
 Se propone diseñar y evaluar un prototipo web que diferencie dos operaciones: la asistencia a la inscripción del período académico actual y la planificación del siguiente período soportado por el MVP. El sistema representará el plan de estudios como un grafo curricular (véase Anexo D), mostrará el estado y el motivo de disponibilidad de cada materia y permitirá registrar para el período siguiente intenciones de cursado condicionadas, sin tratarlas como inscripciones ni asumir la aprobación de materias todavía en curso. Cuando exista oferta publicada, generará alternativas de cátedras sin superposición; en caso contrario, planificará a nivel de materia y señalará que la oferta está pendiente.
-Para el período actual, el motor considerará como restricciones duras las correlatividades cumplidas según la normativa institucional, la oferta, los cupos y la incompatibilidad horaria. Para el período siguiente, la inscripción vigente en una materia precorrelativa podrá habilitar únicamente una intención condicionada como hipótesis de diseño pendiente de validación institucional; antes de convertirla en una inscripción deberá recalcularse con los resultados académicos oficiales. La carga académica máxima será una restricción dura cuando exista un límite institucional validado; en ausencia de esa regla, funcionará como límite configurable por el estudiante. Las preferencias del estudiante por un profesor, cátedra, modalidad, franja horaria, cantidad de días de cursado y horas libres se tratarán como restricciones configurables o criterios de optimización.
+Para el período actual, el motor considerará como restricciones duras las correlatividades cumplidas según la normativa institucional, la oferta, los cupos y la incompatibilidad horaria. Para el período siguiente, la inscripción vigente en una materia precorrelativa podrá habilitar únicamente una intención condicionada como hipótesis de diseño pendiente de validación institucional; antes de convertirla en una inscripción deberá recalcularse con los resultados académicos oficiales. La carga académica máxima será una restricción dura cuando exista un límite institucional validado; en ausencia de esa regla, funcionará como límite configurable por el estudiante. La preferencia del estudiante por un profesor de una materia se tratará como criterio de optimización, y sus restricciones de disponibilidad, es decir los días en que no puede cursar, como restricción dura.
 Entre las materias seleccionadas y habilitadas para cursar, el sistema priorizará aquellas cuya aprobación produzca un mayor impacto en el avance curricular. Este impacto se medirá primero por la cantidad de materias pendientes que quedarían habilitadas directamente; ante un empate, se considerará la cantidad de materias descendientes aún pendientes en el grafo y, luego, el grado de satisfacción de las preferencias configuradas por el estudiante. Esta prioridad se implementará como un criterio de optimización.
 Además, el sistema podrá recomendar materias que el estudiante no haya seleccionado, siempre que estén habilitadas, formen parte de la oferta del período y su aprobación contribuya al avance curricular, especialmente cuando permita desbloquear otras materias pendientes. Cada recomendación deberá incluir una justificación y solo podrá incorporarse al conjunto de materias utilizado por el motor para generar alternativas de cursado después de la aceptación expresa del estudiante.
 Cuando no exista una solución completa, el sistema deberá identificar los conflictos y proponer modificaciones explícitas, sin excluir materias de manera silenciosa.
@@ -120,7 +119,7 @@ Las notificaciones se simularán dentro del prototipo y no implicarán un servic
 Representar el 100 % de las materias del plan de Ingeniería en Software y sus correlatividades disponibles para el caso de estudio.
 Representar y permitir consultar los períodos 1A, 1B, 2A y 2B, sin modificar la posición estructural de las materias en el grafo. Para las acciones de inscripción y planificación, el MVP aplicará una ventana móvil formada por el período actual y el siguiente dentro de la secuencia operativa soportada: 1A → 1B → 2A → 2B → 1A del año académico siguiente. Los demás períodos soportados continuarán visibles para consulta, oferta, antecedentes y reportes, pero sin acciones operativas habilitadas. Cada período académico corresponde a un bimestre. Las materias se dictan durante dos meses, de modo que el año académico comprende cuatro bimestres, y el número del período indica el cuatrimestre al que pertenece: el período 1A es el primer bimestre del año, y el 1B el segundo, que conserva el número 1 por continuar dentro del primer cuatrimestre. Los períodos 2A y 2B son, del mismo modo, los dos bimestres del segundo cuatrimestre. En consecuencia, el límite de tres materias por bimestre equivale al límite de tres materias por período.
 Calcular y explicar el estado de cada materia: aprobada, habilitada para inscripción, condicionada para el período siguiente, bloqueada por correlatividad o no disponible por falta de cátedra o de cupo. Cuando el estudiante seleccione una materia sin cupo del período actual, podrá incorporarla a su planificación con estado planificada y motivo falta de cupo.
-Permitir la selección múltiple de materias y el registro de preferencias obligatorias o deseables de cátedra, profesor, modalidad, días y franjas horarias.
+Permitir la selección múltiple de materias, la preferencia por un profesor de cada materia y el registro de los días en que el estudiante no puede cursar.
 Generar hasta tres alternativas ordenadas cuando existan combinaciones válidas; si existen menos, mostrar todas las disponibles.
 Garantizar en los casos de prueba que el 100 % de las alternativas presentadas para el período actual respete correlatividades, cupos, período, el límite de carga aplicable y la ausencia de superposición; las alternativas futuras que aún dependan de una precorrelativa cursada u oferta no confirmada deberán quedar clasificadas como condicionadas y no como válidas para inscripción.
 Resolver en cinco segundos o menos al menos el 95 % de las ejecuciones de escenarios controlados, conforme al protocolo de evaluación definido para el caso de estudio.

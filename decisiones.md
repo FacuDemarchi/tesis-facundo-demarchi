@@ -35,7 +35,7 @@ Clasificación usada (según la propuesta de los capítulos 6 y 7): **preliminar
 
 ## D-02 — Dos niveles: intención por materia y preferencias de cursado
 
-**Fecha:** 2026-09-16 · **Estado:** aceptada · **Reformulada:** 2026-09-16 para coincidir con la tesis; vocabulario alineado a §1 el 2026-09-17 · **Clasificación:** supuesto de diseño
+**Fecha:** 2026-09-16 · **Estado:** aceptada · **Reformulada:** 2026-09-16 para coincidir con la tesis; vocabulario alineado a §1 el 2026-09-17 · **Acotada:** 2026-09-18 · **Clasificación:** supuesto de diseño
 
 **Contexto.** Al incorporar una materia al escenario hay que definir qué compromete esa acción. La formulación original de esta decisión ("marcar una materia declara intención; no fija comisión") resultó **más acotada que lo que la tesis ya compromete**. La sección 3.3 exige "el registro de preferencias obligatorias o deseables de cátedra, profesor, modalidad, días y franjas horarias", y 3.1 habla de "generar combinaciones de cátedras cuando exista oferta suficiente". Como una preferencia *obligatoria* es una restricción dura, la decisión anterior contradecía el documento. El texto normativo está en §1 "Propuesta de solución general": "Las preferencias del estudiante por un profesor, cátedra, modalidad, franja horaria, cantidad de días de cursado y horas libres se tratarán como **restricciones configurables o criterios de optimización**."
 
@@ -60,6 +60,8 @@ Clasificación usada (según la propuesta de los capítulos 6 y 7): **preliminar
 - Las restricciones configurables y los criterios de optimización **no comparten camino**: las restricciones entran en el chequeo local y en el solver (D-01); los criterios solo ordenan resultados válidos.
 - La comparación de alternativas (RF-08) conserva sentido: dos alternativas pueden diferir en comisiones, no solo en materias.
 - Reemplaza la formulación anterior, que dejaba las exigencias de cátedra como capacidad futura. Ese recorte ya no es válido: la tesis lo compromete en el alcance del MVP.
+
+**Acotación del 2026-09-18.** El alcance de las preferencias se redujo por decisión del autor: la interfaz ofrece **una sola preferencia**, la del profesor de cada materia, tratada como criterio de optimización, y **un solo bloque de restricciones**, los días en que el estudiante no puede cursar, tratado como restricción dura. Cátedra, modalidad, franjas horarias y cantidad de días de cursado dejaron de tener dónde declararse, y el autor eligió ajustar el documento antes que conservar capacidades que el prototipo no ofrece. §1 y §3.3 se ajustaron en el mismo sentido; ver «Preferencias acotadas el 2026-09-18».
 
 ---
 
@@ -304,6 +306,15 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 - **P-07 — Recomendaciones como interacción propia.** Resuelta el 2026-09-17 en lo que respecta a la trazabilidad: RF-15 quedó en CU-04 y CP-13, RF-16 en CU-06 y CP-14. Queda abierto **solo si preferís** que recibir y aceptar recomendaciones sea un caso de uso propio, lo que exigiría agregar CU-15 y regenerar la Figura 2.
 - **P-08 — Herramienta de cobertura sin nombrar.** 7.3.1 afirma que la integración continua conservará la cobertura como evidencia, y ninguna sección nombra la herramienta que la produce. Agregarla al stack de 4.2 y a la Tabla 1, o quitar la afirmación.
+
+## Preferencias acotadas el 2026-09-18
+
+§1 y §3.3 enumeraban cinco dimensiones de preferencia —cátedra, profesor, modalidad, días y franjas horarias—, y D-02 las registraba. La interfaz construida ofrece una sola, así que el autor eligió **ajustar el documento a lo que hay** en lugar de conservar capacidades que el prototipo no tiene.
+
+- **§1** ahora dice que la preferencia por un profesor de una materia se trata como criterio de optimización, y que las restricciones de disponibilidad —los días en que no puede cursar— son restricción dura.
+- **§3.3** ahora promete selección múltiple, preferencia por un profesor de cada materia y registro de los días en que no puede cursar.
+
+**Consecuencia de método**: el índice del documento se repaginó, porque el texto se acortó 31 caracteres. La verificación por diferencia de líneas dio 37 líneas cambiadas en ambos sentidos, y **todas menos dos son números de página del índice**. Con reajuste de paginación, la regla de «cero líneas borradas» hay que leerla sobre el texto normalizado, no sobre las líneas.
 
 ## Deuda documental abierta (2026-09-18)
 
