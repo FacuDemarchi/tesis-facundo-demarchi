@@ -27,11 +27,15 @@ El mockup contiene:
 - el grafo de 10 cuatrimestres, 46 materias y 26 correlatividades, con los ocho estados visuales;
 - una barra de período cuyo botón de entrada cambia de etiqueta según el período: `Iniciar la inscripción` en `1B · 2026` y `Generar alternativas` en `2A · 2026`;
 - un panel flotante **no bloqueante**, que se abre con ese botón y no impide seguir marcando tarjetas;
+- el bloque **RESTRICCIÓN** de disponibilidad, con los seis días como alternadores de «no puedo asistir» y la declaración explícita de que es una restricción dura;
+- la preferencia de profesor de cada materia marcada: el **nombre de la materia es el desplegable** que lista los docentes de sus cátedras publicadas en el período, como preferencia blanda y sin selector de nivel;
 - el contador de carga por bimestre y por cuatrimestre, con la nota de que solo cuenta materias con oferta publicada;
 - la intención derivada de cada materia marcada, de solo lectura: el estudiante no la elige;
-- las comprobaciones locales: tope, correlatividades, superposiciones de franjas y cupos simulados, siempre como advertencias y nunca como alternativas;
+- las comprobaciones locales: tope, correlatividades, superposiciones de franjas, cupos simulados y materias cuyas cátedras caen solo en días bloqueados, siempre como advertencias y nunca como alternativas;
 - el botón que cierra la selección y pasa a la optimización, hoy un marcador que enumera los seis resultados pendientes;
 - la regla de reposicionamiento del panel y la guarda de foco de teclado.
+
+El panel no tiene título ni línea de ayuda: los retiró para hacer lugar a la restricción y a la preferencia, y conserva su nombre accesible mediante `aria-label`.
 
 ## Datos simulados
 
