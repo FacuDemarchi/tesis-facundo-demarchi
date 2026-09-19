@@ -36,15 +36,25 @@
       </section>
     </div>
 
-    <aside id="selection-panel" class="selection-panel" aria-labelledby="selection-title" hidden>
-      <div class="panel-heading">
-        <div>
-          <p class="eyebrow">Borrador de planificación</p>
-          <h1 id="selection-title">Selección</h1>
-        </div>
+    <aside id="selection-panel" class="selection-panel" aria-label="Panel de selección de materias" hidden>
+      <div class="panel-summary">
+        <p class="eyebrow">Borrador de planificación</p>
         <span id="selected-count" class="count-badge">0 materias</span>
       </div>
-      <p id="selection-help" class="panel-help">Marque una tarjeta para agregarla al borrador; vuelva a marcarla para quitarla. La intención es informada por el sistema.</p>
+
+      <section class="panel-section availability-section" aria-labelledby="availability-title">
+        <h2 id="availability-title">Restricción</h2>
+        <p class="availability-note">Restricción dura: si ninguna combinación evita los días bloqueados, el resultado es infactible y explicará qué día lo causa.</p>
+        <div id="unavailable-days" class="day-toggles" aria-label="Días en los que no puede asistir">
+          <button type="button" data-unavailable-day="lunes" aria-pressed="false">lunes</button>
+          <button type="button" data-unavailable-day="martes" aria-pressed="false">martes</button>
+          <button type="button" data-unavailable-day="miercoles" aria-pressed="false">miercoles</button>
+          <button type="button" data-unavailable-day="jueves" aria-pressed="false">jueves</button>
+          <button type="button" data-unavailable-day="viernes" aria-pressed="false">viernes</button>
+          <button type="button" data-unavailable-day="sabado" aria-pressed="false">sabado</button>
+        </div>
+      </section>
+
 
       <section class="panel-section" aria-labelledby="cap-title">
         <h2 id="cap-title">Carga conocida</h2>
@@ -54,7 +64,7 @@
 
       <section class="panel-section" aria-labelledby="subjects-title">
         <h2 id="subjects-title">Materias marcadas</h2>
-        <ul id="selected-subjects" class="selected-subjects" aria-describedby="selection-help"></ul>
+        <ul id="selected-subjects" class="selected-subjects"></ul>
       </section>
 
       <section class="panel-section warnings-section" aria-labelledby="warnings-title">

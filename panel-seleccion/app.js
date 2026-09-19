@@ -27,7 +27,10 @@ const periods = [
 ];
 const scenarioPlans = new Map([['2A · 2026', ['C19', 'C20', 'C27']]]);
 const drafts = new Map();
-const data = window.DATOS_SIMULADOS || { catedras: [] };
+const unavailableDaysByPeriod = new Map();
+const professorChoicesByPeriod = new Map();
+const expandedProfessorChoicesByPeriod = new Map();
+const data = window.DATOS_SIMULADOS || { catedras: [], docentes: [] };
 const columns = document.querySelector('#columns');
 const status = document.querySelector('#selection-status');
 const warningStatus = document.querySelector('#warning-status');
@@ -51,6 +54,18 @@ function draftForPeriod(label = currentPeriod().label) {
   return drafts.get(label);
 }
 function currentDraft() { return draftForPeriod(); }
+function blockedDaysForPeriod(label = currentPeriod().label) {
+  if (!unavailableDaysByPeriod.has(label)) unavailableDaysByPeriod.set(label, new Set());
+  return unavailableDaysByPeriod.get(label);
+}
+function professorChoicesForPeriod(label = currentPeriod().label) {
+  if (!professorChoicesByPeriod.has(label)) professorChoicesByPeriod.set(label, new Map());
+  return professorChoicesByPeriod.get(label);
+}
+function expandedProfessorChoicesForPeriod(label = currentPeriod().label) {
+  if (!expandedProfessorChoicesByPeriod.has(label)) expandedProfessorChoicesByPeriod.set(label, new Set());
+  return expandedProfessorChoicesByPeriod.get(label);
+}
 function selectedCourses() { return courses.filter(course => currentDraft().has(course.id)); }
 function intentionFor(course) {
   if (course.state === 'blocked') return 'no considerar';
@@ -153,12 +168,27 @@ function updatePanelSide() {
   panelSide = nextSide;
   selectionPanel.dataset.side = panelSide;
 }
+function teacherLabel(teacherId) {
+  const teacher = data.docentes.find(item => item.id === teacherId);
+  return teacher ? `${teacher.nombre} (${teacher.id})` : teacherId;
+}
+function professorChoicesFor(courseId) {
+  return [...new Map(offersFor(courseId).map(offer => [offer.docente, teacherLabel(offer.docente)])).entries()]
+    .map(([id, label]) => ({ id, label }));
+}
 function localWarnings() {
   const active = consideredCourses();
   const warnings = [];
   const known = active.filter(course => offersFor(course.id).length);
   if (known.length > 3) warnings.push(`Tope de bimestre superado: ${known.length} materias con oferta en ${bimestreLabel()}; el máximo es 3.`);
   if (known.length > 6) warnings.push(`Tope de cuatrimestre superado: ${known.length} materias conocidas; el máximo es 6.`);
+  const blockedDays = blockedDaysForPeriod();
+  active.forEach(course => {
+    const offerings = offersFor(course.id);
+    if (offerings.length && offerings.every(offer => offer.franjas.length && offer.franjas.every(slot => blockedDays.has(slot.dia)))) {
+      warnings.push(`${course.id} no puede evitar los días bloqueados (${[...blockedDays].join(', ')}); todas sus cátedras publicadas caen solo en esos días.`);
+    }
+  });
   active.forEach(course => {
     edges.filter(([, target]) => target === course.id).forEach(([source]) => {
       const prerequisite = courses.find(item => item.id === source);
@@ -179,6 +209,25 @@ function localWarnings() {
   return [...new Set(warnings)];
 }
 
+function renderAvailability() {
+  const blockedDays = blockedDaysForPeriod();
+  document.querySelectorAll('[data-unavailable-day]').forEach(button => {
+    const unavailable = blockedDays.has(button.dataset.unavailableDay);
+    button.setAttribute('aria-pressed', String(unavailable));
+    button.classList.toggle('unavailable', unavailable);
+    button.textContent = `${button.dataset.unavailableDay}${unavailable ? ' · no puedo asistir' : ''}`;
+  });
+}
+function renderProfessorPreference(course) {
+  const expanded = expandedProfessorChoicesForPeriod().has(course.id);
+  const choice = professorChoicesForPeriod().get(course.id) || '';
+  const professorChoices = professorChoicesFor(course.id);
+  const panelId = `professor-preference-${course.id}`;
+  const options = professorChoices.length
+    ? `<label><input type="radio" name="professor-${course.id}" value="" ${choice ? '' : 'checked'}> Sin preferencia de profesor</label>${professorChoices.map(professor => `<label><input type="radio" name="professor-${course.id}" value="${professor.id}" ${choice === professor.id ? 'checked' : ''}> ${professor.label}</label>`).join('')}`
+    : '<p class="empty-state">No hay cátedras publicadas para elegir profesor en este período.</p>';
+  return `<button type="button" class="subject-professor-toggle" data-professor-toggle="${course.id}" aria-expanded="${expanded}" aria-controls="${panelId}">Preferencia de profesor</button><div id="${panelId}" class="subject-professor-options" ${expanded ? '' : 'hidden'}><p>Preferencia blanda: ordena alternativas válidas y no vuelve infactible el resultado.</p>${options}</div>`;
+}
 function renderPanel() {
   const selected = selectedCourses();
   const active = consideredCourses();
@@ -193,8 +242,9 @@ function renderPanel() {
     const intention = intentionFor(course);
     const offerText = offersFor(course.id).length ? `${offersFor(course.id).length} cátedra(s) publicada(s)` : 'oferta pendiente';
     const motive = intention === 'no considerar' ? `<span class="subject-motive">${blockedReason(course)}</span>` : '';
-    return `<li class="subject-item"><div class="subject-name">${course.id} · ${course.name}<span class="subject-meta">${offerText}</span><span class="derived-intention">${intention}</span>${origin === 'scenario' ? '<span class="subject-origin">Cargada desde la planificación existente del escenario.</span>' : ''}${motive}</div></li>`;
+    return `<li class="subject-item"><div class="subject-name">${course.id} · ${course.name}<span class="subject-meta">${offerText}</span><span class="derived-intention">${intention}</span>${origin === 'scenario' ? '<span class="subject-origin">Cargada desde la planificación existente del escenario.</span>' : ''}${motive}</div>${renderProfessorPreference(course)}</li>`;
   }).join('') : '<li class="empty-state">Todavía no hay materias marcadas.</li>';
+  renderAvailability();
   const warnings = localWarnings();
   document.querySelector('#warnings').innerHTML = warnings.length ? warnings.map(message => `<li>${message}</li>`).join('') : '<li class="clear-warning">No hay advertencias locales para las materias activas.</li>';
   warningStatus.textContent = warnings.length ? `${warnings.length} advertencias locales actualizadas.` : 'No hay advertencias locales.';
@@ -228,6 +278,8 @@ function markCourse(id) {
   const course = courses.find(item => item.id === id);
   if (currentDraft().has(id)) {
     currentDraft().delete(id);
+    professorChoicesForPeriod().delete(id);
+    expandedProfessorChoicesForPeriod().delete(id);
     highlightedId = null;
     announceSelection(`${id} se quitó del borrador.`);
   } else {
@@ -283,6 +335,39 @@ document.querySelector('#period-prev').addEventListener('click', () => { periodI
 document.querySelector('#period-next').addEventListener('click', () => { periodIndex = Math.min(periods.length - 1, periodIndex + 1); highlightedId = null; updateInterface(); });
 primaryAction.addEventListener('click', openSelection);
 document.querySelector('#panel-primary-action').addEventListener('click', runOptimization);
+document.querySelector('#unavailable-days').addEventListener('click', event => {
+  const button = event.target.closest('[data-unavailable-day]');
+  if (!button) return;
+  const blockedDays = blockedDaysForPeriod();
+  const day = button.dataset.unavailableDay;
+  if (blockedDays.has(day)) {
+    blockedDays.delete(day);
+    announceSelection(`${day} vuelve a estar disponible.`);
+  } else {
+    blockedDays.add(day);
+    announceSelection(`${day} se marcó como no disponible; es una restricción dura.`);
+  }
+  updateInterface();
+});
+document.querySelector('#selected-subjects').addEventListener('click', event => {
+  const toggle = event.target.closest('[data-professor-toggle]');
+  if (!toggle) return;
+  const expanded = expandedProfessorChoicesForPeriod();
+  const courseId = toggle.dataset.professorToggle;
+  const isExpanded = expanded.has(courseId);
+  if (isExpanded) expanded.delete(courseId); else expanded.add(courseId);
+  announceSelection(`Preferencia de profesor para ${courseId} ${isExpanded ? 'contraída' : 'expandida'}.`);
+  updateInterface();
+});
+document.querySelector('#selected-subjects').addEventListener('change', event => {
+  const choice = event.target.closest('input[name^="professor-"]');
+  if (!choice) return;
+  const courseId = choice.name.replace('professor-', '');
+  const choices = professorChoicesForPeriod();
+  if (choice.value) choices.set(courseId, choice.value); else choices.delete(courseId);
+  announceSelection(choice.value ? `Preferencia de profesor para ${courseId} actualizada.` : `Preferencia de profesor para ${courseId} eliminada.`);
+  updateInterface();
+});
 canvas.addEventListener('scroll', updatePanelSide, { passive: true });
 document.addEventListener('focusin', updatePanelSide);
 updateInterface();

@@ -73,6 +73,36 @@ Queda una sola guarda, y es de accesibilidad: el panel no debe tapar el elemento
 - El grafo mantiene botones, acceso por teclado y anuncios `aria-live`, y la guarda de la sección 8 evita que el panel tape el elemento enfocado. Lo que falta es una lista o tabla completa como alternativa semántica al mapa de 46 tarjetas.
 - La regla de reposicionamiento está implementada y documentada en la sección 8: el desplazamiento decide el lado y la guarda de foco lo corrige. Lo que falta no es el movimiento sino su contraparte semántica, la lista o tabla navegable.
 
+## Preferencias y disponibilidad (T6)
+
+### Decisiones que exigieron los nuevos bloques
+
+- La disponibilidad queda separada y antes de las preferencias: los seis días son alternadores de “no puedo asistir” y la propia interfaz declara que son una **restricción dura**. La separación evita que una ausencia olvidada se lea como un criterio que el optimizador podría sacrificar.
+- La disponibilidad y las preferencias se conservan por período, como los borradores. Cambiar de `1B · 2026` a `2A · 2026` no traslada una imposibilidad ni una preferencia sin que el estudiante la haya declarado para ese período.
+- Cada dimensión de D-02 tiene siempre el mismo selector visible: `restricción` o `criterio`. La leyenda del bloque explica que la primera puede volver el resultado infactible y la segunda solo ordena alternativas válidas.
+- Las opciones de cátedra y profesor salen exclusivamente de las cátedras de las materias actualmente marcadas. Cátedra muestra su identificador y materia; profesor resuelve el identificador `docente` contra el catálogo compartido. Sin materias con oferta, ambos muestran estado vacío. Las selecciones de una materia que se quite se conservan en la preferencia del período, pero no afectan advertencias ni se muestran hasta que la materia vuelva a estar marcada.
+- Franjas usa las franjas publicadas de esas mismas cátedras. Para cantidad de días, el mockup interpreta el valor elegido como el máximo de días que puede ocupar una cátedra individual; no afirma que haya validado una combinación de varias materias. Modalidad permanece visible como dimensión, pero declara que no tiene opciones porque el dato compartido no publica modalidades.
+
+### Detección local de una imposibilidad por día bloqueado
+
+Para cada materia activa con cátedras publicadas, la comprobación advierte cuando **cada** cátedra tiene todas sus franjas en días bloqueados. En ese caso esa materia no tiene ninguna cátedra individual que evite los días declarados y el aviso nombra tanto la materia como los días. Esto es una advertencia local, no una alternativa ni una ejecución de CP-SAT: que cada materia tenga una cátedra posible por separado no demuestra que exista una combinación compatible entre todas.
+
+Si el estudiante bloquea un día después de marcar materias, el borrador no se borra ni se modifica. Se recalculan de inmediato las comprobaciones locales y puede aparecer el aviso de imposibilidad; al desbloquearlo, el aviso desaparece si deja de aplicar. El resultado global futuro sigue siendo el único lugar que podrá explicar la infactibilidad de una combinación completa.
+
+### Preferencia de profesor por materia marcada — **reducción de alcance registrada**
+
+La interfaz conserva una única preferencia blanda: profesor, dentro de cada materia marcada y limitada a los docentes de sus cátedras publicadas en el período actual. La elección ordena alternativas válidas y no vuelve infactible un resultado; por eso no tiene selector de nivel. Cátedra, modalidad, franjas horarias y cantidad de días, junto con sus estados y selectores, se retiraron del panel. La restricción por días se mantiene separada porque es dura.
+
+La sección 3.3 de la tesis se compromete con cinco dimensiones de preferencia, mientras que esta interfaz ofrece una. La diferencia queda registrada en lugar de reinterpretar silenciosamente el texto de la tesis: hace falta decidir si la tesis se actualiza o si las cuatro dimensiones retiradas regresan en otra interfaz o etapa.
+
+### Funcionalidad que estos bloques necesitan y los datos o requisitos no proveen
+
+- No hay una definición de dominio para el valor de cada preferencia: si varias cátedras, profesores o franjas seleccionadas se interpretan como alternativas permitidas, requisitos simultáneos o prioridades ordenadas; ni cómo se ponderan los `criterio` entre sí.
+- No hay modalidades en `DATOS_SIMULADOS`, ni contrato que indique valores, relación con una cátedra o cómo una restricción de modalidad debe validarse. El panel no fabrica modalidades y advierte que esa restricción no puede comprobarse.
+- Falta el modelo CP-SAT que combine cátedras de varias materias. Por eso la cantidad de días se verifica solo por cátedra individual y los avisos de cátedra, profesor y franja detectan que una materia no tiene opción local, no que toda la selección sea o no factible.
+- Falta especificar si la disponibilidad es por período, permanente, por semana concreta o por franja horaria; el mockup eligió conservarla por período para no mezclar borradores, pero esa persistencia requiere decisión de producto.
+- No hay semántica para una cátedra sin franjas, una franja excepcional, cambios de oferta ni una causa prioritaria cuando se superponen varias restricciones. La futura explicación de infactibilidad necesita esos contratos y trazabilidad de la oferta.
+
 ## Requerimientos candidatos derivados
 
 - **RC-UX-12:** distinguir selección a nivel materia de selección a nivel cátedra e informar la consecuencia sobre horarios, cupos y promesas del sistema, en el resultado de optimización.
