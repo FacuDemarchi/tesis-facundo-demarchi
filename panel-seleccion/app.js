@@ -226,7 +226,7 @@ function renderProfessorPreference(course) {
   const options = professorChoices.length
     ? `<label><input type="radio" name="professor-${course.id}" value="" ${choice ? '' : 'checked'}> Sin preferencia de profesor</label>${professorChoices.map(professor => `<label><input type="radio" name="professor-${course.id}" value="${professor.id}" ${choice === professor.id ? 'checked' : ''}> ${professor.label}</label>`).join('')}`
     : '<p class="empty-state">No hay cátedras publicadas para elegir profesor en este período.</p>';
-  return `<button type="button" class="subject-professor-toggle" data-professor-toggle="${course.id}" aria-expanded="${expanded}" aria-controls="${panelId}">Preferencia de profesor</button><div id="${panelId}" class="subject-professor-options" ${expanded ? '' : 'hidden'}><p>Preferencia blanda: ordena alternativas válidas y no vuelve infactible el resultado.</p>${options}</div>`;
+  return `<div id="${panelId}" class="subject-professor-options" ${expanded ? '' : 'hidden'}><p>Preferencia blanda: ordena alternativas válidas y no vuelve infactible el resultado.</p>${options}</div>`;
 }
 function renderPanel() {
   const selected = selectedCourses();
@@ -242,7 +242,8 @@ function renderPanel() {
     const intention = intentionFor(course);
     const offerText = offersFor(course.id).length ? `${offersFor(course.id).length} cátedra(s) publicada(s)` : 'oferta pendiente';
     const motive = intention === 'no considerar' ? `<span class="subject-motive">${blockedReason(course)}</span>` : '';
-    return `<li class="subject-item"><div class="subject-name">${course.id} · ${course.name}<span class="subject-meta">${offerText}</span><span class="derived-intention">${intention}</span>${origin === 'scenario' ? '<span class="subject-origin">Cargada desde la planificación existente del escenario.</span>' : ''}${motive}</div>${renderProfessorPreference(course)}</li>`;
+    const expandedHere = expandedProfessorChoicesForPeriod().has(course.id);
+    return `<li class="subject-item"><button type="button" class="subject-name" data-professor-toggle="${course.id}" aria-expanded="${expandedHere}" aria-controls="professor-preference-${course.id}">${course.id} · ${course.name}<span class="subject-meta">${offerText}</span><span class="derived-intention">${intention}</span></button>${origin === 'scenario' ? '<span class="subject-origin">Cargada desde la planificación existente del escenario.</span>' : ''}${motive}${renderProfessorPreference(course)}</li>`;
   }).join('') : '<li class="empty-state">Todavía no hay materias marcadas.</li>';
   renderAvailability();
   const warnings = localWarnings();
