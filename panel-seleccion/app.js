@@ -35,10 +35,12 @@ const selectionPanel = document.querySelector('#selection-panel');
 const optimizationStage = document.querySelector('#optimization-stage');
 const graphFrame = document.querySelector('#graph-frame');
 const primaryAction = document.querySelector('#primary-action');
+const canvas = document.querySelector('.canvas');
 let periodIndex = 0;
 let highlightedId = null;
 let selectionOpen = false;
 let optimizationOpen = false;
+let panelSide = 'right';
 
 function currentPeriod() { return periods[periodIndex]; }
 function offersFor(courseId) { return data.catedras.filter(item => item.materiaId === courseId && item.periodo === currentPeriod().label); }
@@ -120,6 +122,37 @@ function drawConnections() {
 }
 
 function overlap(left, right) { return left.dia === right.dia && left.desde < right.hasta && right.desde < left.hasta; }
+function preferredPanelSide(scrollRatio, currentSide) {
+  if (currentSide === 'left') return scrollRatio < .15 ? 'right' : 'left';
+  return scrollRatio >= .20 ? 'left' : 'right';
+}
+function boxesOverlap(first, second) {
+  return first.left < second.right && first.right > second.left && first.top < second.bottom && first.bottom > second.top;
+}
+function panelBoxForSide(side) {
+  const panelBox = selectionPanel.getBoundingClientRect();
+  const inset = parseFloat(getComputedStyle(selectionPanel).getPropertyValue('--panel-inset')) || 24;
+  const left = side === 'left' ? inset : window.innerWidth - inset - panelBox.width;
+  return { left, right: left + panelBox.width, top: panelBox.top, bottom: panelBox.bottom };
+}
+function focusIsClear(side) {
+  const candidateBox = panelBoxForSide(side);
+  const focused = document.activeElement;
+  if (!(focused instanceof HTMLElement) || focused === document.body || focused === document.documentElement) return true;
+  if (selectionPanel.contains(focused)) return true;
+  return !boxesOverlap(candidateBox, focused.getBoundingClientRect());
+}
+function scrollRatio() {
+  const range = canvas.scrollWidth - canvas.clientWidth;
+  return range > 0 ? canvas.scrollLeft / range : 0;
+}
+function updatePanelSide() {
+  if (!selectionOpen) return;
+  let nextSide = preferredPanelSide(scrollRatio(), panelSide);
+  if (!focusIsClear(nextSide)) nextSide = nextSide === 'left' ? 'right' : 'left';
+  panelSide = nextSide;
+  selectionPanel.dataset.side = panelSide;
+}
 function localWarnings() {
   const active = consideredCourses();
   const warnings = [];
@@ -187,6 +220,7 @@ function updateInterface() {
   renderColumns();
   updateCards();
   renderPanel();
+  updatePanelSide();
   drawConnections();
 }
 function announceSelection(message) { status.textContent = message; }
@@ -207,7 +241,6 @@ function markCourse(id) {
   updateInterface();
 }
 function fitGraphToViewport() {
-  const canvas = document.querySelector('.canvas');
   const region = document.querySelector('#graph-region');
   const frame = document.querySelector('#graph-frame');
   const styles = getComputedStyle(canvas);
@@ -224,8 +257,10 @@ function openSelection() {
   selectionOpen = true;
   optimizationOpen = false;
   selectionPanel.hidden = false;
+  primaryAction.blur();
   optimizationStage.hidden = true;
   graphFrame.hidden = false;
+  updatePanelSide();
   announceSelection(`Selección abierta para ${currentPeriod().label}.`);
   updateInterface();
 }
@@ -248,6 +283,11 @@ document.querySelector('#period-prev').addEventListener('click', () => { periodI
 document.querySelector('#period-next').addEventListener('click', () => { periodIndex = Math.min(periods.length - 1, periodIndex + 1); highlightedId = null; updateInterface(); });
 primaryAction.addEventListener('click', openSelection);
 document.querySelector('#panel-primary-action').addEventListener('click', runOptimization);
+canvas.addEventListener('scroll', updatePanelSide, { passive: true });
+document.addEventListener('focusin', updatePanelSide);
 updateInterface();
 requestAnimationFrame(fitGraphToViewport);
-window.addEventListener('resize', fitGraphToViewport);
+window.addEventListener('resize', () => {
+  fitGraphToViewport();
+  updatePanelSide();
+});

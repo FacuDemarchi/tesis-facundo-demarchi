@@ -50,7 +50,13 @@ Tomadas el 2026-09-18. Registradas en memoria como `tesis/interfaz-diseno-cerrad
   **Corregido tras la revisión del autor**, con seis observaciones: el panel no se muestra hasta apretar el botón de la barra; el clic agrega o quita y no recorre intenciones; el sistema deriva la intención y el estudiante no la elige; el indicador de granularidad salió del panel porque es del resultado (RF-13); el botón del panel dice «Inscribir» en el período actual y «Aceptar» en el siguiente (D-03); y el estado de la tarjeta se deriva del borrador y no del escenario estático.
 
   **Evidencia**: `node --check` pasa; verificación propia sobre el mockup servido, con los ocho puntos comprobados, incluidos los borradores separados por período y el plan del escenario cargado en el período que se planifica. Revisión nativa aprobada (riesgo medio, lente de confiabilidad) con cuatro hallazgos no bloqueantes.
-- [ ] **T3 — Regla de reposicionamiento del panel.** Anclaje a la derecha al inicio, migración a la izquierda sobre las columnas resueltas, en **zonas discretas con transición**, escuchando foco y scroll.
+- [x] **T3 — Regla de reposicionamiento del panel.** El desplazamiento horizontal decide el lado: a 0 % a la derecha, desde el 20 % a la izquierda, con histéresis que solo vuelve por debajo del 15 %. Queda una sola guarda, la del foco de teclado (WCAG 2.2, criterio 2.4.11), y excluye a los descendientes del propio panel.
+
+  **Corregido dos veces.** La primera versión dejaba que la guarda de tarjetas seleccionables eligiera el lado, y con eso el panel arrancaba a la izquierda y se mudaba a la derecha al avanzar: el autor lo vio al revés. La segunda versión, ya invertida, dejó la documentación describiendo la regla vieja, y el revisor lo abrió como `R3-001` CRITICAL: cambiar código y no documentación no es cosmético, porque la documentación prometía una protección que el código ya no daba.
+
+  **Evidencia**: medido sobre el mockup servido, con el panel a la derecha a 0 %, 10 % y 19 %, a la izquierda a 25 % y 50 %, y vuelta por debajo del 15 %; la guarda de foco manda el panel al otro lado cuando el elemento enfocado quedaría tapado y no se activa con los controles del panel. Revisión nativa **aprobada sin refutador ni validador** en un linaje nuevo sobre el candidato corregido.
+
+  **Costo aceptado y documentado**: a 0 % de desplazamiento el panel tapa C23 y C24.
 - [x] **T4 — Botón de entrada en la barra de período**, con etiqueta según el período: «Iniciar la inscripción» en el actual, «Generar alternativas» en el siguiente. Entrega junto con T2, porque comparten los mismos archivos.
 - [ ] **T5 — Registro de hallazgos y README** (`panel-seleccion/discoveries.md` y `panel-seleccion/README.md`), con los requerimientos candidatos derivados.
 

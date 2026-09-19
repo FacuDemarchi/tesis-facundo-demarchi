@@ -40,6 +40,16 @@ Las tarjetas `planificada` leían un estado estático del escenario mientras el 
 
 El escenario previo a las inscripciones de `2A · 2026` ubica C19, C20 y C27 en el borrador de ese período y deja vacío el de `1B · 2026`, donde no hay materias inscriptas. Mezclar ambos períodos hace que el estudiante lea como propias marcas que pertenecen a la planificación futura. Por eso `scenarioPlans` solo precarga esas materias en `2A · 2026`; la nota de origen y la intención derivada `requerida en esta planificación` se conservan para identificarlas.
 
+### 8. El desplazamiento decide el lado y la guarda protege el foco — **regla de posicionamiento**
+
+El lado del panel lo decide el desplazamiento horizontal del grafo: a 0 % se ancla a la **derecha**, y desde el **20 %** pasa a la **izquierda**. Con histéresis, solo vuelve a la derecha por debajo del **15 %**, para que no salte de lado cuando el estudiante va y viene sobre el límite. El denominador es `scrollLeft / (scrollWidth - clientWidth)`, el rango realmente desplazable: cubre todas las posiciones válidas sin mezclar el ancho visible.
+
+**La versión anterior tenía el criterio invertido.** El lado se calculaba desde los datos, evitando tapar tarjetas seleccionables, y eso hacía que el panel arrancara a la izquierda y se mudara a la derecha al avanzar. El panel debe correrse a medida que el estudiante avanza, no empezar en el camino.
+
+Queda una sola guarda, y es de accesibilidad: el panel no debe tapar el elemento que tiene el foco de teclado, porque el proyecto cita WCAG 2.2 y su criterio 2.4.11 lo exige. Si el lado preferido cubriría el elemento enfocado, el panel usa el otro. Los descendientes del propio panel quedan excluidos de esa comprobación, porque enfocar un control del panel no puede ser motivo para que el panel se mueva.
+
+**Consecuencia conocida y aceptada**: a 0 % de desplazamiento el panel tapa C23 y C24 en el escenario actual. No es una regresión, es el costo de que el lado lo fije el desplazamiento. Alcanza con desplazarse un 20 % para que se corra, y enfocar cualquiera de esas tarjetas lo mueve de inmediato.
+
 ## Funcionalidad que la interfaz necesita y los datos o requisitos no proveen
 
 ### Oferta, comisiones y cupos
