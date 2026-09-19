@@ -133,10 +133,194 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 ---
 
+---
+
+## D-10 — El período actual genera alternativas y hay una sola pantalla de resultados
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** preliminar
+
+**Contexto.** El documento se contradecía sobre si el período actual produce alternativas. §3.3 exige que las alternativas presentadas para el período actual respeten correlatividades, cupos y carga; D-01 afirma que el motor rige para las dos operaciones; pero el flujo de CU-05 en la Tabla 6 solo «valida la selección resultante», y la Tabla 7 asocia RF-05 únicamente a CU-06, el caso del período siguiente.
+
+**Decisión.** El período actual **también** genera alternativas con CP-SAT, sobre el escenario cerrado y en una única ejecución explícita. Hay **una sola pantalla de resultados** para los dos modos, y lo que cambia es la etiqueta: «válida para inscripción» en el período actual y «condicionada» en el siguiente.
+
+**Alternativas descartadas.**
+
+- *Que el período actual solo valide una selección que el estudiante arma:* dejaba a §3.3 sin respaldo y obligaba a dos pantallas de resultado, una para validar y otra para comparar.
+
+**Consecuencias.** La Tabla 7 debe corregirse: RF-05 pasa de `CU-06` a `CU-05, CU-06`. El flujo de CU-05 necesita el paso de generación de alternativas. La comparación de alternativas (CU-08) y la granularidad del resultado (D-05) aplican a los dos modos.
+
+---
+
+## D-11 — El panel de selección es flotante y su lado lo decide el desplazamiento
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+
+**Contexto.** La selección necesita verse mientras se marcan materias, y el grafo es la superficie de entrada. Un panel acoplado al costado reduciría el ancho disponible de un grafo que ya mide 3444 px.
+
+**Decisión.** El panel es **flotante y no bloqueante**: flota sobre el grafo sin interceptar los clics fuera de él, de modo que el estudiante sigue marcando tarjetas con el panel abierto. Su lado lo decide el **desplazamiento horizontal**: a 0 % se ancla a la derecha y desde el 20 % pasa a la izquierda, con histéresis que solo vuelve por debajo del 15 %.
+
+**Alternativas descartadas.**
+
+- *Un modal:* bloquea la página y vuelve inerte el grafo, así que no se puede marcar mientras se ve la selección. Fue el defecto de la primera versión del mockup.
+- *Que el lado lo decida la posición de las materias pendientes:* fue la primera implementación y resultó contraintuitiva. El panel arrancaba a la izquierda y se mudaba a la derecha al avanzar, al revés de lo esperable: debe correrse a medida que el estudiante avanza, no empezar en el camino.
+
+**Consecuencias.**
+
+- Queda **una sola guarda**, la del foco de teclado, porque el proyecto cita WCAG 2.2 y su criterio 2.4.11 exige que el componente enfocado no quede totalmente oculto. Los descendientes del propio panel quedan excluidos: enfocar un control del panel no puede ser motivo para que el panel se mueva. Sin esa exclusión el panel se aleja del control que el usuario acaba de enfocar, que es el defecto crítico que abrió la revisión nativa.
+- **Costo aceptado:** a 0 % de desplazamiento el panel tapa C23 y C24 en el escenario actual. Se resuelve desplazándose un 20 %, o enfocando cualquiera de esas tarjetas.
+
+---
+
+## D-12 — La intención de cada materia se deriva; el estudiante no la elige
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+
+**Contexto.** D-02 define tres valores de intención —`deseada`, `requerida en esta planificación` y `no considerar`—, y la primera versión del mockup los ofrecía como un selector. D-02 dice que agregar o quitar una materia **declara** una intención, no que el estudiante la seleccione de una lista.
+
+**Decisión.** El estudiante marca o desmarca; el sistema deriva la intención. La derivación es conservadora: una materia cargada desde la planificación existente del escenario queda `requerida en esta planificación`; una marcada durante la sesión, `deseada`; una bloqueada, `no considerar`, con su correlatividad pendiente como motivo visible. `disponible`, `sin cátedra` y `sin cupo` entran como `deseada`.
+
+**Alternativas descartadas.**
+
+- *Derivar `requerida` por impacto curricular*, marcando como dura toda materia que habilita otras también marcadas: aprovecha el grafo y RF-16, pero el sistema decidiría solo qué es duro, y una cadena de correlatividades podría volver infactible el problema sin que el estudiante lo haya pedido.
+
+**Consecuencias.**
+
+- Solo es dura la materia que el estudiante ya había comprometido. La flexibilización que describe `discoveries.md` —cambiar una materia de requerida a deseada— sigue disponible en la etapa de optimización.
+- RF-19 exige que `no considerar` no sea silencioso: el motivo se muestra en el panel.
+- Queda abierto cómo se traduce `no considerar` a restricciones y flexibilizaciones de CP-SAT (`RC-UX-15`).
+
+---
+
+## D-13 — La granularidad pertenece al resultado, no al borrador
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** preliminar
+
+**Contexto.** La primera versión del panel mostraba un indicador de granularidad. RF-13 pide informar la granularidad **del resultado**: nivel de cátedra con oferta publicada y nivel de materia cuando está pendiente. D-05 lo confirma y agrega que la interfaz necesita un indicador visible.
+
+**Decisión.** El indicador sale del borrador y va a la pantalla de resultados de la optimización. En el panel queda solo la nota de que el contador cuenta únicamente materias con oferta publicada, que es lo que el chequeo local necesita.
+
+**Alternativas descartadas.**
+
+- *Dejarlo en el panel:* no informa nada antes de ejecutar el motor, porque la granularidad describe lo que el resultado va a poder afirmar.
+
+**Consecuencias.** El indicador es una obligación de la pantalla de resultados, que todavía no existe. Se registra como pendiente de 7.2.5.
+
+---
+
+## D-14 — Dos botones con trabajos distintos: abrir la etapa y cerrarla
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** preliminar
+
+**Contexto.** La primera versión tenía dos botones con el mismo texto y la misma promesa: el de la barra y el del panel. Ninguno de los dos decía qué cerraba ni qué abría.
+
+**Decisión.** El botón de la **barra de período** abre la etapa de selección, y su etiqueta cambia con el período: «Iniciar la inscripción» en el actual y «Generar alternativas» en el siguiente (D-03). El botón del **panel** cierra la selección y pasa a la optimización, y dice «Inscribir» en el período actual y «Aceptar» en el siguiente; queda deshabilitado con el borrador vacío.
+
+**Alternativas descartadas.**
+
+- *Un solo botón para las dos cosas:* deja al estudiante sin saber si está abriendo un borrador o ejecutando el motor.
+- *El mismo texto en los dos períodos:* desaprovecha el vocabulario de D-03 justo donde distingue períodos.
+
+**Consecuencias.** La etapa de optimización no existe todavía: el mockup muestra un marcador que enumera los seis resultados pendientes, sin simular que el solver exista.
+
+---
+
+## D-15 — La evaluación institucional es automática y el traslado se aplica en el escenario simulado
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** pendiente de validación institucional
+
+**Contexto.** Cuando la demanda supera el cupo, el prototipo puede resolver el caso ampliando la cátedra en un aula mayor, o no puede resolverlo porque no existe aula compatible. El documento prohibía hoy toda aplicación automática.
+
+**Decisión.** La evaluación se dispara **automáticamente al cruzar el umbral** de demanda por materia, y el traslado de aula **se aplica en el escenario simulado del prototipo** cuando hay aula compatible. Cuando no la hay, el caso se deriva a bedelía, que ya es el camino del CRM que el documento reconoce en 7.2.1 y en RC-11.
+
+**Alternativas descartadas.**
+
+- *Evaluación a demanda del actor institucional:* era la lectura conservadora, pero la demanda se acumula sola y el actor no está mirando el sistema cuando la materia se llena.
+
+**Consecuencias.**
+
+- **Contradice el texto vigente en tres lugares**, que hay que reformular: §3.2 («su aprobación y aplicación corresponderán al actor institucional autorizado»), §3.4 («no ejecutarlas») y RF-26 («no producirán modificaciones automáticas»). La reformulación distingue *aplicar en el escenario simulado del prototipo*, que es admisible, de *aplicar sobre los sistemas oficiales*, que sigue fuera de alcance. RF-26 ya dice literalmente «en los sistemas oficiales», así que la aplicación simulada no lo contradice en su letra; §3.2 y §3.4 sí.
+- **Principio de la regla:** automatizar lo que los datos soportan —capacidad y disponibilidad— y escalar lo que no —una cátedra nueva necesita un docente que el prototipo no puede asignar—. Es la frontera entre RF-23 (traslado) y RF-25 (apertura).
+- Hace falta un **requerimiento nuevo**: el disparador se ejecuta al cruzar el umbral, no en cada incremento de demanda.
+- El traslado **no necesita docente nuevo** —la cátedra muda de aula y conserva su profesor—, mientras que la apertura sí implica un docente que el prototipo no asigna. Por eso el traslado es la primera propuesta: es la que no deja cabos sueltos. RC-10 queda correctamente como candidato fuera del MVP.
+
+---
+
+## D-16 — La evaluación de aulas es un filtro determinista, no una corrida del solver
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+
+**Contexto.** D-15 vuelve automático un cálculo que se repite cada vez que la demanda cruza un umbral.
+
+**Decisión.** La evaluación de aulas es un **filtro**: capacidad suficiente y disponibilidad en la franja horaria de la cátedra. No usa CP-SAT.
+
+**Alternativas descartadas.**
+
+- *El mismo motor que las alternativas:* unificaría el mecanismo y resolvería el caso de varias propuestas compitiendo por las mismas aulas, pero cada disparo automático consumiría presupuesto del solver y pondría en riesgo RNF-01 —cinco segundos— y RNF-12 —ejecución aislada—.
+
+**Consecuencias.**
+
+- El filtro es explicable, que es lo que pide RNF-03: «esta aula no sirve porque su capacidad es 40 y la demanda es 62».
+- Es barato, y por eso el disparador automático de D-15 es costeable. Las dos decisiones se sostienen juntas.
+- Queda como límite conocido: si varias propuestas compiten por las mismas aulas, un filtro deja de alcanzar.
+
+---
+
+## D-17 — La intención del estudiante transiciona sola cuando la cátedra se amplía
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+
+**Contexto.** RF-21 conserva la intención de una materia sin cupo con estado `planificada` y motivo `falta de cupo`. Si D-15 amplía la cátedra automáticamente, ese estado deja de ser cierto.
+
+**Decisión.** La intención **transiciona automáticamente** a habilitada para inscripción cuando el traslado amplía la cátedra, y el estudiante lo ve en el panel.
+
+**Alternativas descartadas.**
+
+- *Dejarla `planificada` marcada como «cupo liberado»:* más conservador, pero deja dos estados parecidos conviviendo y obliga al estudiante a hacer un paso que el sistema ya sabe.
+
+**Consecuencias.** Hace falta un **requerimiento nuevo** y la transición correspondiente en el modelo de dominio. `discoveries.md` registra la pregunta abierta sobre qué consentimiento y qué aviso acompañan la automatización.
+
+---
+
+## D-18 — El cierre ofrece descargar un PDF, como requerimiento candidato
+
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** pendiente de validación institucional
+
+**Contexto.** El prototipo no inscribe (§3.2), así que el recorrido del período actual termina en una selección válida sin efecto. El estudiante necesita algo concreto para llevar al sistema oficial.
+
+**Decisión.** El cierre ofrece **descargar un PDF** con la selección y la trazabilidad del escenario. Entra como **requerimiento candidato**, no como funcionalidad comprometida, y su pendiente es que **la institución acepte el documento** como respaldo de la selección. Se describe en la prosa de 7.2.5 como función del cierre, no como paso numerado del flujo de CU-05.
+
+**Alternativas descartadas.**
+
+- *Solo datos en JSON o CSV:* evita cualquier parecido con una constancia oficial, pero no es lo que un estudiante lleva a bedelía.
+- *Entrar como requerimiento funcional comprometido:* una descarga generada en el cliente no tiene dependencia técnica que justifique un candidato, pero tampoco la tiene para exigir un caso de prueba en el MVP.
+
+**Consecuencias.**
+
+- **La leyenda no puede ser una nota al pie**, porque D-03 prohíbe presentar una acción como una inscripción ya efectuada: el documento debe declarar que es una selección simulada y no una inscripción, llevar la trazabilidad de RF-20 —período, versión del plan, origen y fecha de los datos, restricciones y preferencias— y decir que la inscripción se realiza en el sistema oficial. Sin membrete institucional y sin la palabra «comprobante».
+- **Un candidato no puede ser un paso numerado del flujo de un caso de uso comprometido.** La prueba está en el propio documento: RC-05 es candidato y no aparece en el flujo de CU-05.
+- Se implementa con **hoja de impresión y la exportación a PDF del navegador**: no suma dependencias, no retiene nada en el servidor, y es la misma pantalla de resultados. Descargar no es compartir: compartir sí necesitaría la decisión de privacidad abierta en RC-08.
+
 # Pendientes
 
 - **P-07 — Recomendaciones como interacción propia.** Resuelta el 2026-09-17 en lo que respecta a la trazabilidad: RF-15 quedó en CU-04 y CP-13, RF-16 en CU-06 y CP-14. Queda abierto **solo si preferís** que recibir y aceptar recomendaciones sea un caso de uso propio, lo que exigiría agregar CU-15 y regenerar la Figura 2.
 - **P-08 — Herramienta de cobertura sin nombrar.** 7.3.1 afirma que la integración continua conservará la cobertura como evidencia, y ninguna sección nombra la herramienta que la produce. Agregarla al stack de 4.2 y a la Tabla 1, o quitar la afirmación.
+
+## Deuda documental abierta (2026-09-18)
+
+Cambios que dejan pendientes las decisiones D-10 a D-18. Se aplican antes de escribir 7.2.5, porque la sección los cita.
+
+| Dónde | Qué |
+| --- | --- |
+| Tabla 7 | RF-05 pasa de `CU-06` a `CU-05, CU-06` (D-10) |
+| Tabla 6, CU-05 | Falta el paso de generación de alternativas; hoy solo «valida la selección resultante» (D-10) |
+| Tabla 5 | El candidato nuevo de la descarga, con su pendiente de aceptación institucional (D-18) |
+| §3.2, §3.4 y RF-26 | Distinguir *aplicar en el escenario simulado* de *aplicar sobre los sistemas oficiales* (D-15) |
+| RF-21 y el modelo de dominio | Falta el requerimiento y la transición que devuelve la intención a habilitada al ampliarse la cátedra (D-17) |
+| Capítulo 6 | Requerimiento nuevo: el disparador automático se ejecuta al **cruzar** el umbral por materia, no en cada incremento (D-15) |
+| 7.2.5 | La sección entera: panel flotante y su regla, cierre con descarga, indicador de granularidad en el resultado, y rama institucional (D-11, D-13, D-14, D-18) |
+| `mockup/` | El panel flotante y su regla solo existen en `panel-seleccion/`; el README de `mockup/` sigue diciendo que no contiene paneles de planificación |
+
+Los hallazgos y los requerimientos candidatos de los mockups **no se duplican acá**: viven en `panel-seleccion/discoveries.md`, que es su fuente, según la convención de encabezado de este archivo.
 
 ## Decisiones por tomar
 
