@@ -58,7 +58,10 @@ Tomadas el 2026-09-18. Registradas en memoria como `tesis/interfaz-diseno-cerrad
 
   **Costo aceptado y documentado**: a 0 % de desplazamiento el panel tapa C23 y C24.
 - [x] **T4 — Botón de entrada en la barra de período**, con etiqueta según el período: «Iniciar la inscripción» en el actual, «Generar alternativas» en el siguiente. Entrega junto con T2, porque comparten los mismos archivos.
-- [ ] **T5 — Registro de hallazgos y README** (`panel-seleccion/discoveries.md` y `panel-seleccion/README.md`), con los requerimientos candidatos derivados.
+- [x] **T5 — Registro de hallazgos y README.** `panel-seleccion/README.md` escrito con el molde de `mockup/README.md`: ejecución, escenario, alcance, datos simulados, edición y advertencia. `discoveries.md` consolidado, con las ocho correcciones de la revisión, la funcionalidad que falta y **siete requerimientos candidatos** (`RC-UX-12` a `RC-UX-18`).
+
+  **Corregido en esta tarea**: dos bullets habían quedado obsoletos tras implementar T3 —afirmaban que la reposicionamiento no estaba implementada y que faltaba una estrategia de foco— y un encabezado presumía un género que no consta. Es la misma clase de defecto que el revisor abrió como crítico: documentación que afirma algo que el código ya no hace.
+
 
 ## Hallazgos de la capa de datos (T1)
 

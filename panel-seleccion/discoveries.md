@@ -2,7 +2,7 @@
 
 > Documento de trabajo. Este mockup usa datos simulados y no representa una inscripción oficial ni decisiones institucionales cerradas.
 
-## Correcciones de la revisión de la autora
+## Correcciones de la revisión
 
 ### 1. La barra de período abre la etapa de selección — **bug de ciclo de vida**
 
@@ -70,8 +70,8 @@ Queda una sola guarda, y es de accesibilidad: el panel no debe tapar el elemento
 
 - Falta un estado de ejecución, cancelación, tiempo límite, error y reintento de la optimización. El placeholder solo declara el límite del mockup.
 - Falta persistencia: identidad, duración, recuperación del borrador, conflicto entre pestañas y qué ocurre si la oferta cambia después de seleccionar.
-- El grafo mantiene botones, acceso por teclado y anuncios `aria-live`, pero aún se necesita una lista o tabla completa como alternativa semántica al mapa de 46 tarjetas y una estrategia para que el foco no quede oculto detrás del panel móvil.
-- La regla de reposicionamiento requerida por la decisión del proyecto no está implementada en esta tarea. El CSS deja un ancla fija explícita (`top/right`) para que la tarea posterior pueda moverla sin reestructurar el panel.
+- El grafo mantiene botones, acceso por teclado y anuncios `aria-live`, y la guarda de la sección 8 evita que el panel tape el elemento enfocado. Lo que falta es una lista o tabla completa como alternativa semántica al mapa de 46 tarjetas.
+- La regla de reposicionamiento está implementada y documentada en la sección 8: el desplazamiento decide el lado y la guarda de foco lo corrige. Lo que falta no es el movimiento sino su contraparte semántica, la lista o tabla navegable.
 
 ## Requerimientos candidatos derivados
 
