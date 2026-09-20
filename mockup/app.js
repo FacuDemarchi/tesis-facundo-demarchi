@@ -69,12 +69,10 @@ const edges = [
 ];
 
 const columns = document.querySelector('#columns');
-const status = document.querySelector('#selection-status');
 const periods = [
   { kind: 'Período actual', label: '1B · 2026' },
   { kind: 'Período siguiente', label: '2A · 2026' }
 ];
-let selectedId = null;
 let periodIndex = 0;
 
 function renderPeriod() {
@@ -90,11 +88,11 @@ function renderColumns() {
     const term = index + 1;
     const cards = courses.filter(course => course.term === term).map(course => {
       const state = states[course.state];
-      return `<button class="course ${course.state} category-${course.category}" data-course="${course.id}" style="--slot:${course.slot}" type="button" aria-pressed="false">
+      return `<article class="course ${course.state} category-${course.category}" data-course="${course.id}" style="--slot:${course.slot}">
         <span class="course-state"><span aria-hidden="true">${state.symbol}</span> ${state.label}</span>
         <strong><span>${course.id}</span> · ${course.name}</strong>
         <small><span aria-hidden="true">●</span> Disponible · ${course.category === 'sa' ? 'Req. SA' : course.category === 'pp' ? 'Req. PP' : course.category === 'process' ? 'Proceso' : 'General'}</small>
-      </button>`;
+      </article>`;
     }).join('');
     return `<section class="term" aria-labelledby="term-${term}"><h2 id="term-${term}">Cuatrimestre ${term}</h2><div class="term-grid">${cards}</div></section>`;
   }).join('');
@@ -120,28 +118,10 @@ function drawConnections() {
     const x2 = (target.left - stageBox.left) / scale;
     const y2 = (target.top + target.height / 2 - stageBox.top) / scale;
     const bend = Math.max(28, (x2 - x1) * .48);
-    const related = selectedId && (from === selectedId || to === selectedId);
-    const muted = selectedId && !related;
-    return `<path class="edge ${type} ${related ? 'related' : ''} ${muted ? 'muted' : ''}" data-from="${from}" data-to="${to}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;
+    return `<path class="edge ${type}" data-from="${from}" data-to="${to}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;
   }).join('') + `<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" /></marker></defs>`;
 }
 
-function selectCourse(id) {
-  selectedId = selectedId === id ? null : id;
-  const relatedIds = new Set(selectedId ? [selectedId] : []);
-  edges.forEach(([from, to]) => {
-    if (from === selectedId || to === selectedId) { relatedIds.add(from); relatedIds.add(to); }
-  });
-  document.querySelectorAll('.course').forEach(card => {
-    const active = card.dataset.course === selectedId;
-    card.setAttribute('aria-pressed', String(active));
-    card.classList.toggle('selected', active);
-    card.classList.toggle('muted', Boolean(selectedId) && !relatedIds.has(card.dataset.course));
-  });
-  const course = courses.find(item => item.id === selectedId);
-  status.textContent = course ? `${course.id}, ${course.name}. Se resaltaron ${relatedIds.size - 1} relaciones directas.` : 'Se quitó la selección.';
-  drawConnections();
-}
 
 function fitGraphToViewport() {
   const canvas = document.querySelector('.canvas');
@@ -164,7 +144,6 @@ function fitGraphToViewport() {
 
 renderColumns();
 renderPeriod();
-document.querySelectorAll('.course').forEach(card => card.addEventListener('click', () => selectCourse(card.dataset.course)));
 document.querySelector('#period-prev').addEventListener('click', () => {
   periodIndex = Math.max(0, periodIndex - 1);
   renderPeriod();

@@ -43,7 +43,7 @@ Cada escenario contiene `index.html`, `styles.css`, `app.js`, `README.md` y `dis
 
 ## Alcance
 
-El mockup representa únicamente la estructura del plan y el estado visual de las materias. Permite alternar entre dos períodos y resaltar las relaciones directas de una materia al seleccionarla.
+El mockup representa únicamente la estructura del plan y el estado visual de las materias. Permite alternar entre dos períodos. Las tarjetas no son interactivas: no hay selección de materias ni resaltado de correlatividades.
 
 No contiene paneles de planificación, preferencias, restricciones, resultados de CP-SAT, autenticación ni integración con sistemas universitarios. Tampoco habilita ninguna acción de inscripción.
 
@@ -52,7 +52,7 @@ No contiene paneles de planificación, preferencias, restricciones, resultados d
 - **Datos reconstruidos.** Los 46 nombres y estados de materias y las 26 correlatividades fueron transcritos visualmente desde el SVG de referencia, cuyos rótulos están convertidos a trazados y no son legibles por máquina. Las conexiones fueron reconstruidas para el mockup. Deben contrastarse con la fuente académica antes de usarse como reglas de dominio.
 - **Datos simulados.** Los estados académicos corresponden a escenarios ficticios de avance en la carrera.
 - **Sin validación institucional.** Los procesos, permisos, integraciones y reglas que dependen de la universidad permanecen pendientes de la elicitación. La propuesta los clasifica como requerimientos candidatos.
-- **Accesibilidad parcial.** Se aplican foco visible, anuncios `aria-live`, patrones visuales además del color y una alternativa textual por estado. La verificación con herramientas automatizadas (por ejemplo `axe-core`) todavía no fue ejecutada.
+- **Accesibilidad parcial.** Se aplican foco visible en la navegación de períodos, patrones visuales además del color y una alternativa textual por estado. La verificación con herramientas automatizadas (por ejemplo `axe-core`) todavía no fue ejecutada.
 
 ## Documentos de referencia
 

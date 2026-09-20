@@ -31,7 +31,6 @@ El mockup contiene solamente:
 - 46 tarjetas de materias;
 - 26 conexiones de correlatividad;
 - estados visuales aplicados directamente a cada tarjeta;
-- interacción para resaltar las relaciones directas de una materia.
 
 Se retiraron el encabezado descriptivo, las estadísticas y la leyenda inferior. La barra superior solo aporta el contexto y la navegación temporal solicitados; no incorpora funcionalidades de planificación.
 
