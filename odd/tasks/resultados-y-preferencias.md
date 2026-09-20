@@ -45,9 +45,9 @@ Los seis desenlaces de CP-SAT que la interfaz debe distinguir, y la funcionalida
 
   **Cambio de expectativa que introduce T7b**: la verificación de esta unidad observó que `infactible` y `oferta-pendiente` no renderizan tarjeta ni tabla y muestran la línea declarada de ausencia de alternativas. T7b agrega la explicación y las acciones de recuperación en ese lugar, así que esa observación queda superada por la unidad siguiente, no contradicha.
 
-  **Revisión nativa**: pendiente. T7a y T7b se revisan juntas como un solo candidato, la interfaz de resultados completa.
+  **Revisión nativa aprobada**: linaje `review-3de54555fde0cbd0`, riesgo medio, una lente de confiabilidad, 8 archivos y 728 líneas, autoridad quemada (`gentle-ai.review-acknowledged/v1`). Un hallazgo **no bloqueante**: `R3-EMPTY-PLAN` (`panel-seleccion/app.js:237`, severidad WARNING, disposición informativa). Queda como trabajo posterior y no como motivo para repetir la revisión de este candidato.
 
-  **Sin commitear**: pendiente de autorización del autor.
+  **Commit**: `f5471c1` («feat(mockups): add the results modal and simplify the selection panel»), que además cierra la simplificación del panel de T8, que seguía sin commitear desde la ronda anterior del 2026-09-19.
 - [x] **T7b — Explicación de los desenlaces no viables y acciones de recuperación.** Infactibilidad explicada con el día restringido como causa nombrada, estado indeterminado por límite temporal con la solución parcial declarada, y oferta pendiente a nivel de materia con las materias sin oferta nombradas. Cada desenlace no viable gana sus acciones de recuperación y su explicación. Cierra además la documentación del mockup (`README.md`, `discoveries.md`) y la evidencia de las dos unidades.
 
   **Evidencia**: `panel-seleccion/{app.js,styles.css,README.md,discoveries.md}`. `comun/resultados-simulados.js` **no se tocó**: sus explicaciones ya eran consistentes y las acciones son comportamiento, no dato. `node --check` pasa. La comprobación de navegador del escritor (`/tmp/escritor-t7b/check-t7b.cjs`) pasó: los cuatro desenlaces ejercitados, cero errores de página y de consola; su primer intento falló por usar `page.selectOption`, que es API de Playwright y no existe en puppeteer-core.
@@ -58,9 +58,9 @@ Los seis desenlaces de CP-SAT que la interfaz debe distinguir, y la funcionalida
 
   **Falso positivo registrado.** El verificador marcó como fallo una lectura literal de la comprobación de honestidad porque el modal contiene, además del aviso de datos simulados, la línea `Control de la maqueta: en el prototipo real el desenlace lo determina CP-SAT, no el estudiante.` Es la etiqueta del control del simulador y no afirma que la maqueta haya ejecutado nada, que es lo que la comprobación perseguía: ningún texto visible declara una corrida real.
 
-  **Revisión nativa**: en curso sobre el candidato completo (T7a + T7b).
+  **Revisión nativa**: la misma de T7a, porque las dos unidades forman un solo candidato (`review-3de54555fde0cbd0`, aprobada, con `R3-EMPTY-PLAN` como único hallazgo no bloqueante).
 
-  **Sin commitear**: pendiente de autorización del autor.
+  **Commit**: `f5471c1`.
 - [x] **T8 — Segunda pasada del autor sobre el panel.** Cinco cambios en una sola unidad: el encabezado muestra los contadores de carga como una sola línea de texto («Bimestrales n/3 - Cuatrimestrales n/6»), con el límite superado en rojo y sin contador de materias marcadas, y la sección **Carga conocida se retira** para no duplicar el número; se eliminan **seis textos** (el eyebrow, el badge de materias marcadas, la nota de restricción dura, la nota de oferta conocida, la leyenda de preferencia blanda y la nota bajo el botón); el cuadro **Comprobaciones locales se retira con su cálculo**, así que los avisos de día bloqueado, de tope superado y de correlatividad dejan de existir en el mockup por decisión explícita del autor; se elimina el **atenuado y el resaltado** de correlatividades al marcar, porque el autor necesita marcar varias materias a la vez; y el desplegable de profesores pasa a ser un **acordeón real** con indicador visible, colapsado por defecto, encabezado con el nombre de la materia y cuerpo con los nombres de los docentes.
 
   **Reversión registrada.** El 2026-09-19 el autor revirtió su decisión anterior de que la falta de afordancia fuera deliberada: al ver el panel en el navegador no encontró la funcionalidad, porque el nombre se leía como texto plano. El hallazgo `R3-TOGGLE-AFFORDANCE` tenía razón en la práctica.
