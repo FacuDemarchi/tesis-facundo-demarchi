@@ -151,7 +151,7 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 **Consecuencias.** La Tabla 7 debe corregirse: RF-05 pasa de `CU-06` a `CU-05, CU-06`. El flujo de CU-05 necesita el paso de generación de alternativas. La comparación de alternativas (CU-08) y la granularidad del resultado (D-05) aplican a los dos modos.
 
-**Revisión del 2026-09-19 — la planificación no ejecuta CP-SAT.** El autor corrigió el alcance: el período de planificación (el siguiente) **no ejecuta el motor**. Al aceptar el borrador, las materias marcadas pasan directamente a `Planificada` en ese período y el borrador se conserva. El CP-SAT y la pantalla de resultados quedan como superficie del **período actual**, el de inscripción, con la etiqueta `válida para inscripción`; la variante `condicionada` queda sin uso y se retira junto con los datos de resultado del período de planificación. El botón de entrada del período siguiente vuelve a `Planificar`, porque ya no genera alternativas.
+**Revisión del 2026-09-19 — la planificación no ejecuta CP-SAT.** El autor corrigió el alcance: el período de planificación (el siguiente) **no ejecuta el motor**. Al aceptar el borrador, las materias marcadas pasan directamente a `Planificada` en ese período, el borrador por período se conserva y el panel de selección se cierra. El CP-SAT y la pantalla de resultados quedan como superficie del **período actual**, el de inscripción, con la etiqueta `válida para inscripción`; la variante `condicionada` queda sin uso y se retira junto con los datos de resultado del período de planificación. El botón de entrada del período siguiente vuelve a `Planificar`, porque ya no genera alternativas.
 
 **Consecuencias de la revisión.**
 
@@ -224,14 +224,14 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 **Contexto.** La primera versión tenía dos botones con el mismo texto y la misma promesa: el de la barra y el del panel. Ninguno de los dos decía qué cerraba ni qué abría.
 
-**Decisión.** El botón de la **barra de período** abre la etapa de selección, y su etiqueta cambia con el período: «Iniciar la inscripción» en el actual y «Generar alternativas» en el siguiente (D-03). El botón del **panel** cierra la selección y pasa a la optimización, y dice «Inscribir» en el período actual y «Aceptar» en el siguiente; queda deshabilitado con el borrador vacío.
+**Decisión.** El botón de la **barra de período** abre la etapa de selección, y su etiqueta cambia con el período: «Iniciar la inscripción» en el actual y «Planificar» en el siguiente (D-03). El botón del **panel** queda deshabilitado con el borrador vacío y cierra la selección en ambos períodos. «Inscribir» abre la optimización y los resultados simulados solo para el período actual. «Aceptar» aplica directamente el borrador de planificación: conserva ese borrador, muestra las materias como `Planificada`, cierra el panel y devuelve el foco al CTA «Planificar»; no ejecuta CP-SAT ni abre resultados.
 
 **Alternativas descartadas.**
 
 - *Un solo botón para las dos cosas:* deja al estudiante sin saber si está abriendo un borrador o ejecutando el motor.
 - *El mismo texto en los dos períodos:* desaprovecha el vocabulario de D-03 justo donde distingue períodos.
 
-**Consecuencias.** La etapa de optimización no existe todavía: el mockup muestra un marcador que enumera los seis resultados pendientes, sin simular que el solver exista.
+**Consecuencias.** La etapa de optimización y sus seis resultados pendientes solo pertenecen a la inscripción del período actual; el mockup los presenta como resultados simulados, sin ejecutar el solver. La planificación se confirma al aplicar el plan y volver al CTA de entrada con el borrador disponible al reabrirlo. Esta decisión reemplaza la variante anterior en la que aceptar la planificación conservaba el panel abierto.
 
 ---
 
@@ -310,6 +310,47 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 - **La leyenda no puede ser una nota al pie**, porque D-03 prohíbe presentar una acción como una inscripción ya efectuada: el documento debe declarar que es una selección simulada y no una inscripción, llevar la trazabilidad de RF-20 —período, versión del plan, origen y fecha de los datos, restricciones y preferencias— y decir que la inscripción se realiza en el sistema oficial. Sin membrete institucional y sin la palabra «comprobante».
 - **Un candidato no puede ser un paso numerado del flujo de un caso de uso comprometido.** La prueba está en el propio documento: RC-05 es candidato y no aparece en el flujo de CU-05.
 - Se implementa con **hoja de impresión y la exportación a PDF del navegador**: no suma dependencias, no retiene nada en el servidor, y es la misma pantalla de resultados. Descargar no es compartir: compartir sí necesitaría la decisión de privacidad abierta en RC-08.
+
+---
+
+## D-19 — La inscripción simulada exige elegir y confirmar una alternativa
+
+**Fecha:** 2026-09-20 · **Estado:** aceptada · **Clasificación:** preliminar
+
+**Contexto.** Mostrar alternativas como resultado no define si una de ellas cambia el estado del estudiante ni qué materias se trasladan desde un borrador que puede no coincidir con la combinación mostrada. Una selección implícita confundiría la exploración del resultado con una acción de inscripción.
+
+**Decisión.** Cada alternativa viable se elige primero mediante una tarjeta de radio nativa, identificada por el par `desenlace + alternativa`, y la confirmación se realiza con el botón separado `Confirmar inscripción`. Elegir no modifica el estado de ninguna materia. El botón solo se habilita cuando la intersección entre las materias del borrador vigente y las asignaciones de la alternativa elegida no está vacía; la confirmación acumula **solo esa intersección** en un estado local `Inscripta` por período. Si la intersección es vacía, el botón queda deshabilitado con una explicación visible. Las alternativas parciales de un resultado indeterminado siguen siendo elegibles; un desenlace sin alternativas conserva sus acciones de recuperación y no habilita la confirmación.
+
+Al confirmar, el modal y su scrim se cierran sin reabrir la selección, el borrador y sus elecciones/expansiones de profesor se limpian, las restricciones de días se preservan, el canvas y la barra de período dejan de estar inertes y el foco vuelve a `Iniciar la inscripción`. El anuncio debe informar cantidad, período, limpieza del borrador y que el resultado pertenece al escenario simulado, no a una inscripción institucional oficial. Volver, cerrar y Escape no confirman y conservan el borrador.
+
+**Alternativas descartadas.**
+
+- *Inscribir todas las materias de la alternativa:* agrega materias que el estudiante no marcó y convierte el resultado en una decisión unilateral del prototipo.
+- *Inscribir todo el borrador:* conserva materias ausentes de la alternativa y afirma una combinación que el resultado no produjo.
+- *Reutilizar `periodStateOverrides`:* mezcla contexto fijo del escenario con una decisión local de esta sesión y permite que una confirmación se filtre entre períodos.
+
+**Consecuencias.**
+
+- El estado `Inscripta` confirmado tiene precedencia sobre el plan aceptado, las anulaciones por período y el estado base, pero queda aislado al período que lo originó.
+- La elección se reinicia al abrir resultados, cambiar el desenlace o volver a ejecutar el desenlace simulado, para que IDs de alternativas repetidos entre desenlaces no seleccionen otra combinación.
+- La interfaz debe exponer radios agrupados, selección por teclado, estado visual, CTA deshabilitado y explicación visible; no basta con que la validación exista solo en código.
+
+## D-20 — La selección bloquea la navegación de período y cancelar descarta solo la transacción vigente
+
+**Fecha:** 2026-09-20 · **Estado:** aceptada · **Clasificación:** preliminar
+
+**Contexto.** El borrador, las restricciones de disponibilidad y las preferencias pertenecen al período activo. Permitir cambiarlo mientras el panel de selección o los resultados están abiertos mezcla una transacción no confirmada con otra vista y deja sin una semántica clara para abandonar el trabajo en curso.
+
+**Decisión.** Abrir `Iniciar la inscripción` o `Planificar` inicia una transacción por período y bloquea ambas flechas de navegación mientras `selectionOpen || resultsOpen`. El bloqueo es nativo en los controles y también se defiende en los manejadores ante llamadas programáticas. Pasar de selección a resultados, regresar con Volver, Cerrar o Escape, y las acciones de recuperación conserva la misma transacción y, por lo tanto, el bloqueo.
+
+La transacción termina únicamente al confirmar la inscripción, aceptar la planificación o elegir `Cancelar` en el panel. Cancelar descarta los datos aún no confirmados del período actual: borrador, preferencias y expansiones de profesor, y días no disponibles. Cierra y oculta el panel, elimina su marcador del canvas, vuelve a renderizar, devuelve el foco al CTA de entrada y anuncia explícitamente el descarte.
+
+**Alternativas descartadas.**
+
+- *Permitir navegar con la selección abierta:* obliga a elegir implícitamente entre trasladar, mezclar o perder entradas no confirmadas al cambiar de período.
+- *Cancelar revirtiendo el plan o la inscripción confirmados:* confunde el descarte de una transacción abierta con una operación de reversión que requiere reglas, trazabilidad y confirmación propias.
+
+**Consecuencias.** `enrolledByPeriod` y `acceptedPlanByPeriod` no se modifican al cancelar: son resultados confirmados de transacciones anteriores. Cuando no existe una transacción activa, las flechas conservan su deshabilitación normal en los límites de la lista de períodos.
 
 # Pendientes
 

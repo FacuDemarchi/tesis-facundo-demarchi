@@ -28,15 +28,20 @@ const periods = [
 ];
 const periodStateOverrides = new Map([
   ['2A · 2026', new Map([
-    ['C19', 'enrolled'], ['C20', 'enrolled'], ['C27', 'enrolled'],
+    ['C19', 'enrolled'], ['C20', 'enrolled'], ['C23', 'enrolled'], ['C27', 'available'],
     ['C25', 'no-offer'], ['C26', 'no-offer']
   ])]
 ]);
 const drafts = new Map();
 const acceptedPlanByPeriod = new Map();
+const enrolledByPeriod = new Map();
 function acceptedPlanForPeriod(label = currentPeriod().label) {
   if (!acceptedPlanByPeriod.has(label)) acceptedPlanByPeriod.set(label, new Set());
   return acceptedPlanByPeriod.get(label);
+}
+function enrolledForPeriod(label = currentPeriod().label) {
+  if (!enrolledByPeriod.has(label)) enrolledByPeriod.set(label, new Set());
+  return enrolledByPeriod.get(label);
 }
 const unavailableDaysByPeriod = new Map();
 const professorChoicesByPeriod = new Map();
@@ -57,10 +62,15 @@ let periodIndex = 0;
 let selectionOpen = false;
 let resultsOpen = false;
 let outcomeId = 'alternativas';
+let selectedAlternative = null;
 let panelSide = 'right';
+let wheelScrollTarget = null;
+let wheelAnimationFrame = null;
 
 function currentPeriod() { return periods[periodIndex]; }
+function isSelectionFlowActive() { return selectionOpen || resultsOpen; }
 function courseStateForPeriod(course, label = currentPeriod().label) {
+  if (enrolledForPeriod(label).has(course.id)) return 'enrolled';
   if (acceptedPlanForPeriod(label).has(course.id)) return 'planned';
   return periodStateOverrides.get(label)?.get(course.id) || course.state;
 }
@@ -120,8 +130,9 @@ function renderPeriod() {
   const period = currentPeriod();
   document.querySelector('#period-kind').textContent = period.kind;
   document.querySelector('#period-label').textContent = period.label;
-  document.querySelector('#period-prev').disabled = periodIndex === 0;
-  document.querySelector('#period-next').disabled = periodIndex === periods.length - 1;
+  const periodNavigationLocked = isSelectionFlowActive();
+  document.querySelector('#period-prev').disabled = periodNavigationLocked || periodIndex === 0;
+  document.querySelector('#period-next').disabled = periodNavigationLocked || periodIndex === periods.length - 1;
   primaryAction.textContent = period.entryAction;
   primaryAction.hidden = selectionOpen || resultsOpen;
   document.querySelector('#panel-primary-action').textContent = period.panelAction;
@@ -179,6 +190,60 @@ function updatePanelSide() {
   panelSide = preferredPanelSide(scrollRatio(), panelSide);
   selectionPanel.dataset.side = panelSide;
   canvas.dataset.side = panelSide;
+}
+function normalizedVerticalWheelDelta(event) {
+  if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16;
+  if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) return event.deltaY * canvas.clientWidth;
+  return event.deltaY;
+}
+function maxCanvasScrollLeft() {
+  return Math.max(0, canvas.scrollWidth - canvas.clientWidth);
+}
+function clampCanvasScrollLeft(value) {
+  return Math.min(maxCanvasScrollLeft(), Math.max(0, value));
+}
+function cancelWheelScrollAnimation() {
+  if (wheelAnimationFrame !== null) cancelAnimationFrame(wheelAnimationFrame);
+  wheelAnimationFrame = null;
+  wheelScrollTarget = null;
+}
+function finishWheelScrollAnimation() {
+  canvas.scrollLeft = wheelScrollTarget;
+  wheelScrollTarget = null;
+  wheelAnimationFrame = null;
+}
+function animateWheelScroll() {
+  wheelAnimationFrame = null;
+  if (wheelScrollTarget === null) return;
+  wheelScrollTarget = clampCanvasScrollLeft(wheelScrollTarget);
+  const remaining = wheelScrollTarget - canvas.scrollLeft;
+  if (Math.abs(remaining) <= 1) {
+    finishWheelScrollAnimation();
+    return;
+  }
+  const previousScrollLeft = canvas.scrollLeft;
+  canvas.scrollLeft = clampCanvasScrollLeft(previousScrollLeft + remaining * .25);
+  if (canvas.scrollLeft === previousScrollLeft) {
+    finishWheelScrollAnimation();
+    return;
+  }
+  wheelAnimationFrame = requestAnimationFrame(animateWheelScroll);
+}
+function translateVerticalWheelToHorizontalScroll(event) {
+  const preservesNativeInteraction = event.deltaX !== 0 || event.shiftKey || event.ctrlKey || event.metaKey || event.deltaY === 0
+    || (event.target instanceof Element && event.target.closest('#selection-panel, #results-modal, #results-scrim'));
+  if (preservesNativeInteraction) {
+    cancelWheelScrollAnimation();
+    return;
+  }
+  wheelScrollTarget = clampCanvasScrollLeft((wheelScrollTarget ?? canvas.scrollLeft) + normalizedVerticalWheelDelta(event));
+  event.preventDefault();
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    canvas.scrollLeft = wheelScrollTarget;
+    wheelScrollTarget = null;
+    return;
+  }
+  if (wheelAnimationFrame === null) wheelAnimationFrame = requestAnimationFrame(animateWheelScroll);
 }
 
 function teacherLabel(teacherId) {
@@ -348,6 +413,30 @@ function renderOutcomeExplanation(outcome) {
   const actions = action ? `<ul class="outcome-actions"><li><button type="button" data-outcome-action="${action.id}">${action.label}</button></li></ul>` : '';
   return `<section class="outcome-explanation">${lead}<h4>${outcome.explicacion.titulo}</h4><ul class="outcome-causes">${causes}</ul>${actions}</section>`;
 }
+function selectedAlternativeFor(outcome) {
+  if (!selectedAlternative || selectedAlternative.outcomeId !== outcome.id) return null;
+  return outcome.alternativas.find(alternative => alternative.id === selectedAlternative.alternativeId) || null;
+}
+function alternativeIntersection(alternative) {
+  return [...new Set(alternative.asignaciones.map(assignment => assignment.materiaId))]
+    .filter(courseId => currentDraft().has(courseId));
+}
+function renderConfirmation(outcome) {
+  const alternative = selectedAlternativeFor(outcome);
+  const intersection = alternative ? alternativeIntersection(alternative) : [];
+  const confirm = document.querySelector('#results-confirm');
+  const hint = document.querySelector('#results-confirmation-hint');
+  confirm.disabled = !alternative || intersection.length === 0;
+  if (!outcome.alternativas.length) {
+    hint.textContent = 'Este desenlace no ofrece alternativas para confirmar. Puede usar las acciones de recuperación disponibles o volver a la selección.';
+  } else if (!alternative) {
+    hint.textContent = 'Seleccione una alternativa para confirmar únicamente las materias marcadas que contiene.';
+  } else if (!intersection.length) {
+    hint.textContent = 'La alternativa seleccionada no incluye ninguna materia marcada; elija otra alternativa o vuelva a la selección para ajustar el borrador.';
+  } else {
+    hint.textContent = `Se confirmarán ${intersection.length} materia(s) marcada(s) de esta alternativa.`;
+  }
+}
 function renderResults() {
   const period = currentPeriod();
   const outcomes = resultsData.periodos[period.label] || [];
@@ -365,6 +454,7 @@ function renderResults() {
   document.querySelector('#outcome-title').textContent = outcome.titulo;
   document.querySelector('#outcome-summary').textContent = outcome.resumen;
   const alternatives = document.querySelector('#alternatives');
+  const selected = selectedAlternativeFor(outcome);
   const cards = outcome.alternativas.map((alternative, index) => {
     const metrics = alternativeMetrics(alternative);
     const assignments = alternative.asignaciones.map(assignment => {
@@ -372,9 +462,12 @@ function renderResults() {
       const schedule = assignment.franjas.map(franja => `${franja.dia} ${franja.desde}–${franja.hasta}`).join(', ');
       return `<li>${assignment.materiaId} · ${course?.name || assignment.materiaId} — ${teacherLabel(assignment.docenteId)} · ${aulaLabel(assignment.aulaId)} · ${schedule}</li>`;
     }).join('');
-    return `<article class="alternative"><p class="alternative-index">Alternativa ${index + 1}</p><h4>${alternative.titulo}</h4>${alternative.parcial ? '<p class="alternative-badge">Parcial, sin garantía de optimalidad</p>' : ''}<dl class="alternative-metrics"><dt>materias</dt><dd>${metrics.materias}</dd><dt>días ocupados</dt><dd>${metrics.dias}</dd><dt>horas totales</dt><dd>${metrics.horas}</dd><dt>huecos</dt><dd>${metrics.huecos}</dd></dl><ul class="alternative-assignments">${assignments}</ul>${renderWeeklyGrid(alternative)}${alternative.nota ? `<p class="alternative-note">${alternative.nota}</p>` : ''}</article>`;
+    const isSelected = selected?.id === alternative.id;
+    const radioId = `alternative-${outcome.id}-${alternative.id}`;
+    return `<article class="alternative ${isSelected ? 'selected' : ''}"><div class="alternative-choice"><input class="alternative-choice-input" type="radio" id="${radioId}" name="result-alternative" value="${alternative.id}" data-outcome-id="${outcome.id}" data-alternative-id="${alternative.id}" ${isSelected ? 'checked' : ''}><label for="${radioId}">Alternativa ${index + 1}: ${alternative.titulo}</label></div><p class="alternative-index" aria-hidden="true">Alternativa ${index + 1}</p><h4>${alternative.titulo}</h4>${alternative.parcial ? '<p class="alternative-badge">Parcial, sin garantía de optimalidad</p>' : ''}<dl class="alternative-metrics"><dt>materias</dt><dd>${metrics.materias}</dd><dt>días ocupados</dt><dd>${metrics.dias}</dd><dt>horas totales</dt><dd>${metrics.horas}</dd><dt>huecos</dt><dd>${metrics.huecos}</dd></dl><ul class="alternative-assignments">${assignments}</ul>${renderWeeklyGrid(alternative)}${alternative.nota ? `<p class="alternative-note">${alternative.nota}</p>` : ''}</article>`;
   }).join('');
-  alternatives.innerHTML = `${cards}${renderOutcomeExplanation(outcome)}`;
+  alternatives.innerHTML = `<legend class="sr-only">Seleccione una alternativa de cursado</legend>${cards}${renderOutcomeExplanation(outcome)}`;
+  renderConfirmation(outcome);
 }
 function openSelection() {
   selectionOpen = true;
@@ -393,6 +486,7 @@ function advanceStage() {
 }
 function openResults() {
   if (!selectedCourses().length) return;
+  selectedAlternative = null;
   selectionOpen = false;
   resultsOpen = true;
   selectionPanel.hidden = true;
@@ -411,20 +505,59 @@ function openResults() {
 function applyPlan() {
   const plan = new Set(currentDraft().keys());
   acceptedPlanByPeriod.set(currentPeriod().label, plan);
+  selectionOpen = false;
+  selectionPanel.hidden = true;
+  delete canvas.dataset.panel;
   updateInterface();
-  announceSelection(`${currentPeriod().panelAction}: ${plan.size} materia(s) pasaron a planificadas en ${currentPeriod().label}. El borrador se conserva.`);
+  primaryAction.focus();
+  announceSelection(`El plan se aplicó: ${plan.size} materia(s) pasaron a Planificada en ${currentPeriod().label}. El borrador se conserva y la selección se cerró.`);
 }
-function closeResults({ announcement = 'Resultados cerrados: se volvió a la selección con el borrador intacto.', prepareSelection, focusSelector } = {}) {
+function cancelSelection() {
+  const periodLabel = currentPeriod().label;
+  draftForPeriod(periodLabel).clear();
+  professorChoicesForPeriod(periodLabel).clear();
+  expandedProfessorChoicesForPeriod(periodLabel).clear();
+  blockedDaysForPeriod(periodLabel).clear();
+  selectionOpen = false;
+  selectionPanel.hidden = true;
+  delete canvas.dataset.panel;
+  updateInterface();
+  primaryAction.focus();
+  announceSelection(`Se descartó la selección actual de ${periodLabel} y todas sus entradas.`);
+}
+function hideResults() {
   resultsScrim.hidden = true;
   resultsScrim.setAttribute('aria-hidden', 'true');
   resultsModal.hidden = true;
   canvas.inert = false;
   periodBar.inert = false;
   resultsOpen = false;
+}
+function closeResults({ announcement = 'Resultados cerrados: se volvió a la selección con el borrador intacto.', prepareSelection, focusSelector } = {}) {
+  hideResults();
   prepareSelection?.();
   openSelection();
   document.querySelector(focusSelector)?.focus();
   announceSelection(announcement);
+}
+function confirmEnrollment() {
+  const outcomes = resultsData.periodos[currentPeriod().label] || [];
+  const outcome = outcomes.find(item => item.id === outcomeId);
+  const alternative = outcome && selectedAlternativeFor(outcome);
+  const courseIds = alternative ? alternativeIntersection(alternative) : [];
+  if (!courseIds.length) return;
+  courseIds.forEach(courseId => enrolledForPeriod().add(courseId));
+  currentDraft().clear();
+  professorChoicesForPeriod().clear();
+  expandedProfessorChoicesForPeriod().clear();
+  selectedAlternative = null;
+  hideResults();
+  selectionOpen = false;
+  selectionPanel.hidden = true;
+  delete canvas.dataset.panel;
+  updateInterface();
+  primaryAction.focus();
+  announceSelection(`Se confirmaron ${courseIds.length} materia(s) en ${currentPeriod().label}; se limpió el borrador. Este es el escenario simulado, no una inscripción institucional oficial.`);
 }
 function handleOutcomeAction(action) {
   if (action === 'review-restrictions') {
@@ -436,6 +569,7 @@ function handleOutcomeAction(action) {
   }
   if (action === 'rerun-outcome') {
     const title = document.querySelector('#outcome-title').textContent;
+    selectedAlternative = null;
     renderResults();
     document.querySelector('[data-outcome-action="rerun-outcome"]')?.focus();
     announceSelection(`La maqueta no ejecuta un motor: se vuelve a mostrar el mismo desenlace simulado (${title}).`);
@@ -457,20 +591,45 @@ function handleOutcomeAction(action) {
 renderColumns();
 draftForPeriod();
 selectionPanel.hidden = true;
-document.querySelector('#period-prev').addEventListener('click', () => { periodIndex = Math.max(0, periodIndex - 1); updateInterface(); });
-document.querySelector('#period-next').addEventListener('click', () => { periodIndex = Math.min(periods.length - 1, periodIndex + 1); updateInterface(); });
+function movePeriod(direction) {
+  if (isSelectionFlowActive()) return;
+  periodIndex = Math.min(periods.length - 1, Math.max(0, periodIndex + direction));
+  updateInterface();
+}
+document.querySelector('#period-prev').addEventListener('click', () => movePeriod(-1));
+document.querySelector('#period-next').addEventListener('click', () => movePeriod(1));
 primaryAction.addEventListener('click', openSelection);
 document.querySelector('#panel-primary-action').addEventListener('click', advanceStage);
+document.querySelector('#panel-cancel-action').addEventListener('click', cancelSelection);
 resultsClose.addEventListener('click', closeResults);
 document.querySelector('#results-back').addEventListener('click', closeResults);
+document.querySelector('#results-confirm').addEventListener('click', confirmEnrollment);
 resultsScrim.addEventListener('click', closeResults);
 document.querySelector('#outcome-select').addEventListener('change', event => {
   outcomeId = event.target.value;
+  selectedAlternative = null;
   renderResults();
 });
+document.querySelector('#alternatives').addEventListener('change', event => {
+  const choice = event.target.closest('input[name="result-alternative"]');
+  if (!choice) return;
+  selectedAlternative = { outcomeId: choice.dataset.outcomeId, alternativeId: choice.dataset.alternativeId };
+  renderResults();
+  document.querySelector(`#${choice.id}`)?.focus();
+});
 document.querySelector('#alternatives').addEventListener('click', event => {
+  if (!(event.target instanceof Element)) return;
   const action = event.target.closest('[data-outcome-action]');
-  if (action) handleOutcomeAction(action.dataset.outcomeAction);
+  if (action) {
+    handleOutcomeAction(action.dataset.outcomeAction);
+    return;
+  }
+  if (event.target.closest('input, label, button, a, select, textarea')) return;
+  const card = event.target.closest('.alternative');
+  const choice = card?.querySelector('input[name="result-alternative"]');
+  if (!choice) return;
+  choice.focus();
+  choice.click();
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && resultsOpen) closeResults();
@@ -513,6 +672,10 @@ updateInterface();
 updatePanelSide();
 requestAnimationFrame(fitGraphToViewport);
 canvas.addEventListener('scroll', updatePanelSide, { passive: true });
+canvas.addEventListener('wheel', translateVerticalWheelToHorizontalScroll, { passive: false });
+resultsModal.addEventListener('wheel', cancelWheelScrollAnimation, { passive: true });
+resultsScrim.addEventListener('wheel', cancelWheelScrollAnimation, { passive: true });
+canvas.addEventListener('pointerdown', cancelWheelScrollAnimation);
 window.addEventListener('resize', () => {
   fitGraphToViewport();
   updatePanelSide();
