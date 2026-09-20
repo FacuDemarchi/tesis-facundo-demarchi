@@ -4,6 +4,7 @@ const states = {
   enrolled: { label: 'Inscripta', symbol: 'I' }, 'no-capacity': { label: 'Sin cupo', symbol: '0' },
   planned: { label: 'Planificada', symbol: 'P' }, review: { label: 'Solicitud en revisión', symbol: 'R' }
 };
+const MAX_SELECTED_COURSES = 3;
 
 const courses = [
   ['C01',1,1,'Herramientas matemáticas I – Álgebra','approved','sa'], ['C02',1,2,'Herramientas matemáticas II – Análisis','approved','sa'], ['C03',1,3,'Introducción a los algoritmos','approved','sa'], ['C04',1,4,'Desarrollo emprendedor','approved','sa'], ['C05',1,5,'Sistemas de información','approved','sa'], ['C06',1,6,'Idioma extranjero I','approved','sa'],
@@ -22,38 +23,57 @@ const edges = [
 ];
 
 const periods = [
-  { kind: 'Período actual', label: '1B · 2026', entryAction: 'Iniciar la inscripción', panelAction: 'Inscribir' },
-  { kind: 'Período siguiente', label: '2A · 2026', entryAction: 'Generar alternativas', panelAction: 'Aceptar' }
+  { kind: 'Período actual', label: '1B · 2026', entryAction: 'Iniciar la inscripción', panelAction: 'Inscribir', runsSolver: true, resultsLabel: 'válida para inscripción' },
+  { kind: 'Período siguiente', label: '2A · 2026', entryAction: 'Planificar', panelAction: 'Aceptar', runsSolver: false }
 ];
-const scenarioPlans = new Map([['2A · 2026', ['C19', 'C20', 'C27']]]);
+const periodStateOverrides = new Map([
+  ['2A · 2026', new Map([
+    ['C19', 'enrolled'], ['C20', 'enrolled'], ['C27', 'enrolled'],
+    ['C25', 'no-offer'], ['C26', 'no-offer']
+  ])]
+]);
 const drafts = new Map();
+const acceptedPlanByPeriod = new Map();
+function acceptedPlanForPeriod(label = currentPeriod().label) {
+  if (!acceptedPlanByPeriod.has(label)) acceptedPlanByPeriod.set(label, new Set());
+  return acceptedPlanByPeriod.get(label);
+}
 const unavailableDaysByPeriod = new Map();
 const professorChoicesByPeriod = new Map();
 const expandedProfessorChoicesByPeriod = new Map();
-const data = window.DATOS_SIMULADOS || { catedras: [], docentes: [] };
+const data = window.DATOS_SIMULADOS || { catedras: [], docentes: [], aulas: [] };
+const resultsData = window.RESULTADOS_SIMULADOS || { periodos: {} };
 const columns = document.querySelector('#columns');
 const status = document.querySelector('#selection-status');
-const warningStatus = document.querySelector('#warning-status');
 const selectionPanel = document.querySelector('#selection-panel');
-const optimizationStage = document.querySelector('#optimization-stage');
 const graphFrame = document.querySelector('#graph-frame');
 const primaryAction = document.querySelector('#primary-action');
 const canvas = document.querySelector('.canvas');
+const periodBar = document.querySelector('.period-bar');
+const resultsScrim = document.querySelector('#results-scrim');
+const resultsModal = document.querySelector('#results-modal');
+const resultsClose = document.querySelector('#results-close');
 let periodIndex = 0;
-let highlightedId = null;
 let selectionOpen = false;
-let optimizationOpen = false;
+let resultsOpen = false;
+let outcomeId = 'alternativas';
 let panelSide = 'right';
 
 function currentPeriod() { return periods[periodIndex]; }
+function courseStateForPeriod(course, label = currentPeriod().label) {
+  if (acceptedPlanForPeriod(label).has(course.id)) return 'planned';
+  return periodStateOverrides.get(label)?.get(course.id) || course.state;
+}
 function offersFor(courseId) { return data.catedras.filter(item => item.materiaId === courseId && item.periodo === currentPeriod().label); }
 function draftForPeriod(label = currentPeriod().label) {
-  if (!drafts.has(label)) {
-    drafts.set(label, new Map((scenarioPlans.get(label) || []).map(id => [id, 'scenario'])));
-  }
+  if (!drafts.has(label)) drafts.set(label, new Map());
   return drafts.get(label);
 }
 function currentDraft() { return draftForPeriod(); }
+function isCourseSelectable(course) {
+  const state = courseStateForPeriod(course);
+  return state !== 'approved' && state !== 'blocked' && state !== 'enrolled';
+}
 function blockedDaysForPeriod(label = currentPeriod().label) {
   if (!unavailableDaysByPeriod.has(label)) unavailableDaysByPeriod.set(label, new Set());
   return unavailableDaysByPeriod.get(label);
@@ -67,13 +87,16 @@ function expandedProfessorChoicesForPeriod(label = currentPeriod().label) {
   return expandedProfessorChoicesByPeriod.get(label);
 }
 function selectedCourses() { return courses.filter(course => currentDraft().has(course.id)); }
+function pendingCoursesInDraftOrder() {
+  return [...currentDraft().keys()]
+    .map(id => courses.find(course => course.id === id))
+    .filter(course => course && offersFor(course.id).length === 0);
+}
 function intentionFor(course) {
-  if (course.state === 'blocked') return 'no considerar';
-  return currentDraft().get(course.id) === 'scenario' ? 'requerida en esta planificación' : 'deseada';
+  if (courseStateForPeriod(course) === 'blocked') return 'no considerar';
+  return 'deseada';
 }
 function consideredCourses() { return selectedCourses().filter(course => intentionFor(course) !== 'no considerar'); }
-function bimestreLabel() { return currentPeriod().label.slice(0, 2); }
-function cuatrimestreLabel() { return currentPeriod().label.charAt(0); }
 function blockedReason(course) {
   const prerequisites = edges.filter(([, target]) => target === course.id).map(([source]) => source);
   return prerequisites.length
@@ -81,9 +104,16 @@ function blockedReason(course) {
     : 'Bloqueada en el escenario: no cumple las condiciones académicas informadas.';
 }
 function displayState(course) {
-  if (currentDraft().has(course.id) && intentionFor(course) === 'requerida en esta planificación') return states.planned;
-  if (course.state === 'planned') return states.available;
-  return states[course.state];
+  const state = courseStateForPeriod(course);
+  return state === 'planned' ? states.available : states[state];
+}
+function coursePresentation(course) {
+  const accepted = acceptedPlanForPeriod().has(course.id);
+  const effectiveState = courseStateForPeriod(course);
+  // Un plan base pertenece a otro período; solo el plan aceptado de esta vista afirma «Planificada».
+  return accepted
+    ? { state: states.planned, className: 'planned' }
+    : { state: displayState(course), className: effectiveState === 'planned' ? 'available' : effectiveState };
 }
 
 function renderPeriod() {
@@ -93,7 +123,7 @@ function renderPeriod() {
   document.querySelector('#period-prev').disabled = periodIndex === 0;
   document.querySelector('#period-next').disabled = periodIndex === periods.length - 1;
   primaryAction.textContent = period.entryAction;
-  primaryAction.hidden = selectionOpen || optimizationOpen;
+  primaryAction.hidden = selectionOpen || resultsOpen;
   document.querySelector('#panel-primary-action').textContent = period.panelAction;
 }
 
@@ -101,10 +131,12 @@ function renderColumns() {
   columns.innerHTML = Array.from({ length: 10 }, (_, index) => {
     const term = index + 1;
     const cards = courses.filter(course => course.term === term).map(course => {
-      const state = displayState(course);
-      const intention = currentDraft().has(course.id) ? intentionFor(course) : '';
-      return `<button class="course ${state === states.planned ? 'planned' : course.state === 'planned' ? 'available' : course.state} category-${course.category}" data-course="${course.id}" type="button" style="--slot:${course.slot}" aria-pressed="${Boolean(intention)}" ${selectionOpen ? '' : 'disabled'}>
-        <span class="course-state"><span aria-hidden="true">${state.symbol}</span> ${state.label}</span>
+      const presentation = coursePresentation(course);
+      const isMarked = currentDraft().has(course.id);
+      const intention = isMarked ? intentionFor(course) : '';
+      const disabled = !selectionOpen || !isCourseSelectable(course) || (!isMarked && currentDraft().size >= MAX_SELECTED_COURSES);
+      return `<button class="course ${presentation.className} category-${course.category}" data-course="${course.id}" type="button" style="--slot:${course.slot}" aria-pressed="${Boolean(intention)}" ${disabled ? 'disabled' : ''}>
+        <span class="course-state"><span aria-hidden="true">${presentation.state.symbol}</span> ${presentation.state.label}</span>
         <strong><span>${course.id}</span> · ${course.name}</strong>
         <small><span aria-hidden="true">●</span> ${intention ? intention : 'Sin marcar'} · ${course.category === 'sa' ? 'Req. SA' : course.category === 'pp' ? 'Req. PP' : course.category === 'process' ? 'Proceso' : 'General'}</small>
       </button>`;
@@ -131,43 +163,24 @@ function drawConnections() {
     const x2 = (target.left - stageBox.left) / scale;
     const y2 = (target.top + target.height / 2 - stageBox.top) / scale;
     const bend = Math.max(28, (x2 - x1) * .48);
-    const related = highlightedId && (from === highlightedId || to === highlightedId);
-    return `<path class="edge ${type} ${related ? 'related' : ''} ${highlightedId && !related ? 'muted' : ''}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;
+    return `<path class="edge ${type}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;
   }).join('') + '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" /></marker></defs>';
 }
 
-function overlap(left, right) { return left.dia === right.dia && left.desde < right.hasta && right.desde < left.hasta; }
-function preferredPanelSide(scrollRatio, currentSide) {
-  if (currentSide === 'left') return scrollRatio < .15 ? 'right' : 'left';
-  return scrollRatio >= .20 ? 'left' : 'right';
-}
-function boxesOverlap(first, second) {
-  return first.left < second.right && first.right > second.left && first.top < second.bottom && first.bottom > second.top;
-}
-function panelBoxForSide(side) {
-  const panelBox = selectionPanel.getBoundingClientRect();
-  const inset = parseFloat(getComputedStyle(selectionPanel).getPropertyValue('--panel-inset')) || 24;
-  const left = side === 'left' ? inset : window.innerWidth - inset - panelBox.width;
-  return { left, right: left + panelBox.width, top: panelBox.top, bottom: panelBox.bottom };
-}
-function focusIsClear(side) {
-  const candidateBox = panelBoxForSide(side);
-  const focused = document.activeElement;
-  if (!(focused instanceof HTMLElement) || focused === document.body || focused === document.documentElement) return true;
-  if (selectionPanel.contains(focused)) return true;
-  return !boxesOverlap(candidateBox, focused.getBoundingClientRect());
-}
 function scrollRatio() {
   const range = canvas.scrollWidth - canvas.clientWidth;
   return range > 0 ? canvas.scrollLeft / range : 0;
 }
-function updatePanelSide() {
-  if (!selectionOpen) return;
-  let nextSide = preferredPanelSide(scrollRatio(), panelSide);
-  if (!focusIsClear(nextSide)) nextSide = nextSide === 'left' ? 'right' : 'left';
-  panelSide = nextSide;
-  selectionPanel.dataset.side = panelSide;
+function preferredPanelSide(ratio, currentSide) {
+  if (currentSide === 'left') return ratio < .15 ? 'right' : 'left';
+  return ratio >= .20 ? 'left' : 'right';
 }
+function updatePanelSide() {
+  panelSide = preferredPanelSide(scrollRatio(), panelSide);
+  selectionPanel.dataset.side = panelSide;
+  canvas.dataset.side = panelSide;
+}
+
 function teacherLabel(teacherId) {
   const teacher = data.docentes.find(item => item.id === teacherId);
   return teacher ? `${teacher.nombre} (${teacher.id})` : teacherId;
@@ -176,39 +189,6 @@ function professorChoicesFor(courseId) {
   return [...new Map(offersFor(courseId).map(offer => [offer.docente, teacherLabel(offer.docente)])).entries()]
     .map(([id, label]) => ({ id, label }));
 }
-function localWarnings() {
-  const active = consideredCourses();
-  const warnings = [];
-  const known = active.filter(course => offersFor(course.id).length);
-  if (known.length > 3) warnings.push(`Tope de bimestre superado: ${known.length} materias con oferta en ${bimestreLabel()}; el máximo es 3.`);
-  if (known.length > 6) warnings.push(`Tope de cuatrimestre superado: ${known.length} materias conocidas; el máximo es 6.`);
-  const blockedDays = blockedDaysForPeriod();
-  active.forEach(course => {
-    const offerings = offersFor(course.id);
-    if (offerings.length && offerings.every(offer => offer.franjas.length && offer.franjas.every(slot => blockedDays.has(slot.dia)))) {
-      warnings.push(`${course.id} no puede evitar los días bloqueados (${[...blockedDays].join(', ')}); todas sus cátedras publicadas caen solo en esos días.`);
-    }
-  });
-  active.forEach(course => {
-    edges.filter(([, target]) => target === course.id).forEach(([source]) => {
-      const prerequisite = courses.find(item => item.id === source);
-      const fulfilled = prerequisite.state === 'approved' || (currentDraft().has(source) && intentionFor(prerequisite) !== 'no considerar');
-      if (!fulfilled) warnings.push(`${course.id} requiere revisar la correlatividad directa con ${source}; el escenario no confirma que esté satisfecha.`);
-    });
-  });
-  active.forEach(course => {
-    const offerings = offersFor(course.id);
-    if (offerings.length && offerings.every(offer => offer.cupo <= 0)) warnings.push(`${course.id} no tiene cupo simulado en las cátedras publicadas de ${currentPeriod().label}.`);
-  });
-  for (let index = 0; index < active.length; index += 1) {
-    for (let other = index + 1; other < active.length; other += 1) {
-      const possibleConflict = offersFor(active[index].id).some(first => offersFor(active[other].id).some(second => first.franjas.some(a => second.franjas.some(b => overlap(a, b)))));
-      if (possibleConflict) warnings.push(`${active[index].id} y ${active[other].id} tienen al menos una combinación de comisiones con superposición; la optimización debe elegir una combinación compatible.`);
-    }
-  }
-  return [...new Set(warnings)];
-}
-
 function renderAvailability() {
   const blockedDays = blockedDaysForPeriod();
   document.querySelectorAll('[data-unavailable-day]').forEach(button => {
@@ -226,42 +206,50 @@ function renderProfessorPreference(course) {
   const options = professorChoices.length
     ? `<label><input type="radio" name="professor-${course.id}" value="" ${choice ? '' : 'checked'}> Sin preferencia de profesor</label>${professorChoices.map(professor => `<label><input type="radio" name="professor-${course.id}" value="${professor.id}" ${choice === professor.id ? 'checked' : ''}> ${professor.label}</label>`).join('')}`
     : '<p class="empty-state">No hay cátedras publicadas para elegir profesor en este período.</p>';
-  return `<div id="${panelId}" class="subject-professor-options" ${expanded ? '' : 'hidden'}><p>Preferencia blanda: ordena alternativas válidas y no vuelve infactible el resultado.</p>${options}</div>`;
+  return `<div id="${panelId}" class="subject-professor-options" ${expanded ? '' : 'hidden'}>${options}</div>`;
 }
 function renderPanel() {
   const selected = selectedCourses();
-  const active = consideredCourses();
-  const known = active.filter(course => offersFor(course.id).length);
-  document.querySelector('#selected-count').textContent = `${selected.length} ${selected.length === 1 ? 'materia' : 'materias'}`;
-  document.querySelector('#cap-summary').innerHTML = [
-    [`Bimestre ${bimestreLabel()}`, known.length, 3], [`Cuatrimestre ${cuatrimestreLabel()}`, known.length, 6]
-  ].map(([label, used, limit]) => `<div class="cap-item ${used > limit ? 'over-cap' : ''}"><span>${label}</span><b>${used} / ${limit}</b><span>${used > limit ? 'Tope excedido' : 'Con oferta conocida'}</span></div>`).join('');
+
+  // La lista de materias marcadas se dibuja primero y no depende de ningún otro
+  // elemento del panel: si algo opcional faltara, la lista tiene que aparecer igual.
   const list = document.querySelector('#selected-subjects');
-  list.innerHTML = selected.length ? selected.map(course => {
-    const origin = currentDraft().get(course.id);
-    const intention = intentionFor(course);
-    const offerText = offersFor(course.id).length ? `${offersFor(course.id).length} cátedra(s) publicada(s)` : 'oferta pendiente';
-    const motive = intention === 'no considerar' ? `<span class="subject-motive">${blockedReason(course)}</span>` : '';
-    const expandedHere = expandedProfessorChoicesForPeriod().has(course.id);
-    return `<li class="subject-item"><button type="button" class="subject-name" data-professor-toggle="${course.id}" aria-expanded="${expandedHere}" aria-controls="professor-preference-${course.id}">${course.id} · ${course.name}<span class="subject-meta">${offerText}</span><span class="derived-intention">${intention}</span></button>${origin === 'scenario' ? '<span class="subject-origin">Cargada desde la planificación existente del escenario.</span>' : ''}${motive}${renderProfessorPreference(course)}</li>`;
-  }).join('') : '<li class="empty-state">Todavía no hay materias marcadas.</li>';
+  if (list) {
+    list.innerHTML = selected.length ? selected.map(course => {
+      const intention = intentionFor(course);
+      const offerText = offersFor(course.id).length ? `${offersFor(course.id).length} cátedra(s) publicada(s)` : 'oferta pendiente';
+      const motive = intention === 'no considerar' ? `<span class="subject-motive">${blockedReason(course)}</span>` : '';
+      const expandedHere = expandedProfessorChoicesForPeriod().has(course.id);
+      return `<li class="subject-item"><button type="button" class="subject-name" data-professor-toggle="${course.id}" aria-expanded="${expandedHere}" aria-controls="professor-preference-${course.id}">${course.id} · ${course.name}<span class="subject-meta">${offerText}</span><span class="accordion-caret" aria-hidden="true"></span></button>${motive}${renderProfessorPreference(course)}</li>`;
+    }).join('') : '<li class="empty-state">Todavía no hay materias marcadas.</li>';
+  }
+
+  const bimestreCap = document.querySelector('[data-cap="bimestre"]');
+  if (bimestreCap) {
+    bimestreCap.textContent = `Bimestrales ${selected.length}/${MAX_SELECTED_COURSES}`;
+    bimestreCap.dataset.overCap = String(selected.length > MAX_SELECTED_COURSES);
+  }
+  const cuatrimestreCap = document.querySelector('[data-cap="cuatrimestre"]');
+  if (cuatrimestreCap) {
+    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/6`;
+    cuatrimestreCap.dataset.overCap = String(selected.length > 6);
+  }
+
   renderAvailability();
-  const warnings = localWarnings();
-  document.querySelector('#warnings').innerHTML = warnings.length ? warnings.map(message => `<li>${message}</li>`).join('') : '<li class="clear-warning">No hay advertencias locales para las materias activas.</li>';
-  warningStatus.textContent = warnings.length ? `${warnings.length} advertencias locales actualizadas.` : 'No hay advertencias locales.';
-  document.querySelector('#panel-primary-action').disabled = selected.length === 0;
+  const cta = document.querySelector('#panel-primary-action');
+  if (cta) cta.disabled = selected.length === 0;
 }
 
 function updateCards() {
-  const relatedIds = new Set(highlightedId ? [highlightedId] : []);
-  edges.forEach(([from, to]) => { if (from === highlightedId || to === highlightedId) { relatedIds.add(from); relatedIds.add(to); } });
   document.querySelectorAll('.course').forEach(card => {
     const course = courses.find(item => item.id === card.dataset.course);
+    const presentation = coursePresentation(course);
     const isMarked = currentDraft().has(course.id);
+    card.classList.remove(...Object.keys(states));
+    card.classList.add(presentation.className);
+    card.querySelector('.course-state').innerHTML = `<span aria-hidden="true">${presentation.state.symbol}</span> ${presentation.state.label}`;
     card.setAttribute('aria-pressed', String(isMarked));
     card.classList.toggle('marked', isMarked);
-    card.classList.toggle('selected', card.dataset.course === highlightedId);
-    card.classList.toggle('muted', Boolean(highlightedId) && !relatedIds.has(card.dataset.course));
     if (isMarked) card.dataset.intention = intentionFor(course); else delete card.dataset.intention;
   });
 }
@@ -271,7 +259,6 @@ function updateInterface() {
   renderColumns();
   updateCards();
   renderPanel();
-  updatePanelSide();
   drawConnections();
 }
 function announceSelection(message) { status.textContent = message; }
@@ -281,15 +268,25 @@ function markCourse(id) {
     currentDraft().delete(id);
     professorChoicesForPeriod().delete(id);
     expandedProfessorChoicesForPeriod().delete(id);
-    highlightedId = null;
     announceSelection(`${id} se quitó del borrador.`);
   } else {
+    const state = courseStateForPeriod(course);
+    if (!isCourseSelectable(course)) {
+      const reason = state === 'enrolled'
+        ? `ya está inscripta en ${currentPeriod().label}`
+        : state === 'approved' ? 'está aprobada' : 'está bloqueada';
+      announceSelection(`${id} no se puede marcar porque ${reason}.`);
+      return;
+    }
+    if (currentDraft().size >= MAX_SELECTED_COURSES) {
+      announceSelection(`Solo se pueden marcar hasta ${MAX_SELECTED_COURSES} materias.`);
+      return;
+    }
     currentDraft().set(id, 'student');
-    highlightedId = id;
     const intention = intentionFor(course);
     announceSelection(intention === 'no considerar'
       ? `${id} se agregó como no considerar. ${blockedReason(course)}`
-      : `${id} se agregó como deseada. Se resaltaron sus correlatividades directas.`);
+      : `${id} se agregó como deseada.`);
   }
   updateInterface();
 }
@@ -306,36 +303,178 @@ function fitGraphToViewport() {
   frame.style.height = `${Math.floor(region.offsetHeight * scale)}px`;
   drawConnections();
 }
+function minutesSinceMidnight(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+function alternativeMetrics(alternative) {
+  const franjas = alternative.asignaciones.flatMap(assignment => assignment.franjas);
+  const days = new Set(franjas.map(franja => franja.dia));
+  const hours = franjas.reduce((total, franja) => total + (minutesSinceMidnight(franja.hasta) - minutesSinceMidnight(franja.desde)) / 60, 0);
+  const gaps = [...days].reduce((total, day) => {
+    const daily = franjas.filter(franja => franja.dia === day).sort((a, b) => a.desde.localeCompare(b.desde));
+    return total + daily.slice(1).filter((franja, index) => minutesSinceMidnight(franja.desde) - minutesSinceMidnight(daily[index].hasta) >= 60).length;
+  }, 0);
+  return { materias: alternative.asignaciones.length, dias: days.size, horas: hours, huecos: gaps };
+}
+function aulaLabel(aulaId) {
+  return data.aulas.find(aula => aula.id === aulaId)?.nombre || aulaId;
+}
+function renderWeeklyGrid(alternative) {
+  const dayOrder = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+  const franjas = alternative.asignaciones.flatMap(assignment => assignment.franjas.map(franja => ({ ...franja, assignment })));
+  if (!franjas.length) return '';
+  const days = dayOrder.filter(day => franjas.some(franja => franja.dia === day));
+  const rows = [...new Map(franjas.map(franja => [`${franja.desde}–${franja.hasta}`, franja])).values()]
+    .sort((a, b) => a.desde.localeCompare(b.desde));
+  return `<table class="weekly-grid"><caption>Distribución semanal: ${alternative.titulo}</caption><thead><tr><th scope="col">Franja</th>${days.map(day => `<th scope="col">${day}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr><th scope="row">${row.desde}–${row.hasta}</th>${days.map(day => {
+    const occupied = franjas.find(franja => franja.dia === day && franja.desde === row.desde && franja.hasta === row.hasta);
+    return `<td>${occupied ? `${occupied.assignment.materiaId}<span class="sr-only">${courses.find(course => course.id === occupied.assignment.materiaId)?.name || occupied.assignment.materiaId}</span>` : ''}</td>`;
+  }).join('')}</tr>`).join('')}</tbody></table>`;
+}
+function recoveryAction(outcome) {
+  const actions = {
+    infactible: { id: 'review-restrictions', label: 'Revisar los días restringidos' },
+    indeterminado: { id: 'rerun-outcome', label: 'Volver a ejecutar el desenlace simulado' },
+    'oferta-pendiente': { id: 'view-pending-offers', label: 'Ver las materias sin oferta' }
+  };
+  return actions[outcome.id] || null;
+}
+function renderOutcomeExplanation(outcome) {
+  if (!outcome.explicacion) return '';
+  const action = recoveryAction(outcome);
+  const lead = outcome.alternativas.length ? '' : '<p class="outcome-empty">Este desenlace simulado no produce alternativas de cursado.</p>';
+  const causes = outcome.explicacion.causas.map(cause => `<li>${cause}</li>`).join('');
+  const actions = action ? `<ul class="outcome-actions"><li><button type="button" data-outcome-action="${action.id}">${action.label}</button></li></ul>` : '';
+  return `<section class="outcome-explanation">${lead}<h4>${outcome.explicacion.titulo}</h4><ul class="outcome-causes">${causes}</ul>${actions}</section>`;
+}
+function renderResults() {
+  const period = currentPeriod();
+  const outcomes = resultsData.periodos[period.label] || [];
+  const outcome = outcomes.find(item => item.id === outcomeId) || outcomes[0];
+  if (!outcome) return;
+  outcomeId = outcome.id;
+  document.querySelector('#results-period').textContent = period.label;
+  document.querySelector('#results-label').textContent = period.resultsLabel || '';
+  const pending = selectedCourses().filter(course => offersFor(course.id).length === 0);
+  document.querySelector('#results-granularity').textContent = pending.length
+    ? `Granularidad del resultado: materia — hay materias con oferta pendiente: ${pending.map(course => `${course.id} · ${course.name || course.id}`).join(', ')}.`
+    : 'Granularidad del resultado: cátedra — todas las materias marcadas tienen oferta publicada.';
+  const outcomeSelect = document.querySelector('#outcome-select');
+  outcomeSelect.innerHTML = outcomes.map(item => `<option value="${item.id}" ${item.id === outcomeId ? 'selected' : ''}>${item.titulo}</option>`).join('');
+  document.querySelector('#outcome-title').textContent = outcome.titulo;
+  document.querySelector('#outcome-summary').textContent = outcome.resumen;
+  const alternatives = document.querySelector('#alternatives');
+  const cards = outcome.alternativas.map((alternative, index) => {
+    const metrics = alternativeMetrics(alternative);
+    const assignments = alternative.asignaciones.map(assignment => {
+      const course = courses.find(item => item.id === assignment.materiaId);
+      const schedule = assignment.franjas.map(franja => `${franja.dia} ${franja.desde}–${franja.hasta}`).join(', ');
+      return `<li>${assignment.materiaId} · ${course?.name || assignment.materiaId} — ${teacherLabel(assignment.docenteId)} · ${aulaLabel(assignment.aulaId)} · ${schedule}</li>`;
+    }).join('');
+    return `<article class="alternative"><p class="alternative-index">Alternativa ${index + 1}</p><h4>${alternative.titulo}</h4>${alternative.parcial ? '<p class="alternative-badge">Parcial, sin garantía de optimalidad</p>' : ''}<dl class="alternative-metrics"><dt>materias</dt><dd>${metrics.materias}</dd><dt>días ocupados</dt><dd>${metrics.dias}</dd><dt>horas totales</dt><dd>${metrics.horas}</dd><dt>huecos</dt><dd>${metrics.huecos}</dd></dl><ul class="alternative-assignments">${assignments}</ul>${renderWeeklyGrid(alternative)}${alternative.nota ? `<p class="alternative-note">${alternative.nota}</p>` : ''}</article>`;
+  }).join('');
+  alternatives.innerHTML = `${cards}${renderOutcomeExplanation(outcome)}`;
+}
 function openSelection() {
   selectionOpen = true;
-  optimizationOpen = false;
   selectionPanel.hidden = false;
   primaryAction.blur();
-  optimizationStage.hidden = true;
-  graphFrame.hidden = false;
+  canvas.dataset.panel = 'open';
   updatePanelSide();
+  fitGraphToViewport();
   announceSelection(`Selección abierta para ${currentPeriod().label}.`);
   updateInterface();
 }
-function runOptimization() {
+function advanceStage() {
+  if (!selectedCourses().length) return;
+  if (currentPeriod().runsSolver) openResults();
+  else applyPlan();
+}
+function openResults() {
   if (!selectedCourses().length) return;
   selectionOpen = false;
-  optimizationOpen = true;
+  resultsOpen = true;
   selectionPanel.hidden = true;
-  graphFrame.hidden = true;
-  optimizationStage.hidden = false;
+  delete canvas.dataset.panel;
   primaryAction.hidden = true;
-  announceSelection(`${currentPeriod().panelAction}: el borrador pasó a la etapa de optimización pendiente.`);
+  resultsScrim.hidden = false;
+  resultsScrim.setAttribute('aria-hidden', 'false');
+  resultsModal.hidden = false;
+  canvas.inert = true;
+  periodBar.inert = true;
+  renderResults();
+  fitGraphToViewport();
+  resultsClose.focus();
+  announceSelection(`${currentPeriod().panelAction}: el borrador pasó a la etapa de resultados simulados.`);
+}
+function applyPlan() {
+  const plan = new Set(currentDraft().keys());
+  acceptedPlanByPeriod.set(currentPeriod().label, plan);
+  updateInterface();
+  announceSelection(`${currentPeriod().panelAction}: ${plan.size} materia(s) pasaron a planificadas en ${currentPeriod().label}. El borrador se conserva.`);
+}
+function closeResults({ announcement = 'Resultados cerrados: se volvió a la selección con el borrador intacto.', prepareSelection, focusSelector } = {}) {
+  resultsScrim.hidden = true;
+  resultsScrim.setAttribute('aria-hidden', 'true');
+  resultsModal.hidden = true;
+  canvas.inert = false;
+  periodBar.inert = false;
+  resultsOpen = false;
+  prepareSelection?.();
+  openSelection();
+  document.querySelector(focusSelector)?.focus();
+  announceSelection(announcement);
+}
+function handleOutcomeAction(action) {
+  if (action === 'review-restrictions') {
+    closeResults({
+      announcement: 'Volver a la selección para revisar los días restringidos.',
+      focusSelector: '[data-unavailable-day="lunes"]'
+    });
+    return;
+  }
+  if (action === 'rerun-outcome') {
+    const title = document.querySelector('#outcome-title').textContent;
+    renderResults();
+    document.querySelector('[data-outcome-action="rerun-outcome"]')?.focus();
+    announceSelection(`La maqueta no ejecuta un motor: se vuelve a mostrar el mismo desenlace simulado (${title}).`);
+    return;
+  }
+  if (action === 'view-pending-offers') {
+    const pending = pendingCoursesInDraftOrder();
+    const course = pending[0];
+    closeResults(course ? {
+      announcement: `${course.id} no tiene cátedras publicadas en ${currentPeriod().label}; el acordeón muestra el estado vacío.`,
+      prepareSelection: () => expandedProfessorChoicesForPeriod().add(course.id),
+      focusSelector: `[data-professor-toggle="${course.id}"]`
+    } : {
+      announcement: `No hay materias marcadas sin oferta publicada en ${currentPeriod().label}.`
+    });
+  }
 }
 
 renderColumns();
 draftForPeriod();
 selectionPanel.hidden = true;
-optimizationStage.hidden = true;
-document.querySelector('#period-prev').addEventListener('click', () => { periodIndex = Math.max(0, periodIndex - 1); highlightedId = null; updateInterface(); });
-document.querySelector('#period-next').addEventListener('click', () => { periodIndex = Math.min(periods.length - 1, periodIndex + 1); highlightedId = null; updateInterface(); });
+document.querySelector('#period-prev').addEventListener('click', () => { periodIndex = Math.max(0, periodIndex - 1); updateInterface(); });
+document.querySelector('#period-next').addEventListener('click', () => { periodIndex = Math.min(periods.length - 1, periodIndex + 1); updateInterface(); });
 primaryAction.addEventListener('click', openSelection);
-document.querySelector('#panel-primary-action').addEventListener('click', runOptimization);
+document.querySelector('#panel-primary-action').addEventListener('click', advanceStage);
+resultsClose.addEventListener('click', closeResults);
+document.querySelector('#results-back').addEventListener('click', closeResults);
+resultsScrim.addEventListener('click', closeResults);
+document.querySelector('#outcome-select').addEventListener('change', event => {
+  outcomeId = event.target.value;
+  renderResults();
+});
+document.querySelector('#alternatives').addEventListener('click', event => {
+  const action = event.target.closest('[data-outcome-action]');
+  if (action) handleOutcomeAction(action.dataset.outcomeAction);
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && resultsOpen) closeResults();
+});
 document.querySelector('#unavailable-days').addEventListener('click', event => {
   const button = event.target.closest('[data-unavailable-day]');
   if (!button) return;
@@ -359,6 +498,7 @@ document.querySelector('#selected-subjects').addEventListener('click', event => 
   if (isExpanded) expanded.delete(courseId); else expanded.add(courseId);
   announceSelection(`Preferencia de profesor para ${courseId} ${isExpanded ? 'contraída' : 'expandida'}.`);
   updateInterface();
+  document.querySelector(`[data-professor-toggle="${courseId}"]`)?.focus();
 });
 document.querySelector('#selected-subjects').addEventListener('change', event => {
   const choice = event.target.closest('input[name^="professor-"]');
@@ -369,10 +509,10 @@ document.querySelector('#selected-subjects').addEventListener('change', event =>
   announceSelection(choice.value ? `Preferencia de profesor para ${courseId} actualizada.` : `Preferencia de profesor para ${courseId} eliminada.`);
   updateInterface();
 });
-canvas.addEventListener('scroll', updatePanelSide, { passive: true });
-document.addEventListener('focusin', updatePanelSide);
 updateInterface();
+updatePanelSide();
 requestAnimationFrame(fitGraphToViewport);
+canvas.addEventListener('scroll', updatePanelSide, { passive: true });
 window.addEventListener('resize', () => {
   fitGraphToViewport();
   updatePanelSide();

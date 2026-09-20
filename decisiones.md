@@ -139,7 +139,7 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 ## D-10 — El período actual genera alternativas y hay una sola pantalla de resultados
 
-**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** preliminar
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **revisada el 2026-09-19** · **Clasificación:** preliminar
 
 **Contexto.** El documento se contradecía sobre si el período actual produce alternativas. §3.3 exige que las alternativas presentadas para el período actual respeten correlatividades, cupos y carga; D-01 afirma que el motor rige para las dos operaciones; pero el flujo de CU-05 en la Tabla 6 solo «valida la selección resultante», y la Tabla 7 asocia RF-05 únicamente a CU-06, el caso del período siguiente.
 
@@ -150,6 +150,15 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 - *Que el período actual solo valide una selección que el estudiante arma:* dejaba a §3.3 sin respaldo y obligaba a dos pantallas de resultado, una para validar y otra para comparar.
 
 **Consecuencias.** La Tabla 7 debe corregirse: RF-05 pasa de `CU-06` a `CU-05, CU-06`. El flujo de CU-05 necesita el paso de generación de alternativas. La comparación de alternativas (CU-08) y la granularidad del resultado (D-05) aplican a los dos modos.
+
+**Revisión del 2026-09-19 — la planificación no ejecuta CP-SAT.** El autor corrigió el alcance: el período de planificación (el siguiente) **no ejecuta el motor**. Al aceptar el borrador, las materias marcadas pasan directamente a `Planificada` en ese período y el borrador se conserva. El CP-SAT y la pantalla de resultados quedan como superficie del **período actual**, el de inscripción, con la etiqueta `válida para inscripción`; la variante `condicionada` queda sin uso y se retira junto con los datos de resultado del período de planificación. El botón de entrada del período siguiente vuelve a `Planificar`, porque ya no genera alternativas.
+
+**Consecuencias de la revisión.**
+
+- **Deja sin efecto la mitad de esta decisión**: la afirmación «el período actual también genera alternativas» sigue vigente; lo que cae es que los dos modos compartan pantalla de resultados, porque la planificación no produce resultados.
+- **Tabla 7 vuelve a cambiar.** Con RF-05 ligada solo a CU-05, la corrección de D-10 queda sin efecto: el caso de uso del período siguiente no genera alternativas y no puede requerir el requisito de comparación de alternativas. Es deuda documental abierta, no un cambio aplicado.
+- **Los seis desenlaces de CP-SAT y la granularidad del resultado son de la inscripción.** El desenlace de oferta pendiente a nivel de materia pierde su pantalla en el período de planificación: allí la oferta faltante se informa en el panel, no en un resultado.
+- **Queda una tensión visible en el mockup**: el estado base `planificado` de las materias del escenario se presenta como `Disponible` —así lo hace también `mockup/`—, mientras que una materia que el estudiante acaba de planificar se presenta como `Planificada`. El motivo es que el estado base describe una planificación de otro período, que la vista actual no puede afirmar. La tensión queda registrada como hallazgo en `panel-seleccion/discoveries.md`.
 
 ---
 
