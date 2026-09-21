@@ -14,7 +14,7 @@ El ciclo de cuatro clics convertía una operación de pertenencia al borrador en
 
 ### 2.1. Aprobadas y bloqueadas no son marcables — **regla del autor**
 
-Durante la selección, las materias aprobadas y bloqueadas permanecen deshabilitadas de forma nativa. En `2A · 2026`, C19, C20 y C27 también quedan deshabilitadas como inscripciones existentes. `markCourse()` rechaza su incorporación por llamadas programáticas según el estado efectivo del período; los demás estados conservan el comportamiento existente.
+Durante la selección, las materias aprobadas y bloqueadas permanecen deshabilitadas de forma nativa. En `2A · 2026`, C19, C20 y C23 también quedan deshabilitadas como inscripciones existentes. `markCourse()` rechaza su incorporación por llamadas programáticas según el estado efectivo del período; los demás estados conservan el comportamiento existente.
 
 ### 2.2. El borrador del bimestre admite hasta tres materias — **regla explícita del autor**
 
@@ -32,19 +32,19 @@ El bloque de granularidad se eliminó del borrador. RF-13 pide informar la granu
 
 ### 5. El CTA del panel cierra la selección — **bug de transición; vocabulario de D-03**
 
-El CTA interno ya no duplica el de entrada ni pretende generar alternativas desde la selección. Dice `Inscribir` en `1B · 2026` y `Aceptar` en `2A · 2026`; queda deshabilitado cuando el borrador está vacío. Al activarlo cierra el panel y muestra una transición explícita a la optimización CP-SAT.
+El CTA interno ya no duplica el de entrada ni pretende generar alternativas desde la selección. Dice `Inscribir` en `1B · 2026` y `Aceptar` en `2A · 2026`; queda deshabilitado cuando el borrador está vacío. `Inscribir` cierra el panel y abre la etapa de resultados simulados del período actual. `Aceptar` aplica directamente el borrador de planificación: las materias pasan a `Planificada`, el borrador se conserva, el panel se cierra y el foco vuelve a `Planificar`.
 
-La transición enumera como pendientes los seis resultados documentados: alternativas de cursado, solución óptima, solución factible, infactibilidad explicada, estado indeterminado por límite temporal y oferta pendiente a nivel de materia. No simula que el solver exista.
+La planificación no ejecuta CP-SAT ni abre el modal de resultados. Los seis resultados documentados —alternativas de cursado, solución óptima, solución factible, infactibilidad explicada, estado indeterminado por límite temporal y oferta pendiente a nivel de materia— pertenecen solamente a la inscripción. No simula que el solver exista.
 
-**Pregunta abierta:** falta especificar la pantalla y el contrato de datos que materializarán esos seis resultados, incluidos su orden, acciones de recuperación y trazabilidad.
+**Pregunta abierta:** falta especificar la pantalla y el contrato de datos que materializarán esos seis resultados de inscripción, incluidos su orden, acciones de recuperación y trazabilidad.
 
 ### 6. El estado efectivo depende del período — **corrección de fuente de verdad**
 
-`courses` conserva el estado base del grafo. `periodStateOverrides` aplica la excepción sin mutarlo: en `2A · 2026`, C19, C20 y C27 son `Inscripta`, mientras C25 y C26 son `Sin cátedra`; en `1B · 2026` todos vuelven a su estado base. La selección, las clases CSS, la intención y los rechazos de `markCourse()` consultan el mismo estado efectivo.
+`courses` conserva el estado base del grafo. `periodStateOverrides` aplica la excepción sin mutarlo: en `2A · 2026`, C19, C20 y C23 son `Inscripta`, C27 es `Disponible` y C25/C26 son `Sin cátedra`; en `1B · 2026` todos vuelven a su estado base. La selección, las clases CSS, la intención y los rechazos de `markCourse()` consultan el mismo estado efectivo.
 
 ### 7. La inscripción existente no pertenece al borrador — **semántica de escenario**
 
-C19, C20 y C27 son contexto de inscripción existente de `2A · 2026`, no decisiones de planificación. Por eso el borrador de ese período empieza vacío, no las lista ni las cuenta contra el máximo de tres; sus tarjetas quedan deshabilitadas. C25 y C26, en cambio, pueden entrar como materias `deseada` aunque no tengan cátedras publicadas, y el acordeón informa ese estado vacío.
+C19, C20 y C23 son contexto de inscripción existente de `2A · 2026`, no decisiones de planificación. Por eso el borrador de ese período empieza vacío, no las lista ni las cuenta contra el máximo de tres; sus tarjetas quedan deshabilitadas. C27 queda `Disponible`; C25 y C26, en cambio, pueden entrar como materias `deseada` aunque no tengan cátedras publicadas, y el acordeón informa ese estado vacío.
 
 ### 8. El panel migra como modal flotante sobre el grafo — **corrección de interacción revisada por el autor**
 
@@ -53,6 +53,26 @@ La implementación anterior superponía el panel al grafo. Con el grafo al 0 % d
 El autor rechazó después la solución de columna reservada porque convertía el modal en una sección de pantalla: estrechaba y desplazaba el canvas como si el panel ocupara una región permanente. El comportamiento actual aceptado vuelve a ser un modal fijo y flotante sobre el grafo. La migración conserva la histéresis: el panel empieza a la derecha, pasa a la izquierda desde el 20 % del desplazamiento horizontal del canvas y solo vuelve a la derecha por debajo del 15 %. El canvas conserva todo su ancho y las tarjetas pueden quedar detrás del panel.
 
 El cambio de fondo blanco se revirtió: «gris» se refería a la sección aparentemente reservada, no a los colores de las tarjetas ni del panel. La guarda de foco permanece ausente; no se restauran los helpers de foco ni de solapamiento. Esto actualiza la sustitución de la regla de panel flotante registrada como D-11 en `decisiones.md`; ese documento se conserva como historial de la decisión deliberada, medida, retirada y corregida por el autor.
+
+### 9. La rueda vertical del grafo se traduce a desplazamiento horizontal — **mejora de navegación**
+
+Sobre el canvas del grafo, una rueda vertical pura actualiza un único destino acumulado de `scrollLeft` sin requerir Shift. La conversión conserva la unidad del evento: píxeles sin cambio, líneas por 16 px y páginas por el ancho visible del canvas. Una sola animación de `requestAnimationFrame` aproxima cada cuadro el 25 % de la distancia pendiente y siempre limita el destino a los extremos; no se crea una cola por cada notch. Para funcionar también donde `scrollLeft` se redondea a enteros, completa al faltar como máximo 1 px o si el paso calculado ya no cambia la posición, y limpia el destino y el cuadro pendiente. El listener existente de `scroll` sigue migrando el panel durante ese movimiento.
+
+Con `prefers-reduced-motion: reduce`, el destino se aplica de inmediato. Los gestos con `deltaX` distinto de cero —incluidos los trackpads horizontales—, Shift+rueda y Ctrl/Cmd+rueda siguen su ruta nativa; los últimos preservan el zoom del navegador. Tampoco se intercepta la rueda que nace en `#selection-panel`, `#results-modal` o `#results-scrim`, para que esos contenedores mantengan su desplazamiento vertical nativo. La ruta del panel, listeners pasivos explícitos en el modal y el scrim de resultados, y una interacción directa de puntero sobre el canvas cancelan cualquier animación pendiente sin impedir el desplazamiento nativo, para que no compita con el desplazamiento, el zoom, las superposiciones ni la barra de desplazamiento.
+
+### 10. La alternativa se confirma explícitamente y solo en su intersección — **regla de cierre simulada**
+
+Las alternativas viables son tarjetas de radio nativas: elegir una es reversible, no modifica las materias ni el borrador y se identifica por el par `desenlace + alternativa`, porque `ALT-1` se repite entre desenlaces. La elección se limpia al abrir resultados, cambiar desenlace o volver a ejecutar el desenlace simulado. El modal conserva `Volver`, cerrar y Escape como salidas no confirmativas que devuelven el borrador intacto.
+
+`Confirmar inscripción` es una acción separada. Solo se habilita cuando la alternativa elegida comparte al menos una materia con el borrador; si no comparte ninguna, el aviso visible explica por qué sigue deshabilitado. Al confirmar, la maqueta acumula exclusivamente esa intersección en un estado `Inscripta` local por período, limpia el borrador y las preferencias/expansiones de profesor, restaura el canvas y la barra de período, y devuelve el foco a `Iniciar la inscripción`. Las restricciones de días no se limpian. El anuncio y el modal declaran que se trata del escenario simulado, no de una inscripción institucional oficial.
+
+La confirmación no reutiliza `periodStateOverrides`: las inscripciones simuladas tienen precedencia sobre el estado base, las anulaciones y el plan aceptado, y no se trasladan a `2A · 2026`. El desenlace `indeterminado` conserva su alternativa parcial seleccionable; los desenlaces sin alternativas mantienen el CTA deshabilitado junto con su explicación y acciones de recuperación.
+
+### 11. La selección bloquea el período y se puede cancelar como transacción — **regla de continuidad**
+
+Abrir `Iniciar la inscripción` o `Planificar` inicia una transacción para el período visible. Mientras `selectionOpen || resultsOpen`, ambas flechas de navegación quedan deshabilitadas de forma nativa y sus manejadores no cambian de período si se los invoca programáticamente. El bloqueo no se libera al pasar al modal de resultados ni al regresar mediante Volver, Cerrar, Escape o una acción de recuperación: esas rutas conservan el borrador y vuelven a la selección.
+
+La transacción solo termina al confirmar la inscripción, aceptar el plan o usar el nuevo `Cancelar` secundario del panel. Cancelar limpia exclusivamente los datos en progreso del período actual —borrador, preferencias y expansiones de profesor, y días no disponibles—; oculta el panel, elimina su marcador del canvas, vuelve a renderizar, devuelve el foco al CTA de entrada y anuncia el descarte. No revierte `enrolledByPeriod` ni `acceptedPlanByPeriod`: esos estados ya fueron confirmados y pertenecen a una transacción anterior.
 
 ## Funcionalidad que la interfaz necesita y los datos o requisitos no proveen
 
