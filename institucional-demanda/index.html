@@ -25,20 +25,7 @@
     <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
   </header>
 
-  <main class="page-shell">
-    <section class="intro" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">Vista de solo lectura</p>
-        <h1 id="page-title">Demanda por materia</h1>
-        <p>Consulta agregada para anticipar la demanda por período. No inicia evaluaciones, propuestas ni decisiones institucionales.</p>
-      </div>
-      <aside class="simulation-notice" aria-label="Aviso sobre datos simulados">
-        <strong>Datos simulados</strong>
-        <span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span>
-      </aside>
-    </section>
-
-
+  <main class="page-shell" aria-label="Consulta de demanda institucional">
     <section class="summary" aria-labelledby="summary-title">
       <div class="section-heading">
         <div>
@@ -60,6 +47,11 @@
       </div>
       <div id="demand-list" class="demand-list" tabindex="-1"></div>
     </section>
+
+    <footer class="page-footer simulation-notice" aria-label="Aviso sobre datos simulados">
+      <strong>Datos simulados</strong>
+      <span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span>
+    </footer>
   </main>
 
   <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
