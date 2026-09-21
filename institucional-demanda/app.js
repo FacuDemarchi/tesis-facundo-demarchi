@@ -7,9 +7,9 @@ let periodIndex = 0;
 
 const categoryDefinitions = [
   { key: 'total', label: 'Demanda total', className: 'total' },
-  { key: 'elegibleActual', label: 'Elegible período actual', className: 'eligible' },
-  { key: 'condicionalSiguiente', label: 'Condicional período siguiente', className: 'conditional' },
-  { key: 'planificadaSinCupo', label: 'Planificada por falta de capacidad', className: 'no-capacity' }
+  { key: 'elegibleActual', label: 'Demanda actual', className: 'eligible' },
+  { key: 'condicionalSiguiente', label: 'Demanda futura', className: 'conditional' },
+  { key: 'planificadaSinCupo', label: 'Demanda insatisfecha', className: 'no-capacity' }
 ];
 
 const summaryValues = [
