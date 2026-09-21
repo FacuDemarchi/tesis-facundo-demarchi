@@ -42,6 +42,10 @@
 
   **CU-13 entry decision:** the normalized model can now evaluate resolution, but the first product decision is whether evaluation runs automatically when outside-capacity demand appears (current D-15) and presents its result, or whether the operator explicitly starts evaluation from the subject card. No CU-13 action is implemented until that choice is confirmed.
 
+- [ ] **T7 — Explicit CU-13 classroom evaluation.** For the current prototype, add `Evaluar resolución` only to current-period subjects with students outside capacity. The operator-triggered deterministic evaluation inspects larger classrooms for sufficient capacity and schedule availability, then expands the same subject card with the evaluated section, compatible classroom, capacity, incorporable students, and an explanation of the filter. It simulates no transfer and changes no enrollment. This visible action is a demonstrative prototype step; automatic triggering remains a future evolution.
+
+- [ ] **T8 — Verify CU-13 behavior and reconcile D-15.** Independently verify successful/no-compatible evaluation paths, repeated evaluations, keyboard/accessibility behavior, period isolation, unchanged enrollment data, and regressions in CU-10 and the student selection panel. Complete native review, record commits, and update D-15/documentation to distinguish the explicit prototype trigger from future automation.
+
 ## Work routing
 
 - Implementation: delegated bounded writer because the unit spans multiple non-trivial files.
