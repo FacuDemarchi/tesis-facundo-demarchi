@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CU-10 · Demanda institucional</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#demand-list">Saltar al detalle de demanda</a>
+  <header class="topbar">
+    <div class="brand">
+      <span>Plan académico · CU-10</span>
+      <strong>Consulta de demanda institucional</strong>
+    </div>
+    <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Vista de solo lectura</p>
+        <h1 id="page-title">Demanda por materia</h1>
+        <p>Consulta agregada para anticipar la demanda por período. No inicia evaluaciones, propuestas ni decisiones institucionales.</p>
+      </div>
+      <aside class="simulation-notice" aria-label="Aviso sobre datos simulados">
+        <strong>Datos simulados</strong>
+        <span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span>
+      </aside>
+    </section>
+
+    <section class="filter-panel" aria-labelledby="filter-title">
+      <div>
+        <p class="eyebrow" id="filter-title">Período de consulta</p>
+        <p id="period-kind" class="period-kind">Período actual</p>
+      </div>
+      <div class="period-controls">
+        <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
+        <label for="period-select">Elegir período</label>
+        <select id="period-select" aria-describedby="period-description"></select>
+        <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
+      </div>
+      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
+    </section>
+
+    <section class="summary" aria-labelledby="summary-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Resumen agregado</p>
+          <h2 id="summary-title">Demanda en <span id="summary-period"></span></h2>
+        </div>
+        <p class="formula">Total = elegible actual + condicional siguiente + planificada sin cupo</p>
+      </div>
+      <div id="summary-metrics" class="metric-grid"></div>
+    </section>
+
+    <section class="demand-section" aria-labelledby="demand-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Detalle por materia</p>
+          <h2 id="demand-title">Demanda y causas</h2>
+        </div>
+        <p class="unsatisfied-key"><span aria-hidden="true"></span> Demanda sin satisfacer</p>
+      </div>
+      <div id="demand-list" class="demand-list" tabindex="-1"></div>
+    </section>
+  </main>
+
+  <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="../comun/demanda-institucional-simulada.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
