@@ -22,6 +22,10 @@
 
   **Evidence:** the first Chromium pass found two concrete gaps: a missing root favicon produced a console 404, and status badges clipped at 320 px. Both were corrected with a self-contained favicon and narrow-layout header wrapping. Independent re-verification passed with HTTP 200, zero page errors, zero console warnings/errors, full badge text at 320 px without viewport overflow, visible 4 px keyboard focus, deterministic mouse/keyboard period filtering (`5 → 4 → 5` cards and `143 → 105 → 143` totals), live announcements, and no CU-11/CU-13/CU-14 mutation controls. `node --check` passes for both JavaScript files and `git diff --check` is clean. Native review `review-4c6bbe99bfda4739` approved the candidate and was acknowledged; informational finding `R3-001` did not open a correction.
 
+- [ ] **T3 — Separate current enrollment from future demand.** Preserve all subjects but make metrics period-specific. The current period shows only `Total`, `Alumnos inscriptos`, and `Alumnos inscriptos fuera de cupo`, with total equal to enrolled plus outside capacity. The following period shows only `Total` and `Demanda futura`, with total equal to future demand. Update simulated data semantics, card labels, aggregate summary, help copy, causes, and announcements consistently.
+
+- [ ] **T4 — Evaluate assigned-classroom capacity for CU-13.** After T3 is accepted, map each current-period subject to its assigned section/classroom and assess whether displaying classroom capacity helps the operator identify intervention candidates. Produce a recommendation and unresolved decisions before implementing CU-13 resolution behavior.
+
 ## Work routing
 
 - Implementation: delegated bounded writer because the unit spans multiple non-trivial files.

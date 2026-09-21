@@ -10,57 +10,47 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
       id: '1B-2026',
       etiqueta: '1B · 2026',
       tipo: 'Período actual',
+      metricas: ['total', 'alumnosInscriptos', 'alumnosInscriptosFueraDeCupo'],
       demanda: [
         {
           materiaId: 'C19',
           materia: 'Algoritmos y estructura de Datos II',
-          total: 30,
-          elegibleActual: 18,
-          condicionalSiguiente: 7,
-          planificadaSinCupo: 5,
-          causas: ['Demanda proyectada para la oferta publicada.']
+          total: 23,
+          alumnosInscriptos: 18,
+          alumnosInscriptosFueraDeCupo: 5,
+          causas: ['18 alumnos inscriptos fueron absorbidos por el cupo asignado.', '5 alumnos inscriptos no pudieron ser absorbidos por el cupo asignado.']
         },
         {
           materiaId: 'C20',
           materia: 'Taller de algoritmos y estructura de Datos II',
-          total: 42,
-          elegibleActual: 26,
-          condicionalSiguiente: 8,
-          planificadaSinCupo: 8,
-          causas: [
-            'La demanda total supera la capacidad de referencia del aula A-101 (24 lugares).',
-            'La oferta alternativa publicada deja 8 planificaciones sin cupo asignable.'
-          ]
+          total: 34,
+          alumnosInscriptos: 26,
+          alumnosInscriptosFueraDeCupo: 8,
+          causas: ['26 alumnos inscriptos fueron absorbidos por el cupo asignado.', '8 alumnos inscriptos no pudieron ser absorbidos por el cupo asignado.']
         },
         {
           materiaId: 'C23',
           materia: 'Ética y Deontología Profesional',
-          total: 24,
-          elegibleActual: 18,
-          condicionalSiguiente: 6,
-          planificadaSinCupo: 0,
-          causas: ['La oferta publicada cubre la demanda simulada del período.']
+          total: 18,
+          alumnosInscriptos: 18,
+          alumnosInscriptosFueraDeCupo: 0,
+          causas: ['Los 18 alumnos inscriptos fueron absorbidos por el cupo asignado.']
         },
         {
           materiaId: 'C27',
           materia: 'Herramientas matemáticas V – Estadística II',
-          total: 28,
-          elegibleActual: 19,
-          condicionalSiguiente: 3,
-          planificadaSinCupo: 6,
-          causas: [
-            'La cátedra publicada no tiene cupos disponibles.',
-            '6 planificaciones quedan sin cupo en el escenario simulado.'
-          ]
+          total: 25,
+          alumnosInscriptos: 19,
+          alumnosInscriptosFueraDeCupo: 6,
+          causas: ['19 alumnos inscriptos fueron absorbidos por el cupo asignado.', '6 alumnos inscriptos no pudieron ser absorbidos por el cupo asignado.']
         },
         {
           materiaId: 'C29',
           materia: 'Seminario de práctica de Analista en Software',
-          total: 19,
-          elegibleActual: 14,
-          condicionalSiguiente: 5,
-          planificadaSinCupo: 0,
-          causas: ['La capacidad simulada disponible cubre la demanda prevista.']
+          total: 14,
+          alumnosInscriptos: 14,
+          alumnosInscriptosFueraDeCupo: 0,
+          causas: ['Los 14 alumnos inscriptos fueron absorbidos por el cupo asignado.']
         }
       ]
     },
@@ -68,42 +58,35 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
       id: '2A-2026',
       etiqueta: '2A · 2026',
       tipo: 'Período siguiente',
+      metricas: ['total', 'demandaFutura'],
       demanda: [
         {
           materiaId: 'C20',
           materia: 'Taller de algoritmos y estructura de Datos II',
-          total: 25,
-          elegibleActual: 15,
-          condicionalSiguiente: 7,
-          planificadaSinCupo: 3,
-          causas: ['La capacidad simulada deja 3 planificaciones sin cupo asignable.']
+          total: 7,
+          demandaFutura: 7,
+          causas: ['7 estudiantes manifestaron demanda futura para 2A · 2026.']
         },
         {
           materiaId: 'C25',
           materia: 'Análisis y diseño de Software',
-          total: 21,
-          elegibleActual: 0,
-          condicionalSiguiente: 15,
-          planificadaSinCupo: 6,
-          causas: ['No hay oferta publicada para absorber las planificaciones del período.']
+          total: 15,
+          demandaFutura: 15,
+          causas: ['15 estudiantes manifestaron demanda futura para 2A · 2026.']
         },
         {
           materiaId: 'C42',
           materia: 'Emprendimientos universitarios',
-          total: 37,
-          elegibleActual: 28,
-          condicionalSiguiente: 9,
-          planificadaSinCupo: 0,
-          causas: ['La oferta simulada cubre la demanda prevista.']
+          total: 9,
+          demandaFutura: 9,
+          causas: ['9 estudiantes manifestaron demanda futura para 2A · 2026.']
         },
         {
           materiaId: 'C43',
           materia: 'Métodos Formales',
-          total: 22,
-          elegibleActual: 17,
-          condicionalSiguiente: 5,
-          planificadaSinCupo: 0,
-          causas: ['La oferta simulada cubre la demanda prevista.']
+          total: 5,
+          demandaFutura: 5,
+          causas: ['5 estudiantes manifestaron demanda futura para 2A · 2026.']
         }
       ]
     }
