@@ -40,10 +40,10 @@ button:focus-visible, select:focus-visible, .skip-link:focus-visible { outline: 
 .topbar-period button, .topbar-period select { border-color: #b7c8e2; }
 .topbar-period button:hover:not(:disabled) { border-color: #fff; }
 
-.page-shell { width: min(1180px, 100%); margin: 0 auto; padding: clamp(24px, 5vw, 52px) clamp(16px, 4vw, 32px) 56px; }
+.page-shell { width: 100%; margin: 0; padding: 0 0 56px; }
 .eyebrow { margin: 0 0 7px; color: var(--blue); }
 h2, h3 { color: var(--navy); }
-.page-footer { margin-top: 22px; }
+.page-footer { margin: 22px clamp(16px, 4vw, 32px) 0; }
 .simulation-notice { padding: 15px 17px; border-left: 5px solid var(--violet); border-radius: 8px; background: var(--violet-soft); display: grid; gap: 4px; color: #31236c; font-size: .88rem; line-height: 1.4; }
 
 .summary { padding: 12px clamp(16px, 4vw, 32px); background: var(--panel); border-bottom: 1px solid var(--line); box-shadow: 0 5px 12px #16284a0d; }
@@ -58,7 +58,7 @@ h2, h3 { color: var(--navy); }
 .summary-item:not(.is-dismissed):hover .summary-help, .summary-item:not(.is-dismissed):focus-within .summary-help, .summary-item.is-open .summary-help { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .period-controls { display: flex; align-items: center; gap: 9px; }
 .period-controls label { color: var(--muted); font-size: .82rem; font-weight: 700; }
-.demand-section { margin-top: 22px; padding: clamp(19px, 3vw, 29px); border: 1px solid var(--line); border-radius: 14px; background: var(--panel); box-shadow: 0 8px 22px #16284a0d; }
+.demand-section { margin-top: 0; padding: clamp(19px, 3vw, 29px); border: 1px solid var(--line); border-radius: 0; background: var(--panel); box-shadow: 0 8px 22px #16284a0d; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
 h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.02em; }
 .unsatisfied-key { margin: 0; color: var(--warning); font-size: .83rem; font-weight: 800; }.unsatisfied-key span { display: inline-block; width: 10px; height: 10px; margin-right: 4px; border-radius: 50%; background: var(--warning); }
