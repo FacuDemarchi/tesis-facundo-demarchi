@@ -14,6 +14,13 @@
       <span>Plan académico · CU-10</span>
       <strong>Consulta de demanda institucional</strong>
     </div>
+    <div class="period-controls topbar-period">
+      <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
+      <label for="period-select">Elegir período</label>
+      <select id="period-select" aria-describedby="period-description"></select>
+      <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
+      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
+    </div>
     <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
   </header>
 
@@ -35,13 +42,7 @@
         <p class="eyebrow" id="filter-title">Período de consulta</p>
         <p id="period-kind" class="period-kind">Período actual</p>
       </div>
-      <div class="period-controls">
-        <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
-        <label for="period-select">Elegir período</label>
-        <select id="period-select" aria-describedby="period-description"></select>
-        <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
-      </div>
-      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
+      <p class="filter-context">Los controles de período están disponibles en el encabezado.</p>
     </section>
 
     <section class="summary" aria-labelledby="summary-title">
