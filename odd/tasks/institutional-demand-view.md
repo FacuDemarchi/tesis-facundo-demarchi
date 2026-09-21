@@ -32,6 +32,10 @@
 
   **Prerequisites for CU-13:** canonical period IDs; demand attributed by `catedraId` or an explicit unattributed bucket; one defined `cupo` semantic and multi-section rule; reconciliation of `cupo` with classroom capacity; removal/reconciliation of C20's orphan `demanda: 42`; correction of C19/C27 cause text; and simulated classroom availability or a declared derivation over room/time assignments.
 
+- [ ] **T5 — Normalize section capacity and display it per section.** Correct the simulated offer so each current-period section's declared `cupo` equals its assigned classroom's physical capacity, enrollment does not exceed that capacity, and subject-level outside-capacity counts remain explicitly unattributed until CU-13 assigns them. Preserve multiple sections and display each section, assigned classroom, and capacity inside the current-period subject card. Keep future-period demand free of current classroom-capacity claims.
+
+- [ ] **T6 — Verify the capacity bridge and define CU-13 entry.** Independently verify consistency across shared offer data, institutional demand data, the student-facing selection mockup, and the CU-10 browser UI. Complete native review, record commits, then define the first CU-13 product decision from the normalized model without implementing resolution actions yet.
+
 ## Work routing
 
 - Implementation: delegated bounded writer because the unit spans multiple non-trivial files.

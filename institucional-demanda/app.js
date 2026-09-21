@@ -40,6 +40,20 @@ function assertDemandModel(model) {
       if (item.total !== contract.totalFor(item)) {
         throw new Error(`Inconsistent demand total for ${period.id}/${item.materiaId}.`);
       }
+
+      if (period.tipo === 'Período actual') {
+        const sections = item.secciones;
+        const assigned = sections?.reduce((sum, section) => sum + section.alumnosInscriptosAsignados, 0);
+        const validSections = Array.isArray(sections) && sections.length > 0
+          && sections.every(section => section.catedraId && section.aulaId && section.aulaNombre
+            && section.cupo === section.alumnosInscriptosAsignados);
+        if (!validSections || assigned !== item.alumnosInscriptos
+          || (item.alumnosInscriptosFueraDeCupo > 0 && item.atribucionFueraDeCupo !== 'No asignados todavía a una sección.')) {
+          throw new Error(`Inconsistent section snapshot for ${period.id}/${item.materiaId}.`);
+        }
+      } else if (item.secciones) {
+        throw new Error(`Unexpected section snapshot for future demand ${period.id}/${item.materiaId}.`);
+      }
     });
   });
 }
@@ -67,14 +81,41 @@ function createCategoryRow(definition, item) {
   return row;
 }
 
+function createSectionDetails(item) {
+  const sectionBlock = document.createElement('section');
+  sectionBlock.className = 'section-details';
+  const title = document.createElement('h4');
+  title.textContent = 'Secciones asignadas (simuladas)';
+  const list = document.createElement('ul');
+  list.className = 'section-list';
+
+  item.secciones.forEach(section => {
+    const listItem = document.createElement('li');
+    const sectionId = document.createElement('strong');
+    sectionId.textContent = section.catedraId;
+    listItem.append(sectionId, ` · ${section.aulaNombre} · Cupo: ${section.cupo} · Inscriptos asignados: ${section.alumnosInscriptosAsignados}`);
+    list.append(listItem);
+  });
+
+  if (item.alumnosInscriptosFueraDeCupo > 0) {
+    const pending = document.createElement('p');
+    pending.className = 'pending-assignment';
+    pending.textContent = `${item.alumnosInscriptosFueraDeCupo} alumnos fuera de cupo pendientes de asignación a una sección.`;
+    sectionBlock.append(title, list, pending);
+  } else {
+    sectionBlock.append(title, list);
+  }
+  return sectionBlock;
+}
+
 function createDemandCard(item, period) {
   const isCurrentPeriod = period.tipo === 'Período actual';
   const hasOutsideCapacity = isCurrentPeriod && item.alumnosInscriptosFueraDeCupo > 0;
   const card = document.createElement('article');
   card.className = `demand-card${hasOutsideCapacity ? ' is-unsatisfied' : ''}`;
   const statusText = isCurrentPeriod
-    ? (hasOutsideCapacity ? 'Con inscriptos fuera de cupo' : 'Inscriptos dentro de cupo')
-    : 'Demanda futura registrada';
+    ? (hasOutsideCapacity ? 'Pendiente de asignación (simulado)' : 'Asignado a sección (simulado)')
+    : 'Demanda futura simulada';
   card.setAttribute('aria-label', `${item.materiaId}, ${item.materia}, ${statusText.toLowerCase()}`);
 
   const header = document.createElement('header');
@@ -106,7 +147,9 @@ function createDemandCard(item, period) {
     causesList.append(listItem);
   });
   causes.append(causesTitle, causesList);
-  card.append(header, categories, causes);
+  card.append(header, categories);
+  if (isCurrentPeriod) card.append(createSectionDetails(item));
+  card.append(causes);
   return card;
 }
 

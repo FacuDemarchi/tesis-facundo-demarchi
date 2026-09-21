@@ -18,7 +18,11 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
           total: 23,
           alumnosInscriptos: 18,
           alumnosInscriptosFueraDeCupo: 5,
-          causas: ['18 alumnos inscriptos fueron absorbidos por el cupo asignado.', '5 alumnos inscriptos no pudieron ser absorbidos por el cupo asignado.']
+          atribucionFueraDeCupo: 'No asignados todavía a una sección.',
+          secciones: [
+            { catedraId: 'CAT-C19-01', aulaId: 'SIM-1B-C19-01', aulaNombre: 'Aula simulada 1B C19-01', cupo: 18, alumnosInscriptosAsignados: 18 }
+          ],
+          causas: ['Escenario simulado: 18 alumnos inscriptos fueron asignados a la sección CAT-C19-01.', '5 alumnos inscriptos fuera de cupo siguen sin asignación a una sección.']
         },
         {
           materiaId: 'C20',
@@ -26,7 +30,12 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
           total: 34,
           alumnosInscriptos: 26,
           alumnosInscriptosFueraDeCupo: 8,
-          causas: ['26 alumnos inscriptos fueron absorbidos por el cupo asignado.', '8 alumnos inscriptos no pudieron ser absorbidos por el cupo asignado.']
+          atribucionFueraDeCupo: 'No asignados todavía a una sección.',
+          secciones: [
+            { catedraId: 'CAT-C20-01', aulaId: 'SIM-1B-C20-01', aulaNombre: 'Aula simulada 1B C20-01', cupo: 12, alumnosInscriptosAsignados: 12 },
+            { catedraId: 'CAT-C20-02', aulaId: 'SIM-1B-C20-02', aulaNombre: 'Aula simulada 1B C20-02', cupo: 14, alumnosInscriptosAsignados: 14 }
+          ],
+          causas: ['Escenario simulado: 26 alumnos inscriptos fueron asignados entre las secciones CAT-C20-01 y CAT-C20-02.', '8 alumnos inscriptos fuera de cupo siguen sin asignación a una sección.']
         },
         {
           materiaId: 'C23',
@@ -34,7 +43,11 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
           total: 18,
           alumnosInscriptos: 18,
           alumnosInscriptosFueraDeCupo: 0,
-          causas: ['Los 18 alumnos inscriptos fueron absorbidos por el cupo asignado.']
+          atribucionFueraDeCupo: 'Sin alumnos fuera de cupo.',
+          secciones: [
+            { catedraId: 'CAT-C23-01', aulaId: 'SIM-1B-C23-01', aulaNombre: 'Aula simulada 1B C23-01', cupo: 18, alumnosInscriptosAsignados: 18 }
+          ],
+          causas: ['Escenario simulado: los 18 alumnos inscriptos fueron asignados a la sección CAT-C23-01.']
         },
         {
           materiaId: 'C27',
@@ -42,7 +55,11 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
           total: 25,
           alumnosInscriptos: 19,
           alumnosInscriptosFueraDeCupo: 6,
-          causas: ['19 alumnos inscriptos fueron absorbidos por el cupo asignado.', '6 alumnos inscriptos no pudieron ser absorbidos por el cupo asignado.']
+          atribucionFueraDeCupo: 'No asignados todavía a una sección.',
+          secciones: [
+            { catedraId: 'CAT-C27-01', aulaId: 'SIM-1B-C27-01', aulaNombre: 'Aula simulada 1B C27-01', cupo: 19, alumnosInscriptosAsignados: 19 }
+          ],
+          causas: ['Escenario simulado: 19 alumnos inscriptos fueron asignados a la sección CAT-C27-01.', '6 alumnos inscriptos fuera de cupo siguen sin asignación a una sección.']
         },
         {
           materiaId: 'C29',
@@ -50,7 +67,11 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
           total: 14,
           alumnosInscriptos: 14,
           alumnosInscriptosFueraDeCupo: 0,
-          causas: ['Los 14 alumnos inscriptos fueron absorbidos por el cupo asignado.']
+          atribucionFueraDeCupo: 'Sin alumnos fuera de cupo.',
+          secciones: [
+            { catedraId: 'CAT-C29-01', aulaId: 'SIM-1B-C29-01', aulaNombre: 'Aula simulada 1B C29-01', cupo: 14, alumnosInscriptosAsignados: 14 }
+          ],
+          causas: ['Escenario simulado: los 14 alumnos inscriptos fueron asignados a la sección CAT-C29-01.']
         }
       ]
     },

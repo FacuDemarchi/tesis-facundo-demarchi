@@ -28,7 +28,14 @@ window.DATOS_SIMULADOS = {
     { id: 'A-102', nombre: 'Aula A-102', capacidad: 48, tipo: 'aula' },
     { id: 'B-201', nombre: 'Aula B-201', capacidad: 80, tipo: 'aula' },
     { id: 'B-203', nombre: 'Laboratorio B-203', capacidad: 60, tipo: 'laboratorio' },
-    { id: 'C-301', nombre: 'Aula C-301', capacidad: 100, tipo: 'aula' }
+    { id: 'C-301', nombre: 'Aula C-301', capacidad: 100, tipo: 'aula' },
+    // Aulas simuladas exclusivas del período actual de CU-10. No reemplazan las aulas compartidas.
+    { id: 'SIM-1B-C19-01', nombre: 'Aula simulada 1B C19-01', capacidad: 18, tipo: 'aula' },
+    { id: 'SIM-1B-C20-01', nombre: 'Aula simulada 1B C20-01', capacidad: 12, tipo: 'aula' },
+    { id: 'SIM-1B-C20-02', nombre: 'Aula simulada 1B C20-02', capacidad: 14, tipo: 'aula' },
+    { id: 'SIM-1B-C23-01', nombre: 'Aula simulada 1B C23-01', capacidad: 18, tipo: 'aula' },
+    { id: 'SIM-1B-C27-01', nombre: 'Aula simulada 1B C27-01', capacidad: 19, tipo: 'aula' },
+    { id: 'SIM-1B-C29-01', nombre: 'Aula simulada 1B C29-01', capacidad: 14, tipo: 'aula' }
   ],
 
   docentes: [
@@ -44,28 +51,30 @@ window.DATOS_SIMULADOS = {
   ],
 
   // El bimestre se deriva de periodo: 1A/2A corresponde a A y 1B/2B a B.
+  // periodo conserva la etiqueta consumida por los mockups; periodoId permite enlaces canónicos.
   catedras: [
     {
       id: 'CAT-C19-01',
       materiaId: 'C19',
       periodo: '1B · 2026',
+      periodoId: '1B-2026',
       docente: 'D01',
-      aulaId: 'A-102',
-      cupo: 6,
+      aulaId: 'SIM-1B-C19-01',
+      cupo: 18,
       franjas: [
         { dia: 'lunes', desde: '18:00', hasta: '20:00' },
         { dia: 'miercoles', desde: '18:00', hasta: '20:00' }
       ]
     },
-    // La demanda simulada (42) excede A-101 (24); B-201 puede absorberla.
+    // C20 conserva dos secciones llenas; los inscriptos fuera de cupo se atribuyen solo a la materia.
     {
       id: 'CAT-C20-01',
       materiaId: 'C20',
       periodo: '1B · 2026',
+      periodoId: '1B-2026',
       docente: 'D02',
-      aulaId: 'A-101',
-      cupo: 0,
-      demanda: 42,
+      aulaId: 'SIM-1B-C20-01',
+      cupo: 12,
       franjas: [
         { dia: 'lunes', desde: '19:00', hasta: '21:00' }
       ]
@@ -74,9 +83,10 @@ window.DATOS_SIMULADOS = {
       id: 'CAT-C20-02',
       materiaId: 'C20',
       periodo: '1B · 2026',
+      periodoId: '1B-2026',
       docente: 'D03',
-      aulaId: 'B-201',
-      cupo: 26,
+      aulaId: 'SIM-1B-C20-02',
+      cupo: 14,
       franjas: [
         { dia: 'martes', desde: '18:00', hasta: '20:00' },
         { dia: 'jueves', desde: '18:00', hasta: '20:00' }
@@ -86,21 +96,23 @@ window.DATOS_SIMULADOS = {
       id: 'CAT-C23-01',
       materiaId: 'C23',
       periodo: '1B · 2026',
+      periodoId: '1B-2026',
       docente: 'D04',
-      aulaId: 'A-102',
+      aulaId: 'SIM-1B-C23-01',
       cupo: 18,
       franjas: [
         { dia: 'martes', desde: '08:00', hasta: '10:00' }
       ]
     },
-    // Todas las cátedras de C27 están completas: escenario "sin cupo".
+    // La única sección de C27 está completa; seis inscriptos fuera de cupo siguen sin sección asignada.
     {
       id: 'CAT-C27-01',
       materiaId: 'C27',
       periodo: '1B · 2026',
+      periodoId: '1B-2026',
       docente: 'D05',
-      aulaId: 'B-203',
-      cupo: 0,
+      aulaId: 'SIM-1B-C27-01',
+      cupo: 19,
       franjas: [
         { dia: 'miercoles', desde: '20:00', hasta: '22:00' }
       ]
@@ -109,9 +121,10 @@ window.DATOS_SIMULADOS = {
       id: 'CAT-C29-01',
       materiaId: 'C29',
       periodo: '1B · 2026',
+      periodoId: '1B-2026',
       docente: 'D06',
-      aulaId: 'C-301',
-      cupo: 30,
+      aulaId: 'SIM-1B-C29-01',
+      cupo: 14,
       franjas: [
         { dia: 'jueves', desde: '10:00', hasta: '12:00' }
       ]
