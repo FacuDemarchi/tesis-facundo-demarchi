@@ -7,9 +7,16 @@ let periodIndex = 0;
 
 const categoryDefinitions = [
   { key: 'total', label: 'Demanda total', className: 'total' },
-  { key: 'elegibleActual', label: 'Elegible período actual', className: 'eligible' },
-  { key: 'condicionalSiguiente', label: 'Condicional período siguiente', className: 'conditional' },
-  { key: 'planificadaSinCupo', label: 'Planificada por falta de capacidad', className: 'no-capacity' }
+  { key: 'elegibleActual', label: 'Demanda actual', className: 'eligible' },
+  { key: 'condicionalSiguiente', label: 'Demanda futura', className: 'conditional' },
+  { key: 'planificadaSinCupo', label: 'Demanda insatisfecha', className: 'no-capacity' }
+];
+
+const summaryValues = [
+  { key: 'total', valueId: 'demand-total-value' },
+  { key: 'elegibleActual', valueId: 'eligible-current-value' },
+  { key: 'condicionalSiguiente', valueId: 'conditional-next-value' },
+  { key: 'planificadaSinCupo', valueId: 'planned-capacity-value' }
 ];
 
 function assertDemandModel(model) {
@@ -31,17 +38,6 @@ function currentPeriod() {
 
 function totalFor(period, key) {
   return period.demanda.reduce((sum, item) => sum + item[key], 0);
-}
-
-function createMetric(definition, value) {
-  const metric = document.createElement('div');
-  metric.className = 'metric';
-  const label = document.createElement('dt');
-  label.textContent = definition.label;
-  const number = document.createElement('dd');
-  number.textContent = value;
-  metric.append(label, number);
-  return metric;
 }
 
 function createCategoryRow(definition, item) {
@@ -97,13 +93,13 @@ function createDemandCard(item) {
 function renderPeriod({ announce = false } = {}) {
   const period = currentPeriod();
   document.querySelector('#period-kind').textContent = period.tipo;
-  document.querySelector('#summary-period').textContent = period.etiqueta;
   periodSelect.value = String(periodIndex);
   previousButton.disabled = periodIndex === 0;
   nextButton.disabled = periodIndex === demandModel.periodos.length - 1;
 
-  const metrics = document.querySelector('#summary-metrics');
-  metrics.replaceChildren(...categoryDefinitions.map(definition => createMetric(definition, totalFor(period, definition.key))));
+  summaryValues.forEach(({ key, valueId }) => {
+    document.querySelector(`#${valueId}`).textContent = totalFor(period, key);
+  });
 
   const demandList = document.querySelector('#demand-list');
   demandList.replaceChildren(...period.demanda.map(createDemandCard));
@@ -134,3 +130,51 @@ renderPeriod();
 previousButton.addEventListener('click', () => setPeriod(periodIndex - 1));
 nextButton.addEventListener('click', () => setPeriod(periodIndex + 1));
 periodSelect.addEventListener('change', event => setPeriod(Number(event.target.value)));
+
+const summaryItems = document.querySelectorAll('.summary-item');
+
+function setTooltipState(item, { isOpen, isDismissed = false }) {
+  item.classList.toggle('is-open', isOpen);
+  item.classList.toggle('is-dismissed', isDismissed);
+  item.querySelector('.summary-info').setAttribute('aria-expanded', String(isOpen));
+}
+
+function closeOpenTooltips() {
+  document.querySelectorAll('.summary-item.is-open').forEach(item => {
+    setTooltipState(item, { isOpen: false });
+  });
+}
+
+summaryItems.forEach(item => {
+  const button = item.querySelector('.summary-info');
+
+  button.addEventListener('click', () => {
+    const willOpen = !item.classList.contains('is-open');
+    closeOpenTooltips();
+    setTooltipState(item, { isOpen: willOpen, isDismissed: !willOpen });
+  });
+
+  item.addEventListener('pointerleave', () => {
+    item.classList.remove('is-dismissed');
+  });
+
+  item.addEventListener('focusout', event => {
+    if (!item.contains(event.relatedTarget)) {
+      item.classList.remove('is-dismissed');
+    }
+  });
+});
+
+document.addEventListener('click', event => {
+  if (!event.target.closest('.summary-item')) {
+    closeOpenTooltips();
+  }
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    document.querySelectorAll('.summary-item:hover, .summary-item:focus-within, .summary-item.is-open').forEach(item => {
+      setTooltipState(item, { isOpen: false, isDismissed: true });
+    });
+  }
+});

@@ -14,47 +14,44 @@
       <span>Plan académico · CU-10</span>
       <strong>Consulta de demanda institucional</strong>
     </div>
+    <div class="period-controls topbar-period">
+      <p id="period-kind" class="period-kind">Período actual</p>
+      <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
+      <label for="period-select">Elegir período</label>
+      <select id="period-select" aria-describedby="period-description"></select>
+      <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
+      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
+    </div>
     <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
   </header>
 
-  <main class="page-shell">
-    <section class="intro" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">Vista de solo lectura</p>
-        <h1 id="page-title">Demanda por materia</h1>
-        <p>Consulta agregada para anticipar la demanda por período. No inicia evaluaciones, propuestas ni decisiones institucionales.</p>
-      </div>
-      <aside class="simulation-notice" aria-label="Aviso sobre datos simulados">
-        <strong>Datos simulados</strong>
-        <span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span>
-      </aside>
-    </section>
+  <section class="summary" aria-labelledby="summary-title">
+    <h2 id="summary-title" class="sr-only">Resumen agregado de demanda</h2>
+    <div class="inline-summary">
+      <span class="summary-item">
+        <button type="button" class="summary-info" aria-label="Más información sobre Demanda total" aria-describedby="demand-total-help" aria-controls="demand-total-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Demanda total: <strong id="demand-total-value">0</strong></span>
+        <span id="demand-total-help" class="summary-help" role="tooltip">Suma de la demanda actual, la demanda futura y la demanda insatisfecha.</span>
+      </span>
+      <span class="summary-item">
+        <button type="button" class="summary-info" aria-label="Más información sobre Demanda actual" aria-describedby="eligible-current-help" aria-controls="eligible-current-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Demanda actual: <strong id="eligible-current-value">0</strong></span>
+        <span id="eligible-current-help" class="summary-help" role="tooltip">Quiere cursar ahora y puede hacerlo.</span>
+      </span>
+      <span class="summary-item">
+        <button type="button" class="summary-info" aria-label="Más información sobre Demanda futura" aria-describedby="conditional-next-help" aria-controls="conditional-next-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Demanda futura: <strong id="conditional-next-value">0</strong></span>
+        <span id="conditional-next-help" class="summary-help" role="tooltip">Quiere cursar después, pero depende de condiciones.</span>
+      </span>
+      <span class="summary-item">
+        <button type="button" class="summary-info" aria-label="Más información sobre Demanda insatisfecha" aria-describedby="planned-capacity-help" aria-controls="planned-capacity-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Demanda insatisfecha: <strong id="planned-capacity-value">0</strong></span>
+        <span id="planned-capacity-help" class="summary-help" role="tooltip">Quería cursar ahora, pero no pudo por capacidad.</span>
+      </span>
+    </div>
+  </section>
 
-    <section class="filter-panel" aria-labelledby="filter-title">
-      <div>
-        <p class="eyebrow" id="filter-title">Período de consulta</p>
-        <p id="period-kind" class="period-kind">Período actual</p>
-      </div>
-      <div class="period-controls">
-        <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
-        <label for="period-select">Elegir período</label>
-        <select id="period-select" aria-describedby="period-description"></select>
-        <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
-      </div>
-      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
-    </section>
-
-    <section class="summary" aria-labelledby="summary-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Resumen agregado</p>
-          <h2 id="summary-title">Demanda en <span id="summary-period"></span></h2>
-        </div>
-        <p class="formula">Total = elegible actual + condicional siguiente + planificada sin cupo</p>
-      </div>
-      <div id="summary-metrics" class="metric-grid"></div>
-    </section>
-
+  <main class="page-shell" aria-label="Consulta de demanda institucional">
     <section class="demand-section" aria-labelledby="demand-title">
       <div class="section-heading">
         <div>
@@ -65,6 +62,11 @@
       </div>
       <div id="demand-list" class="demand-list" tabindex="-1"></div>
     </section>
+
+    <footer class="page-footer simulation-notice" aria-label="Aviso sobre datos simulados">
+      <strong>Datos simulados</strong>
+      <span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span>
+    </footer>
   </main>
 
   <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
