@@ -237,7 +237,7 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 ## D-15 — La evaluación institucional se activa explícitamente y no aplica traslados
 
-**Fecha:** 2026-09-18 · **Estado:** aceptada · **Revisada:** implementación demostrativa de CU-13 · **Clasificación:** pendiente de validación institucional
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Revisada:** implementación demostrativa de CU-13 · **Revisada parcialmente por D-21:** el disparador explícito y la frontera de solo lectura se conservan; el alcance local de la evaluación queda supersedido. · **Clasificación:** pendiente de validación institucional
 
 **Contexto.** La versión original de esta decisión proponía disparar la evaluación automáticamente al cruzar el umbral de demanda y aplicar el traslado en el escenario simulado. Esa formulación conservó la intención de responder temprano a la falta de cupo, pero ocultaba el proceso que el prototipo necesita hacer visible y validar con el operador institucional.
 
@@ -261,7 +261,7 @@ El disparador automático al aparecer demanda fuera de cupo queda como **evoluci
 
 ## D-16 — La evaluación de aulas es un filtro determinista, no una corrida del solver
 
-**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Revisada parcialmente por D-21:** se conserva que el prototipo no ejecuta CP-SAT; el filtro local por sección y su algoritmo quedan supersedidos por una búsqueda exacta global. · **Clasificación:** supuesto de diseño
 
 **Contexto.** D-15 define en el prototipo actual una evaluación demostrativa que el operador activa explícitamente. Esa evaluación debe comprobar capacidad, tipo de aula y disponibilidad sin ejecutar el solver ni aplicar un traslado.
 
@@ -276,6 +276,8 @@ El disparador automático al aparecer demanda fuera de cupo queda como **evoluci
 - El filtro es explicable, que es lo que pide RNF-03: «esta aula no sirve porque su capacidad es 40 y la demanda es 62».
 - Es barato y determinista; esas propiedades sostienen la evaluación explícita actual y dejan abierta una automatización futura si se autoriza.
 - Queda como límite conocido: si varias propuestas compiten por las mismas aulas, un filtro deja de alcanzar.
+
+**Nota histórica.** Esta decisión documenta el filtro local implementado originalmente. D-21 reemplaza únicamente ese alcance y algoritmo para el prototipo actual; no modifica la ausencia de CP-SAT, el disparador explícito ni la prohibición de aplicar cambios.
 
 ---
 
@@ -355,6 +357,28 @@ La transacción termina únicamente al confirmar la inscripción, aceptar la pla
 
 **Consecuencias.** `enrolledByPeriod` y `acceptedPlanByPeriod` no se modifican al cancelar: son resultados confirmados de transacciones anteriores. Cuando no existe una transacción activa, las flechas conservan su deshabilitación normal en los límites de la lista de períodos.
 
+---
+
+## D-21 — CU-13 optimiza globalmente la reasignación de aulas del período actual
+
+**Fecha:** 2026-09-21 · **Estado:** aceptada · **Clasificación:** supuesto de diseño con validación institucional pendiente
+
+**Contexto.** El filtro local por sección de D-16 no podía resolver la competencia entre secciones por una misma aula ni reutilizar una aula que otra sección libera. El prototipo implementado necesita representar una única decisión coherente para todas las secciones del período actual, sin convertir la evaluación en un cambio operativo.
+
+**Decisión.** CU-13 se inicia solo mediante una acción explícita del operador y ejecuta una búsqueda exacta, determinista y de solo lectura sobre todas las secciones y aulas del período actual. Los horarios y docentes de las secciones permanecen fijos; cada asignación debe respetar el tipo de aula, su capacidad y la incompatibilidad de superposición horaria. El inventario incluye las aulas compatibles que quedan libres por otra reasignación.
+
+La demanda fuera de cupo se conserva agrupada por materia. Para cada materia, las vacantes de las aulas asignadas a sus secciones absorben esa demanda común. La salida simulada distribuye una cantidad incorporable entre secciones en orden canónico de cátedra únicamente para explicar y comprobar la conservación del total; no asigna estudiantes identificables ni modifica inscripciones. Las soluciones válidas se ordenan lexicográficamente por la tupla `(residuo, movimientos, capacidad sin usar, vector canónico de IDs de aula)`. El último componente establece el desempate reproducible. Un movimiento es asignar a una sección un `aulaId` distinto del actual.
+
+CU-13 muestra el resultado global y su proyección en las tarjetas, pero no modifica aulas, horarios, docentes, inscripciones, datos compartidos ni la oferta. Si queda residuo, solo lo informa y deriva su evaluación a CU-11; no crea una propuesta de nueva sección ni la aplica. La búsqueda estática exacta del prototipo no usa CP-SAT; un backend CP-SAT es una evolución futura si la escala o las reglas institucionales lo justifican.
+
+**Relación con decisiones previas.** D-21 supersede únicamente el alcance local y el algoritmo de D-15/D-16. Conserva de D-15 el disparador explícito y la prohibición de mutar o aplicar, y conserva de D-16 la separación respecto de CP-SAT en el prototipo. D-17 permanece intacta: una transición de intención solo sería pertinente tras una ampliación futura, autorizada y aplicada por separado.
+
+**Consecuencias.**
+
+- El resultado base verificable es: 19 estudiantes absorbidos, 0 de residuo, 3 movimientos y 45 asientos libres totales en las aulas propuestas antes de asignar la demanda agrupada fuera de cupo; tras absorber los 19 estudiantes, quedan 26 asientos.
+- La explicabilidad debe incluir las restricciones globales y el orden de objetivos, no solo el motivo local de descarte de una aula.
+- La tesis debe alinear CU-13, CU-11, RF-23 a RF-25, la trazabilidad, el caso contendido y las métricas de evaluación sin afirmar que se aplicó una reasignación real.
+
 # Pendientes
 
 - **P-07 — Recomendaciones como interacción propia.** Resuelta el 2026-09-17 en lo que respecta a la trazabilidad: RF-15 quedó en CU-04 y CP-13, RF-16 en CU-06 y CP-14. Queda abierto **solo si preferís** que recibir y aceptar recomendaciones sea un caso de uso propio, lo que exigiría agregar CU-15 y regenerar la Figura 2.
@@ -378,10 +402,10 @@ Cambios que dejan pendientes las decisiones D-10 a D-18. Se aplican antes de esc
 | Tabla 7 | RF-05 pasa de `CU-06` a `CU-05, CU-06` (D-10) |
 | Tabla 6, CU-05 | Falta el paso de generación de alternativas; hoy solo «valida la selección resultante» (D-10) |
 | Tabla 5 | El candidato nuevo de la descarga, con su pendiente de aceptación institucional (D-18) |
-| Tabla 6, CU-13 | Alinear el flujo con la evaluación demostrativa explícita y de solo lectura: no aplica traslados ni modifica intenciones (D-15) |
+| Tabla 6, CU-13 y CU-11 | Alinear el flujo con la reasignación global exacta, explícita y de solo lectura; CU-11 recibe solo el residuo y no crea ni aplica una apertura (D-21) |
 | RF-21 y el modelo de dominio | Mantener como evolución futura la transición si una transferencia autorizada y aplicada amplía la capacidad; CU-13 no la activa (D-17) |
-| Capítulo 6 | Identificar el disparador automático como evolución futura, no como requerimiento del prototipo actual (D-15) |
-| 7.2.5 | La sección entera: panel flotante y su regla, cierre con descarga, indicador de granularidad en el resultado, y rama institucional (D-11, D-13, D-14, D-18) |
+| Capítulo 6 | Reemplazar la descripción del filtro local por la reasignación global: horarios/docentes fijos, tipo/capacidad/superposición, demanda agrupada por materia y orden de objetivos; mantener el disparador explícito y la no aplicación (D-21) |
+| 7.2.5 | La sección entera: panel flotante y su regla, cierre con descarga, indicador de granularidad en el resultado, rama institucional y la proyección de CU-13 global en las tarjetas (D-11, D-13, D-14, D-18, D-21) |
 | `mockup/` | El panel flotante y su regla solo existen en `panel-seleccion/`; el README de `mockup/` sigue diciendo que no contiene paneles de planificación |
 
 Los hallazgos y los requerimientos candidatos de los mockups **no se duplican acá**: viven en `panel-seleccion/discoveries.md`, que es su fuente, según la convención de encabezado de este archivo.

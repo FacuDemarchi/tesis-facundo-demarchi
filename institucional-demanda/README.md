@@ -36,7 +36,7 @@ The initial current-period scenario preserves:
 
 `../comun/datos-simulados.js` is the single source of physical classroom capacity. Every current-period CU-10 section uses its `catedraId` and `aulaId` to link to that shared model; its declared `cupo`, the referenced classroom capacity, and the assigned enrolled count must be equal. The demand snapshot repeats the display value only as a simulated read-only snapshot, not as a second capacity authority.
 
-Outside-capacity counts remain at the subject level. They are deliberately not attributed to a `catedraId` or `aulaId`. CU-13 evaluates each existing section as a possible transfer target but does not assign students, make a transfer proposal, or mutate the simulated scenario.
+Input outside-capacity demand remains pooled at the subject level, with no actual student-to-section assignment. The simulated output deterministically allocates an incorporable count across sections in `catedra` order for explanation and conservation only; it does not assign identifiable students or mutate enrollment. CU-13 evaluates a global reassignment of the current-period sections and classrooms, but it does not create a proposal or mutate the simulated scenario.
 
 The shared data model validates the metric set, preserved subject count, total rule, and current-period section-snapshot rule when it loads. A mismatch stops rendering rather than showing a misleading total.
 
@@ -45,23 +45,28 @@ The shared data model validates the metric set, preserved subject count, total r
 - The period select and previous/next controls deterministically render one of the two fixed simulated periods.
 - The summary and every subject card show only the metrics that apply to the selected period; irrelevant metrics are hidden rather than rendered as zero.
 - Current-period cards list each simulated section ID, assigned classroom, and `Cupo`, and identify outside-capacity students as pending section assignment. Following-period cards identify registered future demand without treating it as current enrollment or showing a section/classroom/capacity block.
-- Only a current-period card with students outside capacity exposes the native `Evaluar resolución` button. It is keyboard-operable; its result expands inside that same card, has an accessible name, and is announced politely. Changing periods clears expanded results.
+- Only the current period with students outside capacity exposes the native global `Evaluar resolución` button. It is keyboard-operable; its read-only global result is announced politely and projects the applicable plan details into the existing subject cards. Changing periods clears expanded results.
 - Navigation uses native keyboard-operable controls, visible focus treatment, accessible help tooltips, a skip link, and polite live announcements after a period change.
 - The mockup has a responsive layout for narrow screens.
 
 ### Demonstrative CU-13 algorithm
 
-The page loads `../comun/datos-simulados.js` with the institutional demand snapshot. Activating `Evaluar resolución` recalculates a read-only result for every existing section of that subject:
+The page loads `../comun/datos-simulados.js` with the institutional demand snapshot. Activating the explicit global `Evaluar resolución` action runs a read-only, exact and deterministic search over **all** current-period sections and classrooms; it is not an independent filter for each card.
 
-1. Required capacity is the section's assigned students plus all subject-level students outside capacity.
-2. The evaluation excludes the current classroom and retains only classrooms with the same type (`aula` or `laboratorio`) and enough capacity.
-3. A retained room must be free in every section time slot. Availability is calculated from other current-period sections assigned to that room; following-period assignments are ignored, and overlapping day/time ranges make a room unavailable.
-4. Each section keeps its least-capacity compatible classroom, resolving capacity ties by classroom ID. The displayed section is the result with the smallest such classroom, resolving ties by section ID.
-5. `estudiantes incorporables = min(alumnos fuera de cupo, capacidad del aula compatible - alumnos asignados a la sección)`.
+The search keeps every section schedule and teacher fixed, assigns every section a type-compatible classroom (`aula` or `laboratorio`) with capacity for its enrolled students, and forbids two sections with overlapping day/time ranges from sharing a classroom. Every compatible classroom is available to the search, including one vacated by another section. Students outside capacity remain pooled by subject: the free seats of the classrooms assigned to that subject absorb that subject's outside-capacity demand. The displayed simulated output deterministically allocates the incorporable count across sections in `catedra` order for explanation and conservation only; it does not assign identifiable students or mutate enrollment.
 
-If no compatible classroom exists, the card says so and directs evaluation of a new section to CU-11. It does not create that proposal. Repeated activation recomputes and toggles only the visible result; neither the demand model nor `window.DATOS_SIMULADOS` is mutated.
+Valid assignments are compared lexicographically in this order:
 
-Automatic triggering when outside-capacity demand appears is a future evolution. The prototype deliberately keeps the explicit operator action so that the deterministic filter and its result can be seen and validated.
+1. residual students outside capacity;
+2. number of classroom movements from the current `aulaId`;
+3. total free seats in proposed rooms before allocating the pooled outside-capacity demand;
+4. canonical classroom-ID vector, to break remaining ties reproducibly.
+
+For the fixed baseline scenario, the exact result absorbs **19** students, leaves **0** residual students, makes **3** classroom movements, and has **45** total free seats in proposed rooms before allocating the pooled outside-capacity demand (**26** remain after absorbing the 19 students). The summary is projected into the existing subject cards; card details describe the global plan rather than a separate per-card calculation.
+
+A residual is displayed and handed off only to CU-11 for evaluation of a new section. CU-13 neither creates that proposal nor applies a reassignment. Repeated activation collapses the cached visible result; reopening shows the same plan without recomputation. Neither the demand model nor `window.DATOS_SIMULADOS` is mutated.
+
+Automatic triggering when outside-capacity demand appears is a future evolution. This static exact search is deliberately distinct from a future backend CP-SAT implementation: the prototype uses deterministic enumeration with pruning, while CP-SAT remains an option only if the backend scenario later requires it.
 
 ## Out of scope
 
