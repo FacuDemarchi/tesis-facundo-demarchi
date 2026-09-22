@@ -127,21 +127,21 @@ Detectar escenarios infactibles e identificar las restricciones, materias y cát
 Registrar una única intención vigente por alumno, materia y período, con estado y motivo explícitos, incluyendo las intenciones planificadas por falta de cupo y evitando duplicaciones en la demanda.
 Mostrar por materia la demanda total, la demanda habilitada para el período actual, la demanda condicionada del período siguiente, la demanda planificada por falta de cupo y las causas correspondientes. La demanda total de una materia resulta de sumar la demanda habilitada del período actual, la demanda condicionada del período siguiente y la demanda planificada por falta de cupo; esta última constituye la demanda insatisfecha que alimenta las propuestas de resolución.
 Cuando una cátedra del período actual no posea cupo, conservar la materia en la planificación del estudiante con estado planificada y motivo falta de cupo, sin confirmar una inscripción ni reservar una vacante.
-Consolidar esas intenciones como demanda insatisfecha y evaluar si una cátedra existente puede trasladarse a un aula disponible de mayor capacidad.
-Cuando no exista un aula compatible, generar una propuesta de apertura de una nueva cátedra y recalcular cuántos estudiantes podrían incorporarse, sujeta a aprobación institucional.
+Para el período académico actual, evaluar mediante una acción explícita del operador institucional provisional una reasignación global de aulas sobre las cátedras existentes cuando exista demanda agregada fuera de cupo. La evaluación considera conjuntamente todas las cátedras y aulas del período, mantiene fijos sus horarios y docentes, y solo analiza asignaciones compatibles por tipo y capacidad, sin superposiciones horarias en una misma aula. La demanda fuera de cupo se mantiene agrupada por materia y puede ser absorbida por las vacantes resultantes de las aulas asignadas a las cátedras de esa materia.
+Presentar el resultado como una recomendación simulada, explicable y de solo lectura. No modifica la asignación real de aulas, los horarios, los docentes, las inscripciones, la oferta académica ni los datos compartidos. Cuando subsista demanda fuera de cupo, esta se deriva a CU-11, una evaluación separada de apertura de una nueva cátedra.
 ## 3.4. No contempla
 Integración productiva con el sistema académico de la universidad.
 Autenticación institucional, inicio de sesión único o gestión real de permisos.
 Confirmación legal o administrativa de inscripciones.
 Reserva, asignación o liberación real de cupos.
-Aplicación automática de cambios sobre la oferta académica institucional. El prototipo podrá generar propuestas de traslado de aula o apertura de cátedra, pero no ejecutarlas ni contratar o asignar profesores.
+La aplicación automática de cambios sobre la oferta académica institucional. La evaluación de aulas solo presenta una recomendación de solo lectura y no ejecuta traslados, crea cátedras ni contrata o asigna docentes.
 Notificaciones productivas por correo, SMS o aplicaciones móviles.
 Desarrollo de aplicaciones móviles nativas para iOS o Android.
 Migración histórica de expedientes o datos académicos.
 El prototipo se implementará y evaluará exclusivamente para la carrera Ingeniería en Software y el período académico definido como caso de estudio. No se contempla la carga, administración ni visualización de otras carreras, ni la gestión de equivalencias entre planes de estudio o reformas curriculares. Sin embargo, el modelo de datos y la arquitectura evitarán dependencias exclusivas con esta carrera para permitir una futura ampliación.
 Operación de alta disponibilidad, acuerdos de nivel de servicio o despliegue institucional definitivo.
-Asignación institucional real de aulas y horarios a las cátedras. El prototipo podrá simular un traslado y generar una propuesta sujeta a autorización.
-Programación institucional completa de aulas y docentes: asignación de docentes a cátedras y detección de conflictos entre cátedras que el prototipo no gestiona. El prototipo sí verificará que el aula propuesta esté disponible en la franja horaria de la cátedra, según los datos de oferta que recibe.
+La evaluación de aulas no constituye una operación de generación de horarios ni de asignación de personal. Se trata exclusivamente de una reasignación global de aulas para cátedras ya existentes: sus horarios y docentes permanecen fijos. Para cada escenario controlado, el prototipo busca una solución global factible que minimiza, en este orden, los estudiantes fuera de cupo residuales, la cantidad de movimientos de aula y la capacidad sin utilizar. Ante empate, utiliza un vector canónico de identificadores de aula para obtener un resultado reproducible.
+La búsqueda exacta estática de reasignación de aulas es un supuesto técnico de demostración. Una futura implementación podría evaluar CP-SAT u otra técnica si la escala y las reglas validadas institucionalmente lo requieren; esa evolución no forma parte del comportamiento actual ni autoriza cambios automáticos.
 Administración productiva del inventario de aulas, su disponibilidad física y otros recursos institucionales. El prototipo utilizará datos simulados o provistos por la universidad para evaluar escenarios.
 Período académico de Verano, ubicado entre 2B y 1A del año académico siguiente. Su oferta, reglas especiales, correlatividades e inscripción quedan fuera del MVP actual, aunque su incorporación se considera una evolución futura del sistema.
 El prototipo no contempla inscripciones de más de tres materias por bimestre, equivalentes a seis materias por cuatrimestre. La planificación se limita a ese máximo y no se modelan escenarios con una carga mayor. Esta limitación responde al alcance definido para el prototipo y no constituye una afirmación sobre la regla académica vigente en la universidad.
@@ -274,14 +274,16 @@ Para el prototipo, el diagnóstico prioriza cinco capacidades: visualizar el pla
 El relevamiento institucional permitió identificar que los tickets del CRM representan una fuente de demanda insatisfecha. Su incorporación conceptual al prototipo permite conservar la intención del estudiante, consolidar la demanda y asistir a la institución en la evaluación de un cambio de aula o de la apertura de una nueva cátedra. La automatización se limita al análisis, la generación de propuestas y la trazabilidad; la decisión y la ejecución permanecen bajo responsabilidad institucional.
 # 6. Propuesta de solución
 ## 6.1. Descripción general de la propuesta
+Como capacidad institucional preliminar, el prototipo incluye la evaluación global de reasignación de aulas para el período actual. Esta capacidad recibe cátedras, aulas, tipos, capacidades y franjas horarias simuladas; preserva horarios y docentes; y presenta una alternativa determinista de solo lectura. Su propósito es hacer visible el efecto de las restricciones físicas sobre la demanda agregada, no gestionar la programación académica ni ejecutar cambios sobre recursos reales. La validación institucional deberá definir responsables, fuentes de datos, permisos y el tratamiento operativo de cualquier recomendación.
 ### 6.1.1. A nivel funcional
 Cuando el estudiante seleccione una materia cuyas cátedras no posean cupo, el sistema conservará la materia con estado planificada y motivo falta de cupo. Esta acción no confirmará la inscripción ni reservará una vacante, pero incorporará la intención a la demanda agregada de la materia y el período.
-Cuando la demanda supere la capacidad disponible, el prototipo evaluará si existe un aula disponible con capacidad suficiente para trasladar la cátedra y ampliar su cupo. Si no encuentra una alternativa compatible, generará una propuesta de apertura de una nueva cátedra y calculará cuántos estudiantes podrían incorporarse.
-La propuesta quedará sujeta a revisión y aprobación institucional. El MVP registrará la decisión y recalculará el escenario, pero no modificará automáticamente la oferta ni el sistema académico oficial.
+Mediante una acción explícita del operador institucional provisional, el prototipo evaluará globalmente la reasignación de aulas para todas las cátedras existentes y aulas del período actual cuando exista demanda fuera de cupo. Mantendrá fijos horarios y docentes, respetará tipo y capacidad de aula y evitará superposiciones horarias en una misma aula. La evaluación mostrará en modo de solo lectura la asignación resultante y su proyección de demanda agrupada por materia.
+Cuando persista demanda fuera de cupo, el resultado la derivará a la evaluación separada de apertura de una nueva cátedra (CU-11), sin crear, aprobar ni aplicar una cátedra desde la evaluación de aulas (CU-13). Ninguna de estas evaluaciones modificará automáticamente la oferta ni el sistema académico oficial.
 ### 6.1.2. A nivel técnico
 El prototipo se implementará como una aplicación web desacoplada compuesta por un frontend React con TypeScript, una API REST desarrollada con FastAPI y una base de datos PostgreSQL. La API publicará sus contratos mediante OpenAPI y mantendrá separados los módulos de dominio académico, planificación, explicación, optimización y persistencia.
-El modelo CP-SAT de OR-Tools recibirá una representación validada del escenario académico y devolverá hasta tres alternativas junto con su estado de factibilidad y la información necesaria para explicar restricciones y conflictos. Su ejecución estará sujeta a límites temporales y se aislará del procesamiento principal de la API.
-El entorno local se reproducirá mediante contenedores y migraciones versionadas. La integración continua verificará el análisis estático, los contratos, las pruebas del dominio, los escenarios del solver y los flujos críticos de la interfaz.
+Para las alternativas de cursado del estudiante, el modelo CP-SAT de OR-Tools recibirá una representación validada del escenario académico y devolverá hasta tres alternativas junto con su estado de factibilidad y la información necesaria para explicar restricciones y conflictos. Su ejecución estará sujeta a límites temporales y se aislará del procesamiento principal de la API.
+La reasignación global de aulas utilizará una búsqueda exacta determinista independiente de CP-SAT. Sobre cátedras existentes con horarios y docentes fijos, ordenará las soluciones por demanda residual, movimientos de aula, capacidad sin utilizar y desempate canónico; no realiza timetabling ni asignación de personal.
+El entorno local se reproducirá mediante contenedores y migraciones versionadas. La integración continua verificará el análisis estático, los contratos, las pruebas del dominio, los escenarios de optimización y los flujos críticos de la interfaz.
 6.1.3. Diagrama de arquitectura
 Figura 1. Arquitectura lógica del prototipo.
 Nota. Elaboración propia.
@@ -312,9 +314,9 @@ Requerimientos funcionales preliminares
 | RF-20 | El sistema deberá preservar la trazabilidad del escenario utilizado, incluyendo período, versión del plan, origen y fecha de los datos, restricciones y preferencias. | Preliminar |
 | RF-21 | Cuando una materia del período actual no disponga de cátedras con cupo, el sistema deberá conservar la intención del estudiante con estado planificada y motivo falta de cupo, sin confirmarla como inscripción ni reservar una vacante. | Preliminar |
 | RF-22 | El sistema deberá incorporar las intenciones planificadas por falta de cupo al cálculo de demanda agregada de la materia y el período. | Preliminar |
-| RF-23 | Cuando la demanda supere el cupo disponible, el sistema deberá evaluar si existe un aula disponible cuya capacidad permita ampliar la cátedra sin generar incompatibilidades. | Preliminar |
-| RF-24 | Cuando exista un aula adecuada, el sistema deberá generar una propuesta de traslado de la cátedra e informar la nueva capacidad y la cantidad estimada de estudiantes incorporables. | Preliminar |
-| RF-25 | Cuando no exista un aula adecuada, el sistema deberá generar una propuesta de apertura de una nueva cátedra y simular su impacto sobre la demanda insatisfecha. | Preliminar |
+| RF-23 | El sistema deberá permitir que el operador institucional provisional inicie explícitamente una evaluación global de reasignación de aulas para todas las cátedras del período actual con demanda fuera de cupo. | Pendiente de validación institucional |
+| RF-24 | La evaluación deberá mantener fijos los horarios y docentes, respetar tipo y capacidad de aula y evitar que se asignen a una misma aula cátedras con superposición horaria. Deberá ordenar las soluciones por residuo de demanda, movimientos de aula, capacidad sin utilizar y desempate canónico. | Supuesto de diseño |
+| RF-25 | El sistema deberá mostrar el resultado global y su proyección por materia; cuando subsista demanda fuera de cupo, deberá derivarla a CU-11 sin crear, aprobar ni aplicar una apertura de cátedra. | Pendiente de validación institucional |
 | RF-26 | Las propuestas deberán quedar pendientes de aprobación por un actor institucional autorizado y no producirán modificaciones automáticas en los sistemas oficiales. Cada decisión deberá registrar el actor que la tomó, la fecha y el motivo. | Preliminar |
 Nota. Elaboración propia.
 ### 6.2.2. Requerimientos no funcionales
@@ -371,7 +373,7 @@ Nota. Elaboración propia.
 Figura 4. Entidades de planificación y gestión de demanda.
 Nota. Elaboración propia.
 ### 7.2.3. Descripción de casos de uso
-Se describen los cuatro casos de uso centrales del recorrido del estudiante. Cada uno registra los siete campos previstos en el diseño: objetivo, actor, precondiciones, flujo principal, flujos alternativos, postcondiciones y requerimientos relacionados.
+Se describen los cuatro casos de uso centrales del recorrido del estudiante y dos casos de la rama institucional. Cada uno registra los siete campos previstos en el diseño: objetivo, actor, precondiciones, flujo principal, flujos alternativos, postcondiciones y requerimientos relacionados.
 Tabla 6
 Descripción de los casos de uso centrales
 | Campo | Contenido |
@@ -407,19 +409,37 @@ Descripción de los casos de uso centrales
 | Flujos alternativos | Sin flexibilización posible: se declara explícitamente. Exclusión de materias: se explica cada una, nunca en silencio |
 | Postcondiciones | El estudiante comprende el conflicto y sus opciones de flexibilización |
 | Requerimientos | RF-07, RF-19, RNF-03 |
+| CU-13 · Evaluar reasignación global de aulas |  |
+| Objetivo | Evaluar en modo de solo lectura una alternativa global de reasignación de aulas para las cátedras existentes del período actual |
+| Actor | Operador institucional provisional |
+| Precondiciones | Cátedras, aulas, tipos, capacidades, horarios, docentes y demanda agrupada por materia disponibles en un escenario simulado |
+| Flujo principal | 1. El operador inicia explícitamente la evaluación. 2. El sistema calcula una alternativa global exacta y determinista con horarios y docentes fijos. 3. Presenta el resumen y el detalle por materia, sin aplicar cambios |
+| Flujos alternativos | No hay solución sin residuo: el sistema informa la demanda residual agrupada por materia y la deriva a CU-11 |
+| Postcondiciones | Se conserva una evaluación de solo lectura; no se trasladan cátedras, modifican datos ni abren cátedras |
+| Requerimientos | RF-23, RF-24, RF-25 |
+| CU-11 · Evaluar apertura de nueva cátedra ante residuo |  |
+| Objetivo | Evaluar por separado una posible apertura a partir de la demanda residual informada por CU-13 |
+| Actor | Operador institucional provisional |
+| Precondiciones | CU-13 informó demanda residual agrupada por materia |
+| Flujo principal | 1. El operador inicia la evaluación separada. 2. El sistema recibe únicamente el residuo informado. 3. Presenta su resultado sin crear, aprobar ni aplicar una cátedra |
+| Flujos alternativos | Sin demanda residual: CU-11 no se activa |
+| Postcondiciones | La apertura permanece fuera de CU-13 y pendiente de validación institucional |
+| Requerimientos | RF-25 |
 Nota. Elaboración propia.
-Para la rama institucional, el caso de uso central será Gestionar demanda insatisfecha. El actor institucional consultará la demanda acumulada, solicitará la evaluación de capacidad, revisará la propuesta de cambio de aula o apertura de cátedra y registrará su decisión. La aplicación conservará la trazabilidad de los datos y del resultado, pero no ejecutará cambios en el sistema académico oficial.
+Para la rama institucional, CU-13 permite al operador institucional provisional iniciar una evaluación global de aulas sobre las cátedras existentes y consultar su resultado por materia. Si persiste demanda fuera de cupo, CU-11 puede iniciarse por separado con ese residuo. Ambas evaluaciones conservan la trazabilidad de los datos y del resultado, pero no generan, aprueban ni aplican cambios en el sistema académico oficial.
 ### 7.2.4. Diagrama de colaboración
 La colaboración representa el escenario Solicitar alternativas de cursado e incorpora el camino de verificación local inmediata previsto para la selección y el registro de demanda agregada al cierre.
 Figura 5. Colaboración del escenario «Solicitar alternativas de cursado».
 Nota. Elaboración propia.
-La gestión asistida de demanda insatisfecha incorporará un segundo escenario de colaboración: el módulo de demanda consolidará las intenciones planificadas por falta de cupo; el dominio institucional evaluará aulas compatibles y, según el resultado, generará una propuesta de traslado o de apertura; finalmente, el actor institucional registrará su decisión y el sistema recalculará el escenario sin modificar la oferta oficial.
+La gestión asistida de demanda insatisfecha incorporará un segundo escenario de colaboración: el módulo de demanda consolidará las intenciones planificadas por falta de cupo; ante una acción explícita, el dominio institucional evaluará global y determinísticamente las aulas compatibles para las cátedras existentes; y la interfaz mostrará el resultado de solo lectura por materia. Si queda demanda residual, se derivará a CU-11 para una evaluación separada, sin propuesta ni aplicación automática de apertura o reasignación.
 ### 7.2.5. Interfaz gráfica
 ## 7.3. Proceso de V&V
 ### 7.3.1. Plan de pruebas
 Las pruebas producidas mediante TDD y los comprobantes generados por RDD formarán parte de la evidencia de verificación técnica del prototipo (Beck, 2002; Gentleman Programming, 2026). La integración continua conservará los resultados de las pruebas, el análisis estático, la cobertura y la compilación de cada versión evaluada.
 Pytest verificará las reglas del dominio, la persistencia, la API y los escenarios controlados del solver. Hypothesis comprobará invariantes generales de las alternativas generadas. Schemathesis verificará los contratos publicados mediante OpenAPI y Playwright cubrirá los recorridos críticos de la interfaz, incluyendo verificaciones automáticas y manuales de accesibilidad.
-La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas. La Tabla 7 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
+La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas.
+La evaluación técnica de la reasignación global de aulas utilizará escenarios sintéticos, reproducibles y sin datos personales. Para cada escenario se registrarán los estudiantes fuera de cupo iniciales, los absorbidos, la demanda residual, los movimientos de aula, la capacidad libre antes y después de absorber la demanda agrupada, el tiempo de ejecución y la repetibilidad ante entradas idénticas; además, se verificará que horarios y docentes permanezcan fijos y que ninguna aula concentre cátedras con superposición horaria. En el escenario base controlado se registran 19 estudiantes fuera de cupo iniciales, 19 absorbidos, 0 de demanda residual, 3 movimientos de aula, 45 asientos libres antes de la absorción y 26 después. Estos valores describen datos simulados del prototipo y no una intervención institucional.
+La Tabla 7 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
 Tabla 7
 Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba |
@@ -445,9 +465,9 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RF-20 |  | CP-18 |  |
 | RF-21 | CU-12 | CP-19 |  |
 | RF-22 | CU-12 | CP-19 |  |
-| RF-23 | CU-13 | CP-20 |  |
-| RF-24 | CU-13 | CP-20 |  |
-| RF-25 | CU-11, CU-13 | CP-21 |  |
+| RF-23 | CU-13 | CP-23 |  |
+| RF-24 | CU-13 | CP-24 |  |
+| RF-25 | CU-13, CU-11 | CP-25 |  |
 | RF-26 | CU-14 | CP-22 |  |
 | RNF-01 |  |  | Protocolo de medición del percentil 95 |
 | RNF-02 |  | CP-01 |  |
@@ -491,9 +511,10 @@ Diseño de casos de prueba
 | CP-08 | Se analiza una pantalla principal con axe-core. | No se detectan infracciones automáticas consideradas bloqueantes. | RNF-07 |
 | Gestión de demanda |  |  |  |
 | CP-19 | Todas las cátedras de una materia alcanzaron su cupo y el estudiante conserva su intención. | La materia queda planificada con motivo falta de cupo y la intención se incorpora una sola vez a la demanda agregada. | RF-21, RF-22 |
-| CP-20 | La demanda supera el cupo y existe un aula compatible de mayor capacidad. | El sistema propone el traslado, informa la capacidad resultante y calcula los estudiantes incorporables, sin aplicar el cambio. | RF-23, RF-24 |
-| CP-21 | La demanda supera el cupo y no existe un aula compatible. | El sistema genera una propuesta de nueva cátedra y simula su impacto sobre la demanda insatisfecha. | RF-25 |
 | CP-22 | El actor institucional aprueba o rechaza una propuesta. | La decisión queda registrada y el escenario se recalcula sin modificar el sistema académico oficial. | RF-26 |
+| CP-23 | El operador activa la evaluación global en un período actual con demanda fuera de cupo. | La evaluación se ejecuta solo por acción explícita, muestra un resultado de solo lectura y no altera aulas, horarios, docentes, inscripciones ni datos de entrada. | RF-23, RF-25 |
+| CP-24 | Dos cátedras compatibles compiten por una misma aula y una de ellas puede liberar otra aula compatible. | La solución considera el intercambio global, reutiliza el aula liberada cuando corresponde y selecciona el óptimo lexicográfico; no conserva una decisión local que aumente el residuo. | RF-24 |
+| CP-25 | Tras la reasignación global queda demanda fuera de cupo. | El sistema informa el residuo agrupado por materia y ofrece únicamente la derivación de evaluación a CU-11, sin crear ni aplicar una nueva cátedra. | RF-25 |
 Nota. Elaboración propia.
 # 8. Referencias
 Anthropic. (2026). Claude [Modelo de lenguaje grande]. Recuperado de https://claude.ai/
