@@ -1,8 +1,10 @@
 const demandModel = window.DEMANDA_INSTITUCIONAL_SIMULADA;
+const simulatedData = window.DATOS_SIMULADOS;
 const periodSelect = document.querySelector('#period-select');
 const previousButton = document.querySelector('#period-prev');
 const nextButton = document.querySelector('#period-next');
 const announcements = document.querySelector('#announcements');
+const expandedEvaluations = new Map();
 let periodIndex = 0;
 
 const metricDefinitions = [
@@ -58,6 +60,22 @@ function assertDemandModel(model) {
   });
 }
 
+function assertEvaluationData(data, model) {
+  if (!data?.simulado || !Array.isArray(data.aulas) || !Array.isArray(data.catedras)) {
+    throw new Error('The shared simulated classroom data is unavailable.');
+  }
+
+  model.periodos.filter(period => period.tipo === 'Período actual').forEach(period => {
+    period.demanda.forEach(item => item.secciones.forEach(section => {
+      const classroom = data.aulas.find(room => room.id === section.aulaId);
+      const offer = data.catedras.find(candidate => candidate.id === section.catedraId && candidate.periodo === period.etiqueta);
+      if (!classroom || !offer || offer.aulaId !== section.aulaId || classroom.capacidad !== section.cupo) {
+        throw new Error(`Inconsistent classroom data for ${period.id}/${section.catedraId}.`);
+      }
+    }));
+  });
+}
+
 function currentPeriod() {
   return demandModel.periodos[periodIndex];
 }
@@ -69,6 +87,53 @@ function totalFor(period, key) {
 function metricDefinitionsFor(period) {
   return period.metricas.map(key => metricDefinitions.find(definition => definition.key === key));
 }
+
+function slotsOverlap(first, second) {
+  return first.dia === second.dia && first.desde < second.hasta && second.desde < first.hasta;
+}
+
+function roomIsAvailableForSection(room, section, period, data) {
+  const otherCurrentSections = data.catedras.filter(candidate => candidate.periodo === period.etiqueta
+    && candidate.id !== section.catedraId && candidate.aulaId === room.id);
+  const sectionOffer = data.catedras.find(candidate => candidate.id === section.catedraId && candidate.periodo === period.etiqueta);
+  return !otherCurrentSections.some(other => sectionOffer.franjas.some(slot => other.franjas.some(otherSlot => slotsOverlap(slot, otherSlot))));
+}
+
+function compareClassrooms(left, right) {
+  return left.capacidad - right.capacidad || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0);
+}
+
+function evaluateSubjectResolution(item, period, data = simulatedData) {
+  const outsideCapacityStudents = item.alumnosInscriptosFueraDeCupo;
+  const evaluations = item.secciones.map(section => {
+    const currentRoom = data.aulas.find(room => room.id === section.aulaId);
+    const requiredCapacity = section.alumnosInscriptosAsignados + outsideCapacityStudents;
+    const compatibleClassrooms = data.aulas
+      .filter(room => room.id !== section.aulaId && room.tipo === currentRoom.tipo && room.capacidad >= requiredCapacity)
+      .filter(room => roomIsAvailableForSection(room, section, period, data))
+      .sort(compareClassrooms);
+    const classroom = compatibleClassrooms[0] || null;
+
+    return {
+      section,
+      currentRoom,
+      requiredCapacity,
+      classroom,
+      incorporableStudents: classroom
+        ? Math.min(outsideCapacityStudents, classroom.capacidad - section.alumnosInscriptosAsignados)
+        : 0
+    };
+  });
+  const compatibleEvaluations = evaluations.filter(evaluation => evaluation.classroom)
+    .sort((left, right) => compareClassrooms(left.classroom, right.classroom)
+      || (left.section.catedraId < right.section.catedraId ? -1 : left.section.catedraId > right.section.catedraId ? 1 : 0));
+
+  return compatibleEvaluations[0]
+    ? { status: 'compatible', ...compatibleEvaluations[0] }
+    : { status: 'no-compatible-classroom' };
+}
+
+window.CU13_EVALUATION = { evaluateSubjectResolution, slotsOverlap };
 
 function createCategoryRow(definition, item) {
   const row = document.createElement('div');
@@ -106,6 +171,74 @@ function createSectionDetails(item) {
     sectionBlock.append(title, list);
   }
   return sectionBlock;
+}
+
+function createEvaluationResult(item, evaluation) {
+  const resultId = `evaluation-result-${item.materiaId}`;
+  const result = document.createElement('section');
+  result.id = resultId;
+  result.className = 'evaluation-result';
+  result.setAttribute('aria-labelledby', `${resultId}-title`);
+  result.setAttribute('aria-live', 'polite');
+  const title = document.createElement('h4');
+  title.id = `${resultId}-title`;
+  title.textContent = 'Resultado de evaluación';
+  result.append(title);
+
+  if (evaluation.status === 'no-compatible-classroom') {
+    const message = document.createElement('p');
+    message.textContent = 'No se encontró un aula compatible para las secciones evaluadas. La evaluación de una nueva sección corresponde al CU-11.';
+    result.append(message);
+    return result;
+  }
+
+  const details = document.createElement('dl');
+  details.className = 'evaluation-details';
+  [
+    ['Sección evaluada', evaluation.section.catedraId],
+    ['Aula actual', `${evaluation.currentRoom.nombre} · Capacidad: ${evaluation.currentRoom.capacidad}`],
+    ['Aula compatible', `${evaluation.classroom.nombre} · Capacidad: ${evaluation.classroom.capacidad}`],
+    ['Capacidad requerida', evaluation.requiredCapacity],
+    ['Estudiantes incorporables', evaluation.incorporableStudents]
+  ].forEach(([label, value]) => {
+    const term = document.createElement('dt');
+    term.textContent = label;
+    const description = document.createElement('dd');
+    description.textContent = value;
+    details.append(term, description);
+  });
+  const explanation = document.createElement('p');
+  explanation.className = 'evaluation-explanation';
+  explanation.textContent = 'Filtros superados: aula distinta, capacidad suficiente, tipo de aula coincidente y disponibilidad en todas las franjas horarias de la sección.';
+  result.append(details, explanation);
+  return result;
+}
+
+function createEvaluationAction(item, period) {
+  const resultId = `evaluation-result-${item.materiaId}`;
+  const expanded = expandedEvaluations.has(item.materiaId);
+  const action = document.createElement('button');
+  action.type = 'button';
+  action.className = 'evaluation-action';
+  action.dataset.evaluateSubject = item.materiaId;
+  action.setAttribute('aria-controls', resultId);
+  action.setAttribute('aria-expanded', String(expanded));
+  action.textContent = 'Evaluar resolución';
+  action.addEventListener('click', () => {
+    const evaluation = evaluateSubjectResolution(item, period);
+    if (expandedEvaluations.has(item.materiaId)) {
+      expandedEvaluations.delete(item.materiaId);
+      announcements.textContent = `Resultado de evaluación oculto para ${item.materiaId}.`;
+    } else {
+      expandedEvaluations.set(item.materiaId, evaluation);
+      announcements.textContent = evaluation.status === 'compatible'
+        ? `Resultado de evaluación disponible para ${item.materiaId}: sección ${evaluation.section.catedraId}, aula compatible ${evaluation.classroom.nombre}.`
+        : `Resultado de evaluación disponible para ${item.materiaId}: no se encontró un aula compatible.`;
+    }
+    renderPeriod();
+    document.querySelector(`[data-evaluate-subject="${item.materiaId}"]`)?.focus();
+  });
+  return action;
 }
 
 function createDemandCard(item, period) {
@@ -149,6 +282,11 @@ function createDemandCard(item, period) {
   causes.append(causesTitle, causesList);
   card.append(header, categories);
   if (isCurrentPeriod) card.append(createSectionDetails(item));
+  if (hasOutsideCapacity) {
+    card.append(createEvaluationAction(item, period));
+    const evaluation = expandedEvaluations.get(item.materiaId);
+    if (evaluation) card.append(createEvaluationResult(item, evaluation));
+  }
   card.append(causes);
   return card;
 }
@@ -159,7 +297,8 @@ function renderSummary(period) {
     const summaryItem = document.querySelector(`[data-metric="${definition.key}"]`);
     const isActive = activeMetrics.has(definition.key);
     summaryItem.hidden = !isActive;
-    summaryItem.classList.remove('is-open', 'is-dismissed');
+    summaryItem.classList.remove('is-preview', 'is-open', 'is-dismissed');
+    summaryItem.querySelector('.summary-info').setAttribute('aria-expanded', 'false');
     document.querySelector(`#${definition.valueId}`).textContent = isActive ? totalFor(period, definition.key) : 0;
   });
 
@@ -190,7 +329,9 @@ function renderPeriod({ announce = false } = {}) {
 }
 
 function setPeriod(nextIndex, announce = true) {
-  periodIndex = Math.max(0, Math.min(demandModel.periodos.length - 1, nextIndex));
+  const boundedIndex = Math.max(0, Math.min(demandModel.periodos.length - 1, nextIndex));
+  if (boundedIndex !== periodIndex) expandedEvaluations.clear();
+  periodIndex = boundedIndex;
   renderPeriod({ announce });
 }
 
@@ -204,6 +345,7 @@ function populatePeriodOptions() {
 }
 
 assertDemandModel(demandModel);
+assertEvaluationData(simulatedData, demandModel);
 populatePeriodOptions();
 renderPeriod();
 previousButton.addEventListener('click', () => setPeriod(periodIndex - 1));
@@ -212,15 +354,26 @@ periodSelect.addEventListener('change', event => setPeriod(Number(event.target.v
 
 const summaryItems = document.querySelectorAll('.summary-item');
 
-function setTooltipState(item, { isOpen, isDismissed = false }) {
+function setTooltipState(item, { isPreview = false, isOpen = false, isDismissed = false }) {
+  item.classList.toggle('is-preview', isPreview && !isOpen && !isDismissed);
   item.classList.toggle('is-open', isOpen);
   item.classList.toggle('is-dismissed', isDismissed);
   item.querySelector('.summary-info').setAttribute('aria-expanded', String(isOpen));
 }
 
-function closeOpenTooltips() {
+function startTooltipPreview(item, { clearDismissal = false } = {}) {
+  if (item.classList.contains('is-open')) return;
+  if (item.classList.contains('is-dismissed') && !clearDismissal) return;
+  setTooltipState(item, { isPreview: true });
+}
+
+function dismissTooltip(item) {
+  setTooltipState(item, { isDismissed: true });
+}
+
+function closeOpenTooltips(exceptItem = null) {
   document.querySelectorAll('.summary-item.is-open').forEach(item => {
-    setTooltipState(item, { isOpen: false });
+    if (item !== exceptItem) dismissTooltip(item);
   });
 }
 
@@ -229,17 +382,29 @@ summaryItems.forEach(item => {
 
   button.addEventListener('click', () => {
     const willOpen = !item.classList.contains('is-open');
-    closeOpenTooltips();
-    setTooltipState(item, { isOpen: willOpen, isDismissed: !willOpen });
+    if (willOpen) {
+      closeOpenTooltips(item);
+      setTooltipState(item, { isOpen: true });
+    } else {
+      dismissTooltip(item);
+    }
+  });
+
+  item.addEventListener('pointerenter', () => {
+    startTooltipPreview(item, { clearDismissal: true });
   });
 
   item.addEventListener('pointerleave', () => {
-    item.classList.remove('is-dismissed');
+    item.classList.remove('is-preview');
+  });
+
+  item.addEventListener('focusin', () => {
+    startTooltipPreview(item);
   });
 
   item.addEventListener('focusout', event => {
     if (!item.contains(event.relatedTarget)) {
-      item.classList.remove('is-dismissed');
+      setTooltipState(item, { isOpen: item.classList.contains('is-open') });
     }
   });
 });
@@ -252,8 +417,6 @@ document.addEventListener('click', event => {
 
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') {
-    document.querySelectorAll('.summary-item:hover, .summary-item:focus-within, .summary-item.is-open').forEach(item => {
-      setTooltipState(item, { isOpen: false, isDismissed: true });
-    });
+    document.querySelectorAll('.summary-item.is-preview, .summary-item.is-open').forEach(dismissTooltip);
   }
 });

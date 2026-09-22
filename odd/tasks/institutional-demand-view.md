@@ -42,6 +42,14 @@
 
   **CU-13 entry decision:** the normalized model can now evaluate resolution, but the first product decision is whether evaluation runs automatically when outside-capacity demand appears (current D-15) and presents its result, or whether the operator explicitly starts evaluation from the subject card. No CU-13 action is implemented until that choice is confirmed.
 
+- [x] **T7 — Explicit CU-13 classroom evaluation.** For the current prototype, add `Evaluar resolución` only to current-period subjects with students outside capacity. The operator-triggered deterministic evaluation inspects larger classrooms for sufficient capacity and schedule availability, then expands the same subject card with the evaluated section, compatible classroom, capacity, incorporable students, and an explanation of the filter. It simulates no transfer and changes no enrollment. This visible action is a demonstrative prototype step; automatic triggering remains a future evolution.
+
+  **Evidence:** C19, C20 and C27 expose the action; C23/C29 and all following-period cards do not. The deterministic filter excludes the current room, wrong room types, insufficient capacity and rooms occupied by overlapping current-period sections; future assignments do not block current availability. Selection is stable by smallest sufficient capacity, room ID and section ID. Observed results: C19/CAT-C19-01 → A-101, required 23, incorporable 5; C20/CAT-C20-01 → A-101, required 20, incorporable 8; C27/CAT-C27-01 → A-102, required 25, incorporable 6. No-compatible results name CU-11 without creating a proposal. Commit: `27dff38` (`feat(mockups): add explicit demand resolution evaluation`).
+
+- [x] **T8 — Verify CU-13 behavior and reconcile D-15.** Independently verify successful/no-compatible evaluation paths, repeated evaluations, keyboard/accessibility behavior, period isolation, unchanged enrollment data, and regressions in CU-10 and the student selection panel. Complete native review, record commits, and update D-15/documentation to distinguish the explicit prototype trigger from future automation.
+
+  **Evidence:** final verification passed at 1440/320 with fresh Chromium profiles: all summary tooltips, CTA mouse/keyboard behavior, inline expansion/collapse, announcements, period reset, no-compatible synthetic path, `assert.deepStrictEqual` immutability, full-width/no-overflow behavior, and student-panel C19/C42 professor accordions. D-15 now records explicit demonstrative evaluation and future automation; D-16/D-17 and debt entries were reconciled. Native review `review-c8a5fba71575ff8d` approved and was acknowledged. Informational findings `R3-001` and `R3-002` did not open corrections.
+
 ## Work routing
 
 - Implementation: delegated bounded writer because the unit spans multiple non-trivial files.

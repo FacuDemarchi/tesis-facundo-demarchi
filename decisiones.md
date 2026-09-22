@@ -235,24 +235,27 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 ---
 
-## D-15 — La evaluación institucional es automática y el traslado se aplica en el escenario simulado
+## D-15 — La evaluación institucional se activa explícitamente y no aplica traslados
 
-**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** pendiente de validación institucional
+**Fecha:** 2026-09-18 · **Estado:** aceptada · **Revisada:** implementación demostrativa de CU-13 · **Clasificación:** pendiente de validación institucional
 
-**Contexto.** Cuando la demanda supera el cupo, el prototipo puede resolver el caso ampliando la cátedra en un aula mayor, o no puede resolverlo porque no existe aula compatible. El documento prohibía hoy toda aplicación automática.
+**Contexto.** La versión original de esta decisión proponía disparar la evaluación automáticamente al cruzar el umbral de demanda y aplicar el traslado en el escenario simulado. Esa formulación conservó la intención de responder temprano a la falta de cupo, pero ocultaba el proceso que el prototipo necesita hacer visible y validar con el operador institucional.
 
-**Decisión.** La evaluación se dispara **automáticamente al cruzar el umbral** de demanda por materia, y el traslado de aula **se aplica en el escenario simulado del prototipo** cuando hay aula compatible. Cuando no la hay, el caso se deriva a bedelía, que ya es el camino del CRM que el documento reconoce en 7.2.1 y en RC-11.
+**Decisión.** En el prototipo actual, la evaluación comienza solo cuando el operador activa explícitamente `Evaluar resolución` en una materia del período actual con alumnos fuera de cupo. El resultado es una demostración de solo lectura dentro de la misma tarjeta: evalúa capacidad, tipo de aula y disponibilidad horaria, pero no traslada aulas, no modifica datos compartidos, no altera inscripciones, no asigna alumnos fuera de cupo ni aprueba o abre nada.
+
+El disparador automático al aparecer demanda fuera de cupo queda como **evolución futura**, no como comportamiento actual. También queda fuera del prototipo cualquier aplicación automática, aun sobre el escenario simulado.
 
 **Alternativas descartadas.**
 
-- *Evaluación a demanda del actor institucional:* era la lectura conservadora, pero la demanda se acumula sola y el actor no está mirando el sistema cuando la materia se llena.
+- *Disparo automático al cruzar el umbral:* se conserva como evolución posible, pero en esta etapa reduciría la visibilidad del filtro y dificultaría su validación por el operador.
+- *Aplicar el traslado en el escenario simulado:* confundiría evaluar una alternativa con ejecutarla y debilitaría la frontera de solo lectura del caso demostrativo.
 
 **Consecuencias.**
 
-- **Contradice el texto vigente en tres lugares**, que hay que reformular: §3.2 («su aprobación y aplicación corresponderán al actor institucional autorizado»), §3.4 («no ejecutarlas») y RF-26 («no producirán modificaciones automáticas»). La reformulación distingue *aplicar en el escenario simulado del prototipo*, que es admisible, de *aplicar sobre los sistemas oficiales*, que sigue fuera de alcance. RF-26 ya dice literalmente «en los sistemas oficiales», así que la aplicación simulada no lo contradice en su letra; §3.2 y §3.4 sí.
-- **Principio de la regla:** automatizar lo que los datos soportan —capacidad y disponibilidad— y escalar lo que no —una cátedra nueva necesita un docente que el prototipo no puede asignar—. Es la frontera entre RF-23 (traslado) y RF-25 (apertura).
-- Hace falta un **requerimiento nuevo**: el disparador se ejecuta al cruzar el umbral, no en cada incremento de demanda.
-- El traslado **no necesita docente nuevo** —la cátedra muda de aula y conserva su profesor—, mientras que la apertura sí implica un docente que el prototipo no asigna. Por eso el traslado es la primera propuesta: es la que no deja cabos sueltos. RC-10 queda correctamente como candidato fuera del MVP.
+- La interfaz muestra la acción únicamente cuando hay alumnos fuera de cupo en el período actual, y el resultado debe explicar por qué un aula pasa los filtros o indicar que no existe una compatible.
+- Si no hay aula compatible, evaluar una sección nueva corresponde a CU-11; la evaluación no crea esa propuesta.
+- La formulación histórica automática y de aplicación simulada queda reemplazada por esta revisión. Por lo tanto, no se requiere reformular §3.2, §3.4 ni RF-26 para admitir modificaciones automáticas: el prototipo no las produce.
+- El traslado sigue sin necesitar docente nuevo, mientras que una sección nueva sí lo requiere; esa distinción explica por qué CU-13 evalúa primero el traslado y CU-11 trata la apertura por separado.
 
 ---
 
@@ -260,35 +263,35 @@ Se recomienda conservar esta aclaración a continuación, para no afirmar una re
 
 **Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
 
-**Contexto.** D-15 vuelve automático un cálculo que se repite cada vez que la demanda cruza un umbral.
+**Contexto.** D-15 define en el prototipo actual una evaluación demostrativa que el operador activa explícitamente. Esa evaluación debe comprobar capacidad, tipo de aula y disponibilidad sin ejecutar el solver ni aplicar un traslado.
 
 **Decisión.** La evaluación de aulas es un **filtro**: capacidad suficiente y disponibilidad en la franja horaria de la cátedra. No usa CP-SAT.
 
 **Alternativas descartadas.**
 
-- *El mismo motor que las alternativas:* unificaría el mecanismo y resolvería el caso de varias propuestas compitiendo por las mismas aulas, pero cada disparo automático consumiría presupuesto del solver y pondría en riesgo RNF-01 —cinco segundos— y RNF-12 —ejecución aislada—.
+- *El mismo motor que las alternativas:* unificaría el mecanismo y resolvería el caso de varias propuestas compitiendo por las mismas aulas, pero introduciría costo y aislamiento de solver en una evaluación que hoy es determinista y demostrativa.
 
 **Consecuencias.**
 
 - El filtro es explicable, que es lo que pide RNF-03: «esta aula no sirve porque su capacidad es 40 y la demanda es 62».
-- Es barato, y por eso el disparador automático de D-15 es costeable. Las dos decisiones se sostienen juntas.
+- Es barato y determinista; esas propiedades sostienen la evaluación explícita actual y dejan abierta una automatización futura si se autoriza.
 - Queda como límite conocido: si varias propuestas compiten por las mismas aulas, un filtro deja de alcanzar.
 
 ---
 
-## D-17 — La intención del estudiante transiciona sola cuando la cátedra se amplía
+## D-17 — Transición futura de la intención ante una ampliación de capacidad aplicada
 
-**Fecha:** 2026-09-18 · **Estado:** aceptada · **Clasificación:** supuesto de diseño
+**Fecha:** 2026-09-18 · **Estado:** pendiente · **Clasificación:** pendiente de validación institucional
 
-**Contexto.** RF-21 conserva la intención de una materia sin cupo con estado `planificada` y motivo `falta de cupo`. Si D-15 amplía la cátedra automáticamente, ese estado deja de ser cierto.
+**Contexto.** RF-21 conserva la intención de una materia sin cupo con estado `planificada` y motivo `falta de cupo`. Una transición solo sería pertinente si una transferencia de aula, autorizada y aplicada por separado, ampliara efectivamente la capacidad. La evaluación actual de CU-13 es de solo lectura y no aplica traslados ni activa esta transición.
 
-**Decisión.** La intención **transiciona automáticamente** a habilitada para inscripción cuando el traslado amplía la cátedra, y el estudiante lo ve en el panel.
+**Decisión.** Si en una evolución futura se autoriza y aplica una transferencia que amplíe la capacidad, la intención podría transicionar a habilitada para inscripción y el estudiante debería verlo en el panel. Esa transición no forma parte del prototipo actual.
 
 **Alternativas descartadas.**
 
-- *Dejarla `planificada` marcada como «cupo liberado»:* más conservador, pero deja dos estados parecidos conviviendo y obliga al estudiante a hacer un paso que el sistema ya sabe.
+- *Dejarla `planificada` marcada como «cupo liberado» tras una ampliación aplicada:* sería más conservador, pero dejaría dos estados parecidos conviviendo y obligaría al estudiante a realizar un paso que el sistema ya conocería.
 
-**Consecuencias.** Hace falta un **requerimiento nuevo** y la transición correspondiente en el modelo de dominio. `discoveries.md` registra la pregunta abierta sobre qué consentimiento y qué aviso acompañan la automatización.
+**Consecuencias.** No hace falta un requerimiento ni una transición de dominio para el CU-13 actual. Si se autoriza la evolución futura, harán falta un requerimiento nuevo, la transición correspondiente y la definición del consentimiento y aviso que la acompañen.
 
 ---
 
@@ -375,9 +378,9 @@ Cambios que dejan pendientes las decisiones D-10 a D-18. Se aplican antes de esc
 | Tabla 7 | RF-05 pasa de `CU-06` a `CU-05, CU-06` (D-10) |
 | Tabla 6, CU-05 | Falta el paso de generación de alternativas; hoy solo «valida la selección resultante» (D-10) |
 | Tabla 5 | El candidato nuevo de la descarga, con su pendiente de aceptación institucional (D-18) |
-| §3.2, §3.4 y RF-26 | Distinguir *aplicar en el escenario simulado* de *aplicar sobre los sistemas oficiales* (D-15) |
-| RF-21 y el modelo de dominio | Falta el requerimiento y la transición que devuelve la intención a habilitada al ampliarse la cátedra (D-17) |
-| Capítulo 6 | Requerimiento nuevo: el disparador automático se ejecuta al **cruzar** el umbral por materia, no en cada incremento (D-15) |
+| Tabla 6, CU-13 | Alinear el flujo con la evaluación demostrativa explícita y de solo lectura: no aplica traslados ni modifica intenciones (D-15) |
+| RF-21 y el modelo de dominio | Mantener como evolución futura la transición si una transferencia autorizada y aplicada amplía la capacidad; CU-13 no la activa (D-17) |
+| Capítulo 6 | Identificar el disparador automático como evolución futura, no como requerimiento del prototipo actual (D-15) |
 | 7.2.5 | La sección entera: panel flotante y su regla, cierre con descarga, indicador de granularidad en el resultado, y rama institucional (D-11, D-13, D-14, D-18) |
 | `mockup/` | El panel flotante y su regla solo existen en `panel-seleccion/`; el README de `mockup/` sigue diciendo que no contiene paneles de planificación |
 
