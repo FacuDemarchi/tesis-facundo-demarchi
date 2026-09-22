@@ -137,6 +137,56 @@ Los umbrales que todavía no tengan evidencia deberán quedar expresamente marca
 
 ---
 
+## Alineación propuesta para la reasignación global de aulas (CU-13)
+
+> **Estado de esta sección:** texto propuesto para evaluación y aprobación. No modifica `documento/tesis.md` ni afirma la aplicación de reasignaciones reales. La asignación de responsabilidades, la oferta institucional y cualquier operación sobre aulas permanecen pendientes de validación institucional.
+
+### Reemplazo propuesto para §3.3
+
+> Para el período académico actual, el prototipo podrá presentar una evaluación de reasignación de aulas cuando exista demanda agregada fuera de cupo. La evaluación se inicia mediante una acción explícita del operador institucional provisional y considera conjuntamente todas las secciones y aulas del período. Conserva fijos los horarios y docentes de las secciones; solo analiza asignaciones de aulas compatibles por tipo y capacidad, sin superposiciones horarias en una misma aula. La demanda fuera de cupo se mantiene agrupada por materia y puede ser absorbida por las vacantes resultantes de las aulas asignadas a las secciones de esa materia.
+>
+> El resultado es una recomendación simulada, explicable y de solo lectura. No modifica la asignación real de aulas, los horarios, los docentes, las inscripciones, la oferta académica ni los datos compartidos. La apertura de una nueva sección se analiza por separado y solo cuando subsiste demanda fuera de cupo.
+
+### Reemplazo propuesto para §3.4
+
+> La evaluación de aulas no constituye una operación de generación de horarios ni de asignación de personal. Se trata exclusivamente de una reasignación de aulas para secciones ya existentes: sus horarios y docentes permanecen fijos. Para cada escenario controlado, el prototipo busca una solución global factible que minimice, en este orden, los estudiantes fuera de cupo residuales, la cantidad de movimientos de aula y la capacidad sin utilizar. Ante empate, utiliza un vector canónico de identificadores de aula para obtener un resultado reproducible.
+>
+> La búsqueda exacta estática del prototipo es un supuesto técnico de demostración. Una futura implementación de backend podría evaluar CP-SAT u otra técnica si la escala y las reglas validadas institucionalmente lo requieren; esa evolución no forma parte del comportamiento actual ni autoriza cambios automáticos.
+
+### Adición propuesta para §6.1
+
+Agregar al final de la descripción general:
+
+> Como capacidad institucional preliminar, el prototipo incluye la evaluación global de reasignación de aulas para el período actual. Esta capacidad recibe secciones, aulas, tipos, capacidades y franjas horarias simuladas; preserva horarios y docentes; y presenta una alternativa determinista de solo lectura. Su propósito es hacer visible el efecto de restricciones físicas sobre la demanda agregada, no gestionar la programación académica ni ejecutar cambios sobre recursos reales. La validación institucional deberá definir responsables, fuentes de datos, permisos y el tratamiento operativo de cualquier recomendación.
+
+### Reemplazo propuesto para RF-23 a RF-25
+
+| ID | Requerimiento | Estado |
+|---|---|---|
+| RF-23 | El sistema deberá permitir que el operador institucional provisional inicie explícitamente una evaluación global de reasignación de aulas para todas las secciones del período actual con demanda fuera de cupo. | Pendiente de validación institucional |
+| RF-24 | La evaluación deberá mantener fijos los horarios y docentes, respetar tipo y capacidad de aula y evitar que se asignen a una misma aula secciones con superposición horaria. Deberá ordenar las soluciones por residuo de demanda, movimientos de aula, capacidad sin utilizar y desempate canónico. | Supuesto de diseño |
+| RF-25 | El sistema deberá mostrar el resultado global y su proyección por materia; cuando subsista demanda fuera de cupo, deberá derivarla a CU-11 sin crear, aprobar ni aplicar una apertura de sección. | Pendiente de validación institucional |
+
+### Reemplazo propuesto para las descripciones de CU-13 y CU-11
+
+**CU-13 — Evaluar reasignación global de aulas.** El operador institucional provisional activa una acción explícita para evaluar las secciones y aulas del período actual. El sistema calcula una alternativa global exacta y determinista con horarios y docentes fijos, restricciones de tipo, capacidad y superposición, y demanda fuera de cupo agrupada por materia. Presenta el resumen y el detalle por materia en modo de solo lectura. No aplica traslados, no modifica datos ni inscripciones y no abre secciones.
+
+**CU-11 — Evaluar apertura de nueva sección ante residuo.** Cuando CU-13 informa demanda residual, el operador puede iniciar por separado la evaluación de una nueva sección. CU-11 recibe únicamente el residuo informado; no se activa por una reasignación sin residuo y no es creado, aprobado ni aplicado automáticamente por CU-13.
+
+### Adición propuesta para trazabilidad y casos de prueba
+
+Agregar a la matriz de trazabilidad la relación `RF-23 → CU-13 → CP-23`, `RF-24 → CU-13 → CP-24` y `RF-25 → CU-13/CU-11 → CP-25`.
+
+| ID | Caso | Resultado esperado | Requerimientos |
+|---|---|---|---|
+| CP-23 | El operador activa la evaluación global en un período actual con demanda fuera de cupo. | La evaluación se ejecuta solo por acción explícita, muestra un resultado de solo lectura y no altera aulas, horarios, docentes, inscripciones ni datos de entrada. | RF-23, RF-25 |
+| CP-24 | Dos secciones compatibles compiten por una misma aula y una de ellas puede liberar otra aula compatible. | La solución considera el intercambio global, reutiliza el aula liberada cuando corresponde y selecciona el óptimo lexicográfico; no conserva una decisión local que aumente el residuo. | RF-24 |
+| CP-25 | Tras la reasignación global queda demanda fuera de cupo. | El sistema informa el residuo agrupado por materia y ofrece únicamente la derivación de evaluación a CU-11, sin crear ni aplicar una nueva sección. | RF-25 |
+
+### Adición propuesta para métricas de evaluación
+
+> La evaluación técnica utilizará escenarios sintéticos, reproducibles y sin datos personales. Para cada escenario se registrarán: estudiantes fuera de cupo iniciales, estudiantes absorbidos, demanda residual, cantidad de movimientos de aula, capacidad total sin utilizar antes de asignar la demanda agrupada fuera de cupo, tiempo de ejecución y repetibilidad del resultado ante entradas idénticas. Se verificará además que horarios y docentes permanezcan fijos y que ninguna aula concentre secciones con superposición horaria. En el escenario base controlado, la evidencia esperada es la absorción de 19 estudiantes, residuo 0, 3 movimientos y 45 asientos libres totales en las aulas propuestas antes de asignar la demanda agrupada fuera de cupo; tras absorber los 19 estudiantes, quedan 26 asientos. Estos valores describen datos simulados del prototipo y no una intervención institucional.
+
 # 7. Desarrollo del prototipo
 
 ## 7.1. Metodología y proceso de construcción asistido por IA
