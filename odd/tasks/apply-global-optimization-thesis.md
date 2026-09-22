@@ -21,7 +21,7 @@ Apply the approved global-classroom-optimization proposal to `documento/tesis.md
 
 - [x] **T1 — Apply the approved manuscript alignment.** Updated scope, limits, functional/technical proposal, RF-23–RF-25, CU-11/CU-13 descriptions, collaboration prose, traceability, test cases, and evaluation metrics. Scoped CP-SAT wording and preserved citations/notes.
 
-- [ ] **T2 — Regenerate the affected use-case figure.** Rename CU-11/CU-13 consistently in the Mermaid source, render Figure 2 using the repository workflow, and update only its figure-status evidence.
+- [x] **T2 — Regenerate the affected use-case figure.** Renamed CU-11 and shortened the Figure 2 CU-13 node to its identifier, with the CU-13 clarification placed immediately below Figure 2 in the manuscript. Rendered only Figure 2 with `mmdc -i figura-2-casos-de-uso.mmd -o figura-2-casos-de-uso.png -w 1600 -b white -p puppeteer-config.json -c mermaid-config.json --scale 2`; `python3 verificar-tamanos.py` reports 1420 × 2502 px, 368 × 648 pt, and 8,8 pt for Figure 2. The checker flags only the documented Figure 3 8,3 pt debt; `git diff --check` passed and no other figure source or PNG changed.
 
 - [ ] **T3 — Verify and close the thesis candidate.** Check manuscript terminology, requirement/use-case/test traceability, numerical evidence, no-timetabling/read-only boundaries, figure references/assets, Markdown integrity, unchanged unrelated figures, and native review; record commits and limitations.
 

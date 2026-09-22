@@ -365,6 +365,7 @@ Declaración sobre el uso de inteligencia artificial generativa. Durante la elab
 ### 7.2.1. Diagrama de casos de uso
 El diagrama distingue al estudiante y a un actor institucional autorizado. Bedelía queda identificada como responsable de registrar en el CRM las solicitudes originadas por falta de cupo. La evaluación y aprobación de cambios de aula o aperturas se atribuyen provisionalmente a un actor institucional, cuya denominación y nivel de autorización deberán confirmarse mediante la elicitación pendiente.
 Figura 2. Casos de uso del sistema.
+CU-13 corresponde a «Evaluar reasignación global de aulas».
 Nota. Elaboración propia.
 ### 7.2.2. Diagrama de clases / Entidad relación
 Las entidades se presentan como un modelo preliminar del dominio, derivado de los requerimientos del capítulo 6 y del alcance definido en 3.3. Además del recorrido del estudiante, se incorporan las entidades necesarias para modelar aulas, disponibilidad y propuestas de resolución de demanda. No se representan inscripciones oficiales ni personal administrativo nominal; el actor institucional se modela mediante un rol provisional hasta completar la elicitación. El cupo de una cátedra se deriva de la capacidad del aula asignada, según lo relevado en 4.4.3, y mientras no exista aula asignada se conserva como capacidad declarada. Esta regla evita que la capacidad del aula y el cupo de la cátedra funcionen como dos fuentes de verdad independientes.
