@@ -174,6 +174,69 @@ function renderGlobalEvaluation(period) {
   if (isExpanded) renderGlobalEvaluationResult(globalEvaluation.result);
 }
 
+function globalSubjectPlanFor(period, item) {
+  if (!globalEvaluationExpanded || globalEvaluation?.periodId !== period.id) return null;
+  const subject = globalEvaluation.result.subjects.find(candidate => candidate.materiaId === item.materiaId);
+  if (!subject || (subject.outsideCapacityStudents === 0 && !subject.sections.some(section => section.changedRoom))) {
+    return null;
+  }
+  return subject;
+}
+
+function createGlobalPlanDetails(subject) {
+  const planBlock = document.createElement('section');
+  planBlock.className = 'global-plan-details';
+  const headingId = `global-plan-${subject.materiaId}`;
+  const title = document.createElement('h4');
+  title.id = headingId;
+  title.textContent = 'Plan global simulado';
+  const explanation = document.createElement('p');
+  explanation.className = 'global-plan-explanation';
+  explanation.textContent = 'El plan considera todas las secciones en conjunto, el tipo y la capacidad de aula, los horarios fijos y la contención de aulas. No aplica cambios.';
+
+  const summary = document.createElement('dl');
+  summary.className = 'global-plan-summary';
+  [
+    ['Demanda fuera de cupo', subject.outsideCapacityStudents],
+    ['Total incorporable', subject.incorporableStudents],
+    ['Residual', subject.residualStudents]
+  ].forEach(([label, value]) => {
+    const term = document.createElement('dt');
+    term.textContent = label;
+    const description = document.createElement('dd');
+    description.textContent = value;
+    summary.append(term, description);
+  });
+
+  const sectionsTitle = document.createElement('h5');
+  sectionsTitle.textContent = 'Asignación por cátedra';
+  const sections = document.createElement('ul');
+  sections.className = 'global-plan-section-list';
+  sections.setAttribute('aria-labelledby', headingId);
+  subject.sections.forEach(section => {
+    const sectionItem = document.createElement('li');
+    const sectionId = document.createElement('strong');
+    sectionId.textContent = section.catedraId;
+    const assignment = document.createElement('p');
+    assignment.className = 'global-plan-assignment';
+    assignment.textContent = `${section.changedRoom ? 'Se traslada' : 'Permanece'} · actual: ${section.currentRoom.nombre} (${section.currentRoom.id}), capacidad ${section.currentRoom.capacidad} · propuesta: ${section.proposedRoom.nombre} (${section.proposedRoom.id}), capacidad ${section.proposedRoom.capacidad}.`;
+    const allocation = document.createElement('p');
+    allocation.className = 'global-plan-allocation';
+    allocation.textContent = `Inscriptos asignados: ${section.alumnosInscriptosAsignados} · Fuera de cupo absorbidos: ${section.incorporableStudents} · Demanda restante: ${section.remainingOutsideCapacityStudents}.`;
+    sectionItem.append(sectionId, assignment, allocation);
+    sections.append(sectionItem);
+  });
+
+  const residualNotice = document.createElement('p');
+  residualNotice.className = 'global-plan-residual';
+  residualNotice.textContent = subject.residualStudents > 0
+    ? `Quedan ${subject.residualStudents} estudiantes residuales: se deriva a CU-11 para evaluar una nueva sección. Esta pantalla no crea ni aprueba una propuesta.`
+    : 'La demanda fuera de cupo queda cubierta por la redistribución simulada.';
+  planBlock.setAttribute('aria-labelledby', headingId);
+  planBlock.append(title, explanation, summary, sectionsTitle, sections, residualNotice);
+  return planBlock;
+}
+
 function evaluateGlobalDistribution() {
   const period = currentPeriod();
   if (period.tipo !== 'Período actual' || totalFor(period, 'alumnosInscriptosFueraDeCupo') === 0) return;
@@ -238,7 +301,11 @@ function createDemandCard(item, period) {
   });
   causes.append(causesTitle, causesList);
   card.append(header, categories);
-  if (isCurrentPeriod) card.append(createSectionDetails(item));
+  if (isCurrentPeriod) {
+    card.append(createSectionDetails(item));
+    const subjectPlan = globalSubjectPlanFor(period, item);
+    if (subjectPlan) card.append(createGlobalPlanDetails(subjectPlan));
+  }
   card.append(causes);
   return card;
 }
