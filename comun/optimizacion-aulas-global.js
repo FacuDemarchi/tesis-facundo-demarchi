@@ -18,8 +18,8 @@
   }
 
   function validateSlot(slot, context) {
-    if (!slot || typeof slot.dia !== 'string' || !/^\d{2}:\d{2}$/.test(slot.desde) || !/^\d{2}:\d{2}$/.test(slot.hasta)
-      || slot.desde >= slot.hasta) {
+    if (!slot || typeof slot.dia !== 'string' || !slot.dia.trim() || !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(slot.desde)
+      || !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(slot.hasta) || slot.desde >= slot.hasta) {
       fail(`invalid schedule slot for ${context}.`);
     }
   }
