@@ -277,6 +277,16 @@
     subjectDemand.forEach((outsideCapacityStudents, materiaId) => {
       const subjectScore = best.score.subjectScores.get(materiaId);
       const subjectSections = sectionsBySubject.get(materiaId) || [];
+      let remainingOutsideCapacityStudents = outsideCapacityStudents;
+      subjectSections.forEach(section => {
+        section.incorporableStudents = Math.min(remainingOutsideCapacityStudents, section.freeSeatsBeforeOutsideDemand);
+        remainingOutsideCapacityStudents -= section.incorporableStudents;
+        section.remainingOutsideCapacityStudents = remainingOutsideCapacityStudents;
+        section.residualStudents = remainingOutsideCapacityStudents;
+      });
+      if (remainingOutsideCapacityStudents !== subjectScore.residualStudents) {
+        fail(`section allocation does not conserve outside-capacity demand for ${materiaId}.`);
+      }
       subjectResults.push({
         materiaId,
         materia: subjectSections[0] ? sections.find(section => section.materiaId === materiaId).materia : materiaId,

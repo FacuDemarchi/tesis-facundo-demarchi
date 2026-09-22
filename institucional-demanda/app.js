@@ -4,7 +4,11 @@ const periodSelect = document.querySelector('#period-select');
 const previousButton = document.querySelector('#period-prev');
 const nextButton = document.querySelector('#period-next');
 const announcements = document.querySelector('#announcements');
-const expandedEvaluations = new Map();
+const globalEvaluationContainer = document.querySelector('#global-evaluation');
+const globalEvaluationAction = document.querySelector('#global-evaluation-action');
+const globalEvaluationResult = document.querySelector('#global-evaluation-result');
+let globalEvaluation = null;
+let globalEvaluationExpanded = false;
 let periodIndex = 0;
 
 const metricDefinitions = [
@@ -88,53 +92,6 @@ function metricDefinitionsFor(period) {
   return period.metricas.map(key => metricDefinitions.find(definition => definition.key === key));
 }
 
-function slotsOverlap(first, second) {
-  return first.dia === second.dia && first.desde < second.hasta && second.desde < first.hasta;
-}
-
-function roomIsAvailableForSection(room, section, period, data) {
-  const otherCurrentSections = data.catedras.filter(candidate => candidate.periodo === period.etiqueta
-    && candidate.id !== section.catedraId && candidate.aulaId === room.id);
-  const sectionOffer = data.catedras.find(candidate => candidate.id === section.catedraId && candidate.periodo === period.etiqueta);
-  return !otherCurrentSections.some(other => sectionOffer.franjas.some(slot => other.franjas.some(otherSlot => slotsOverlap(slot, otherSlot))));
-}
-
-function compareClassrooms(left, right) {
-  return left.capacidad - right.capacidad || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0);
-}
-
-function evaluateSubjectResolution(item, period, data = simulatedData) {
-  const outsideCapacityStudents = item.alumnosInscriptosFueraDeCupo;
-  const evaluations = item.secciones.map(section => {
-    const currentRoom = data.aulas.find(room => room.id === section.aulaId);
-    const requiredCapacity = section.alumnosInscriptosAsignados + outsideCapacityStudents;
-    const compatibleClassrooms = data.aulas
-      .filter(room => room.id !== section.aulaId && room.tipo === currentRoom.tipo && room.capacidad >= requiredCapacity)
-      .filter(room => roomIsAvailableForSection(room, section, period, data))
-      .sort(compareClassrooms);
-    const classroom = compatibleClassrooms[0] || null;
-
-    return {
-      section,
-      currentRoom,
-      requiredCapacity,
-      classroom,
-      incorporableStudents: classroom
-        ? Math.min(outsideCapacityStudents, classroom.capacidad - section.alumnosInscriptosAsignados)
-        : 0
-    };
-  });
-  const compatibleEvaluations = evaluations.filter(evaluation => evaluation.classroom)
-    .sort((left, right) => compareClassrooms(left.classroom, right.classroom)
-      || (left.section.catedraId < right.section.catedraId ? -1 : left.section.catedraId > right.section.catedraId ? 1 : 0));
-
-  return compatibleEvaluations[0]
-    ? { status: 'compatible', ...compatibleEvaluations[0] }
-    : { status: 'no-compatible-classroom' };
-}
-
-window.CU13_EVALUATION = { evaluateSubjectResolution, slotsOverlap };
-
 function createCategoryRow(definition, item) {
   const row = document.createElement('div');
   row.className = `category-row ${definition.className}`;
@@ -173,33 +130,17 @@ function createSectionDetails(item) {
   return sectionBlock;
 }
 
-function createEvaluationResult(item, evaluation) {
-  const resultId = `evaluation-result-${item.materiaId}`;
-  const result = document.createElement('section');
-  result.id = resultId;
-  result.className = 'evaluation-result';
-  result.setAttribute('aria-labelledby', `${resultId}-title`);
-  result.setAttribute('aria-live', 'polite');
-  const title = document.createElement('h4');
-  title.id = `${resultId}-title`;
-  title.textContent = 'Resultado de evaluación';
-  result.append(title);
-
-  if (evaluation.status === 'no-compatible-classroom') {
-    const message = document.createElement('p');
-    message.textContent = 'No se encontró un aula compatible para las secciones evaluadas. La evaluación de una nueva sección corresponde al CU-11.';
-    result.append(message);
-    return result;
-  }
-
+function renderGlobalEvaluationResult(evaluation) {
+  const title = document.createElement('h3');
+  title.textContent = 'Resultado de evaluación global';
   const details = document.createElement('dl');
-  details.className = 'evaluation-details';
+  details.className = 'global-evaluation-details';
   [
-    ['Sección evaluada', evaluation.section.catedraId],
-    ['Aula actual', `${evaluation.currentRoom.nombre} · Capacidad: ${evaluation.currentRoom.capacidad}`],
-    ['Aula compatible', `${evaluation.classroom.nombre} · Capacidad: ${evaluation.classroom.capacidad}`],
-    ['Capacidad requerida', evaluation.requiredCapacity],
-    ['Estudiantes incorporables', evaluation.incorporableStudents]
+    ['Demanda fuera de cupo antes de evaluar', evaluation.summary.totalOutsideCapacityStudents],
+    ['Estudiantes absorbidos por el plan', evaluation.summary.incorporableStudents],
+    ['Estudiantes residuales', evaluation.summary.residualStudents],
+    ['Movimientos de aula', evaluation.summary.changedRoomCount],
+    ['Capacidad sin usar (definición del optimizador)', evaluation.summary.unusedCapacity]
   ].forEach(([label, value]) => {
     const term = document.createElement('dt');
     term.textContent = label;
@@ -207,38 +148,117 @@ function createEvaluationResult(item, evaluation) {
     description.textContent = value;
     details.append(term, description);
   });
-  const explanation = document.createElement('p');
-  explanation.className = 'evaluation-explanation';
-  explanation.textContent = 'Filtros superados: aula distinta, capacidad suficiente, tipo de aula coincidente y disponibilidad en todas las franjas horarias de la sección.';
-  result.append(details, explanation);
-  return result;
+  const definition = document.createElement('p');
+  definition.textContent = 'La capacidad sin usar es la suma de los asientos libres en las aulas asignadas, antes de absorber la demanda fuera de cupo.';
+  const notice = document.createElement('p');
+  notice.className = 'global-evaluation-notice';
+  notice.textContent = 'Esta evaluación es de solo lectura: no aplica cambios a aulas, inscripciones, horarios, docentes ni propuestas.';
+  globalEvaluationResult.replaceChildren(title, details, definition, notice);
 }
 
-function createEvaluationAction(item, period) {
-  const resultId = `evaluation-result-${item.materiaId}`;
-  const expanded = expandedEvaluations.has(item.materiaId);
-  const action = document.createElement('button');
-  action.type = 'button';
-  action.className = 'evaluation-action';
-  action.dataset.evaluateSubject = item.materiaId;
-  action.setAttribute('aria-controls', resultId);
-  action.setAttribute('aria-expanded', String(expanded));
-  action.textContent = 'Evaluar resolución';
-  action.addEventListener('click', () => {
-    const evaluation = evaluateSubjectResolution(item, period);
-    if (expandedEvaluations.has(item.materiaId)) {
-      expandedEvaluations.delete(item.materiaId);
-      announcements.textContent = `Resultado de evaluación oculto para ${item.materiaId}.`;
-    } else {
-      expandedEvaluations.set(item.materiaId, evaluation);
-      announcements.textContent = evaluation.status === 'compatible'
-        ? `Resultado de evaluación disponible para ${item.materiaId}: sección ${evaluation.section.catedraId}, aula compatible ${evaluation.classroom.nombre}.`
-        : `Resultado de evaluación disponible para ${item.materiaId}: no se encontró un aula compatible.`;
-    }
-    renderPeriod();
-    document.querySelector(`[data-evaluate-subject="${item.materiaId}"]`)?.focus();
+function renderGlobalEvaluation(period) {
+  const hasOutsideCapacity = period.tipo === 'Período actual'
+    && totalFor(period, 'alumnosInscriptosFueraDeCupo') > 0;
+  const hasResultForPeriod = globalEvaluation?.periodId === period.id;
+  const isExpanded = hasOutsideCapacity && hasResultForPeriod && globalEvaluationExpanded;
+
+  globalEvaluationContainer.hidden = !hasOutsideCapacity;
+  globalEvaluationAction.setAttribute('aria-expanded', String(isExpanded));
+  globalEvaluationResult.hidden = !isExpanded;
+
+  if (!hasOutsideCapacity) {
+    globalEvaluationResult.replaceChildren();
+    return;
+  }
+
+  if (isExpanded) renderGlobalEvaluationResult(globalEvaluation.result);
+}
+
+function globalSubjectPlanFor(period, item) {
+  if (!globalEvaluationExpanded || globalEvaluation?.periodId !== period.id) return null;
+  const subject = globalEvaluation.result.subjects.find(candidate => candidate.materiaId === item.materiaId);
+  if (!subject || (subject.outsideCapacityStudents === 0 && !subject.sections.some(section => section.changedRoom))) {
+    return null;
+  }
+  return subject;
+}
+
+function createGlobalPlanDetails(subject) {
+  const planBlock = document.createElement('section');
+  planBlock.className = 'global-plan-details';
+  const headingId = `global-plan-${subject.materiaId}`;
+  const title = document.createElement('h4');
+  title.id = headingId;
+  title.textContent = 'Plan global simulado';
+  const explanation = document.createElement('p');
+  explanation.className = 'global-plan-explanation';
+  explanation.textContent = 'El plan considera todas las secciones en conjunto, el tipo y la capacidad de aula, los horarios fijos y la contención de aulas. No aplica cambios.';
+
+  const summary = document.createElement('dl');
+  summary.className = 'global-plan-summary';
+  [
+    ['Demanda fuera de cupo', subject.outsideCapacityStudents],
+    ['Total incorporable', subject.incorporableStudents],
+    ['Residual', subject.residualStudents]
+  ].forEach(([label, value]) => {
+    const term = document.createElement('dt');
+    term.textContent = label;
+    const description = document.createElement('dd');
+    description.textContent = value;
+    summary.append(term, description);
   });
-  return action;
+
+  const sectionsTitle = document.createElement('h5');
+  sectionsTitle.textContent = 'Asignación por cátedra';
+  const sections = document.createElement('ul');
+  sections.className = 'global-plan-section-list';
+  sections.setAttribute('aria-labelledby', headingId);
+  subject.sections.forEach(section => {
+    const sectionItem = document.createElement('li');
+    const sectionId = document.createElement('strong');
+    sectionId.textContent = section.catedraId;
+    const assignment = document.createElement('p');
+    assignment.className = 'global-plan-assignment';
+    assignment.textContent = `${section.changedRoom ? 'Se traslada' : 'Permanece'} · actual: ${section.currentRoom.nombre} (${section.currentRoom.id}), capacidad ${section.currentRoom.capacidad} · propuesta: ${section.proposedRoom.nombre} (${section.proposedRoom.id}), capacidad ${section.proposedRoom.capacidad}.`;
+    const allocation = document.createElement('p');
+    allocation.className = 'global-plan-allocation';
+    allocation.textContent = `Inscriptos asignados: ${section.alumnosInscriptosAsignados} · Fuera de cupo absorbidos: ${section.incorporableStudents} · Demanda restante: ${section.remainingOutsideCapacityStudents}.`;
+    sectionItem.append(sectionId, assignment, allocation);
+    sections.append(sectionItem);
+  });
+
+  const residualNotice = document.createElement('p');
+  residualNotice.className = 'global-plan-residual';
+  residualNotice.textContent = subject.residualStudents > 0
+    ? `Quedan ${subject.residualStudents} estudiantes residuales: se deriva a CU-11 para evaluar una nueva sección. Esta pantalla no crea ni aprueba una propuesta.`
+    : 'La demanda fuera de cupo queda cubierta por la redistribución simulada.';
+  planBlock.setAttribute('aria-labelledby', headingId);
+  planBlock.append(title, explanation, summary, sectionsTitle, sections, residualNotice);
+  return planBlock;
+}
+
+function evaluateGlobalDistribution() {
+  const period = currentPeriod();
+  if (period.tipo !== 'Período actual' || totalFor(period, 'alumnosInscriptosFueraDeCupo') === 0) return;
+
+  if (globalEvaluation?.periodId === period.id) {
+    globalEvaluationExpanded = !globalEvaluationExpanded;
+    announcements.textContent = globalEvaluationExpanded
+      ? 'Resultado de la evaluación global mostrado.'
+      : 'Resultado de la evaluación global oculto.';
+  } else {
+    const optimizeGlobalClassrooms = window.CU10_GLOBAL_CLASSROOM_OPTIMIZER?.optimizeGlobalClassrooms;
+    if (typeof optimizeGlobalClassrooms !== 'function') {
+      throw new Error('The global classroom optimizer is unavailable.');
+    }
+    const result = optimizeGlobalClassrooms(period, period.demanda, simulatedData);
+    globalEvaluation = { periodId: period.id, result };
+    globalEvaluationExpanded = true;
+    announcements.textContent = `Evaluación global disponible: ${result.summary.incorporableStudents} estudiantes pueden ser absorbidos y ${result.summary.residualStudents} permanecen residuales.`;
+  }
+
+  renderPeriod();
+  globalEvaluationAction.focus();
 }
 
 function createDemandCard(item, period) {
@@ -281,11 +301,10 @@ function createDemandCard(item, period) {
   });
   causes.append(causesTitle, causesList);
   card.append(header, categories);
-  if (isCurrentPeriod) card.append(createSectionDetails(item));
-  if (hasOutsideCapacity) {
-    card.append(createEvaluationAction(item, period));
-    const evaluation = expandedEvaluations.get(item.materiaId);
-    if (evaluation) card.append(createEvaluationResult(item, evaluation));
+  if (isCurrentPeriod) {
+    card.append(createSectionDetails(item));
+    const subjectPlan = globalSubjectPlanFor(period, item);
+    if (subjectPlan) card.append(createGlobalPlanDetails(subjectPlan));
   }
   card.append(causes);
   return card;
@@ -316,6 +335,7 @@ function renderPeriod({ announce = false } = {}) {
 
   renderSummary(period);
   document.querySelector('#outside-capacity-key').hidden = period.tipo !== 'Período actual';
+  renderGlobalEvaluation(period);
 
   const demandList = document.querySelector('#demand-list');
   demandList.replaceChildren(...period.demanda.map(item => createDemandCard(item, period)));
@@ -330,7 +350,10 @@ function renderPeriod({ announce = false } = {}) {
 
 function setPeriod(nextIndex, announce = true) {
   const boundedIndex = Math.max(0, Math.min(demandModel.periodos.length - 1, nextIndex));
-  if (boundedIndex !== periodIndex) expandedEvaluations.clear();
+  if (boundedIndex !== periodIndex) {
+    globalEvaluation = null;
+    globalEvaluationExpanded = false;
+  }
   periodIndex = boundedIndex;
   renderPeriod({ announce });
 }
@@ -351,6 +374,7 @@ renderPeriod();
 previousButton.addEventListener('click', () => setPeriod(periodIndex - 1));
 nextButton.addEventListener('click', () => setPeriod(periodIndex + 1));
 periodSelect.addEventListener('change', event => setPeriod(Number(event.target.value)));
+globalEvaluationAction.addEventListener('click', evaluateGlobalDistribution);
 
 const summaryItems = document.querySelectorAll('.summary-item');
 
