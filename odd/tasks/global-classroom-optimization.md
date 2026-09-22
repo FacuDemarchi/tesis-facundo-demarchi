@@ -23,7 +23,7 @@ Evolve the institutional-demand prototype from independent per-subject classroom
 
 - [x] **T1 — Implement the pure global optimizer.** Added a shared browser module that enumerates valid current-period classroom assignments, enforces type and overlap constraints, computes subject-level residual demand, and returns the lexicographically optimal deterministic plan without mutating inputs. Exported `window.CU10_GLOBAL_CLASSROOM_OPTIMIZER` for verification.
 
-- [ ] **T2 — Add the explicit global evaluation UI.** Replace per-card evaluation triggers with one global action and a read-only summary showing demand resolved, residual demand, movements, and unused capacity. Reset the result on period changes and expose accessible announcements.
+- [x] **T2 — Add the explicit global evaluation UI.** Replaced per-card evaluation triggers with one global action and a read-only summary showing demand resolved, residual demand, movements, and unused capacity. Reset the result on period changes and expose accessible announcements.
 
 - [ ] **T3 — Project the global plan into subject cards.** Show current/proposed classroom assignments, incorporable students, explanations, and CU-11 residual handoff within each affected card while preserving every subject and period-specific demand metric.
 
@@ -42,3 +42,4 @@ Evolve the institutional-demand prototype from independent per-subject classroom
 
 - T1 implementation: added `comun/optimizacion-aulas-global.js` with explicit-input deterministic enumeration, immutable plan output, validation, and verification hook. It is loaded before `institucional-demanda/app.js`.
 - T1 checks passed: `node --check comun/optimizacion-aulas-global.js`, `node --check institucional-demanda/app.js`, and `git diff --check`. A temporary Node VM/assert harness loaded both simulated-data files and the module, confirmed repeated deep equality and unchanged inputs, assigned all 6 expected sections without overlapping-room conflicts, and reduced residual demand from 19 (baseline) to 0.
+- T2 checks passed: `node --check institucional-demanda/app.js`, `node --check comun/optimizacion-aulas-global.js`, and `git diff --check`. A temporary browser-free DOM harness confirmed one optimizer invocation, second-click collapse without recomputation, required read-only summary fields, and period-reset isolation.
