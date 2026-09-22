@@ -18,29 +18,34 @@ python3 -m http.server 8080
 
 The page loads `../comun/demanda-institucional-simulada.js`, so the web server must use the repository root rather than this directory as its document root.
 
-## Scenario
+## Scenario and metric rules
 
 All displayed values are simulated aggregated records. They contain no student data, personal data, or institutional source data. The actor is explicitly provisional until institutional validation assigns responsibilities.
 
-The initial `1B · 2026` scenario includes:
+The view separates its metrics by period:
 
-- **C20**, where total demand is 42 and the reference capacity of Aula A-101 is 24; 8 planned records remain due to lack of capacity.
-- **C27**, where the published class has no available capacity; 6 planned records remain due to lack of capacity.
+- **Período actual (`1B · 2026`)** shows exactly **Total**, **Alumnos inscriptos**, and **Alumnos inscriptos fuera de cupo**. `Total = alumnos inscriptos + alumnos inscriptos fuera de cupo`. Enrolled students are assigned to simulated sections; students outside capacity are pending section assignment and are not silently allocated. Its aggregate total is `114 = 95 + 19`.
+- **Período siguiente (`2A · 2026`)** shows exactly **Total** and **Demanda futura**. `Total = demanda futura`. Future demand represents students who want to take the subject in that following period and are not current enrollments. Its aggregate total is `36 = 36`.
 
-Every subject record follows thesis §3.3 exactly:
+The initial current-period scenario preserves:
 
-```text
-Total demand = current-period eligible + next-period conditional + planned due to no capacity
-```
+- **C20**, with two full sections (`12 + 14`) and 8 students outside capacity pending section assignment.
+- **C27**, with one full 19-seat section and 6 students outside capacity pending section assignment.
 
-The data model validates this relation when it loads. A mismatch stops rendering rather than showing a misleading total.
+### Capacity and attribution boundary
+
+`../comun/datos-simulados.js` is the single source of physical classroom capacity. Every current-period CU-10 section uses its `catedraId` and `aulaId` to link to that shared model; its declared `cupo`, the referenced classroom capacity, and the assigned enrolled count must be equal. The demand snapshot repeats the display value only as a simulated read-only snapshot, not as a second capacity authority.
+
+Outside-capacity counts remain at the subject level. They are deliberately not attributed to a `catedraId` or `aulaId` until a later CU-13 decision assigns a section, transfer, or opening; this view does not make any of those proposals.
+
+The shared data model validates the metric set, preserved subject count, total rule, and current-period section-snapshot rule when it loads. A mismatch stops rendering rather than showing a misleading total.
 
 ## Behavior
 
 - The period select and previous/next controls deterministically render one of the two fixed simulated periods.
-- The summary and every subject card expose the four thesis categories: total, current-period eligible, next-period conditional, and planned due to no capacity.
-- Cards with planned demand due to no capacity receive a visible warning border and `Sin satisfacer` status; the causes remain visible in each card.
-- Navigation uses native keyboard-operable controls, visible focus treatment, a skip link, and polite live announcements after a period change.
+- The summary and every subject card show only the metrics that apply to the selected period; irrelevant metrics are hidden rather than rendered as zero.
+- Current-period cards list each simulated section ID, assigned classroom, and `Cupo`, and identify outside-capacity students as pending section assignment. Following-period cards identify registered future demand without treating it as current enrollment or showing a section/classroom/capacity block.
+- Navigation uses native keyboard-operable controls, visible focus treatment, accessible help tooltips, a skip link, and polite live announcements after a period change.
 - The mockup has a responsive layout for narrow screens.
 
 ## Out of scope

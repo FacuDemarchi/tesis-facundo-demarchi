@@ -5,31 +5,57 @@ const nextButton = document.querySelector('#period-next');
 const announcements = document.querySelector('#announcements');
 let periodIndex = 0;
 
-const categoryDefinitions = [
-  { key: 'total', label: 'Demanda total', className: 'total' },
-  { key: 'elegibleActual', label: 'Demanda actual', className: 'eligible' },
-  { key: 'condicionalSiguiente', label: 'Demanda futura', className: 'conditional' },
-  { key: 'planificadaSinCupo', label: 'Demanda insatisfecha', className: 'no-capacity' }
+const metricDefinitions = [
+  { key: 'total', label: 'Total', className: 'total', valueId: 'demand-total-value' },
+  { key: 'alumnosInscriptos', label: 'Alumnos inscriptos', className: 'eligible', valueId: 'enrolled-value' },
+  { key: 'alumnosInscriptosFueraDeCupo', label: 'Alumnos inscriptos fuera de cupo', className: 'no-capacity', valueId: 'outside-capacity-value' },
+  { key: 'demandaFutura', label: 'Demanda futura', className: 'conditional', valueId: 'future-demand-value' }
 ];
 
-const summaryValues = [
-  { key: 'total', valueId: 'demand-total-value' },
-  { key: 'elegibleActual', valueId: 'eligible-current-value' },
-  { key: 'condicionalSiguiente', valueId: 'conditional-next-value' },
-  { key: 'planificadaSinCupo', valueId: 'planned-capacity-value' }
-];
+const periodContracts = {
+  'Período actual': {
+    metricas: ['total', 'alumnosInscriptos', 'alumnosInscriptosFueraDeCupo'],
+    subjectCount: 5,
+    totalFor: item => item.alumnosInscriptos + item.alumnosInscriptosFueraDeCupo
+  },
+  'Período siguiente': {
+    metricas: ['total', 'demandaFutura'],
+    subjectCount: 4,
+    totalFor: item => item.demandaFutura
+  }
+};
 
 function assertDemandModel(model) {
   if (!model?.simulado || !Array.isArray(model.periodos) || !model.periodos.length) {
     throw new Error('The simulated institutional demand model is unavailable.');
   }
 
-  model.periodos.forEach(period => period.demanda.forEach(item => {
-    const components = item.elegibleActual + item.condicionalSiguiente + item.planificadaSinCupo;
-    if (item.total !== components) {
-      throw new Error(`Inconsistent demand total for ${period.id}/${item.materiaId}.`);
+  model.periodos.forEach(period => {
+    const contract = periodContracts[period.tipo];
+    if (!contract || period.demanda.length !== contract.subjectCount || period.metricas?.join('|') !== contract.metricas.join('|')) {
+      throw new Error(`Invalid demand contract for ${period.id}.`);
     }
-  }));
+
+    period.demanda.forEach(item => {
+      if (item.total !== contract.totalFor(item)) {
+        throw new Error(`Inconsistent demand total for ${period.id}/${item.materiaId}.`);
+      }
+
+      if (period.tipo === 'Período actual') {
+        const sections = item.secciones;
+        const assigned = sections?.reduce((sum, section) => sum + section.alumnosInscriptosAsignados, 0);
+        const validSections = Array.isArray(sections) && sections.length > 0
+          && sections.every(section => section.catedraId && section.aulaId && section.aulaNombre
+            && section.cupo === section.alumnosInscriptosAsignados);
+        if (!validSections || assigned !== item.alumnosInscriptos
+          || (item.alumnosInscriptosFueraDeCupo > 0 && item.atribucionFueraDeCupo !== 'No asignados todavía a una sección.')) {
+          throw new Error(`Inconsistent section snapshot for ${period.id}/${item.materiaId}.`);
+        }
+      } else if (item.secciones) {
+        throw new Error(`Unexpected section snapshot for future demand ${period.id}/${item.materiaId}.`);
+      }
+    });
+  });
 }
 
 function currentPeriod() {
@@ -38,6 +64,10 @@ function currentPeriod() {
 
 function totalFor(period, key) {
   return period.demanda.reduce((sum, item) => sum + item[key], 0);
+}
+
+function metricDefinitionsFor(period) {
+  return period.metricas.map(key => metricDefinitions.find(definition => definition.key === key));
 }
 
 function createCategoryRow(definition, item) {
@@ -51,11 +81,42 @@ function createCategoryRow(definition, item) {
   return row;
 }
 
-function createDemandCard(item) {
-  const isUnsatisfied = item.planificadaSinCupo > 0;
+function createSectionDetails(item) {
+  const sectionBlock = document.createElement('section');
+  sectionBlock.className = 'section-details';
+  const title = document.createElement('h4');
+  title.textContent = 'Secciones asignadas (simuladas)';
+  const list = document.createElement('ul');
+  list.className = 'section-list';
+
+  item.secciones.forEach(section => {
+    const listItem = document.createElement('li');
+    const sectionId = document.createElement('strong');
+    sectionId.textContent = section.catedraId;
+    listItem.append(sectionId, ` · ${section.aulaNombre} · Cupo: ${section.cupo} · Inscriptos asignados: ${section.alumnosInscriptosAsignados}`);
+    list.append(listItem);
+  });
+
+  if (item.alumnosInscriptosFueraDeCupo > 0) {
+    const pending = document.createElement('p');
+    pending.className = 'pending-assignment';
+    pending.textContent = `${item.alumnosInscriptosFueraDeCupo} alumnos fuera de cupo pendientes de asignación a una sección.`;
+    sectionBlock.append(title, list, pending);
+  } else {
+    sectionBlock.append(title, list);
+  }
+  return sectionBlock;
+}
+
+function createDemandCard(item, period) {
+  const isCurrentPeriod = period.tipo === 'Período actual';
+  const hasOutsideCapacity = isCurrentPeriod && item.alumnosInscriptosFueraDeCupo > 0;
   const card = document.createElement('article');
-  card.className = `demand-card${isUnsatisfied ? ' is-unsatisfied' : ''}`;
-  card.setAttribute('aria-label', `${item.materiaId}, ${item.materia}${isUnsatisfied ? ', con demanda sin satisfacer' : ''}`);
+  card.className = `demand-card${hasOutsideCapacity ? ' is-unsatisfied' : ''}`;
+  const statusText = isCurrentPeriod
+    ? (hasOutsideCapacity ? 'Pendiente de asignación (simulado)' : 'Asignado a sección (simulado)')
+    : 'Demanda futura simulada';
+  card.setAttribute('aria-label', `${item.materiaId}, ${item.materia}, ${statusText.toLowerCase()}`);
 
   const header = document.createElement('header');
   header.className = 'card-header';
@@ -68,12 +129,12 @@ function createDemandCard(item) {
   titleGroup.append(code, title);
   const status = document.createElement('span');
   status.className = 'status-chip';
-  status.textContent = isUnsatisfied ? 'Sin satisfacer' : 'Sin pendiente de cupo';
+  status.textContent = statusText;
   header.append(titleGroup, status);
 
   const categories = document.createElement('dl');
   categories.className = 'category-list';
-  categoryDefinitions.forEach(definition => categories.append(createCategoryRow(definition, item)));
+  metricDefinitionsFor(period).forEach(definition => categories.append(createCategoryRow(definition, item)));
 
   const causes = document.createElement('section');
   causes.className = 'cause-block';
@@ -86,8 +147,25 @@ function createDemandCard(item) {
     causesList.append(listItem);
   });
   causes.append(causesTitle, causesList);
-  card.append(header, categories, causes);
+  card.append(header, categories);
+  if (isCurrentPeriod) card.append(createSectionDetails(item));
+  card.append(causes);
   return card;
+}
+
+function renderSummary(period) {
+  const activeMetrics = new Set(period.metricas);
+  metricDefinitions.forEach(definition => {
+    const summaryItem = document.querySelector(`[data-metric="${definition.key}"]`);
+    const isActive = activeMetrics.has(definition.key);
+    summaryItem.hidden = !isActive;
+    summaryItem.classList.remove('is-open', 'is-dismissed');
+    document.querySelector(`#${definition.valueId}`).textContent = isActive ? totalFor(period, definition.key) : 0;
+  });
+
+  document.querySelector('#demand-total-help').textContent = period.tipo === 'Período actual'
+    ? 'Total: suma de alumnos inscriptos y alumnos inscriptos fuera de cupo.'
+    : 'Total: coincide con la demanda futura.';
 }
 
 function renderPeriod({ announce = false } = {}) {
@@ -97,16 +175,17 @@ function renderPeriod({ announce = false } = {}) {
   previousButton.disabled = periodIndex === 0;
   nextButton.disabled = periodIndex === demandModel.periodos.length - 1;
 
-  summaryValues.forEach(({ key, valueId }) => {
-    document.querySelector(`#${valueId}`).textContent = totalFor(period, key);
-  });
+  renderSummary(period);
+  document.querySelector('#outside-capacity-key').hidden = period.tipo !== 'Período actual';
 
   const demandList = document.querySelector('#demand-list');
-  demandList.replaceChildren(...period.demanda.map(createDemandCard));
+  demandList.replaceChildren(...period.demanda.map(item => createDemandCard(item, period)));
 
   if (announce) {
-    const unresolved = totalFor(period, 'planificadaSinCupo');
-    announcements.textContent = `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; ${unresolved} planificaciones por falta de capacidad.`;
+    const total = totalFor(period, 'total');
+    announcements.textContent = period.tipo === 'Período actual'
+      ? `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; total ${total}: ${totalFor(period, 'alumnosInscriptos')} alumnos inscriptos y ${totalFor(period, 'alumnosInscriptosFueraDeCupo')} alumnos inscriptos fuera de cupo.`
+      : `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; total ${total} de demanda futura.`;
   }
 }
 

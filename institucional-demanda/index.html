@@ -28,25 +28,25 @@
   <section class="summary" aria-labelledby="summary-title">
     <h2 id="summary-title" class="sr-only">Resumen agregado de demanda</h2>
     <div class="inline-summary">
-      <span class="summary-item">
-        <button type="button" class="summary-info" aria-label="Más información sobre Demanda total" aria-describedby="demand-total-help" aria-controls="demand-total-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
-        <span>Demanda total: <strong id="demand-total-value">0</strong></span>
-        <span id="demand-total-help" class="summary-help" role="tooltip">Suma de la demanda actual, la demanda futura y la demanda insatisfecha.</span>
+      <span class="summary-item" data-metric="total">
+        <button type="button" class="summary-info" aria-label="Más información sobre Total" aria-describedby="demand-total-help" aria-controls="demand-total-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Total: <strong id="demand-total-value">0</strong></span>
+        <span id="demand-total-help" class="summary-help" role="tooltip">Total: suma de alumnos inscriptos y alumnos inscriptos fuera de cupo.</span>
       </span>
-      <span class="summary-item">
-        <button type="button" class="summary-info" aria-label="Más información sobre Demanda actual" aria-describedby="eligible-current-help" aria-controls="eligible-current-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
-        <span>Demanda actual: <strong id="eligible-current-value">0</strong></span>
-        <span id="eligible-current-help" class="summary-help" role="tooltip">Quiere cursar ahora y puede hacerlo.</span>
+      <span class="summary-item" data-metric="alumnosInscriptos">
+        <button type="button" class="summary-info" aria-label="Más información sobre Alumnos inscriptos" aria-describedby="enrolled-help" aria-controls="enrolled-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Alumnos inscriptos: <strong id="enrolled-value">0</strong></span>
+        <span id="enrolled-help" class="summary-help" role="tooltip">Alumnos inscriptos: estudiantes inscriptos dentro del cupo asignado.</span>
       </span>
-      <span class="summary-item">
-        <button type="button" class="summary-info" aria-label="Más información sobre Demanda futura" aria-describedby="conditional-next-help" aria-controls="conditional-next-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
-        <span>Demanda futura: <strong id="conditional-next-value">0</strong></span>
-        <span id="conditional-next-help" class="summary-help" role="tooltip">Quiere cursar después, pero depende de condiciones.</span>
+      <span class="summary-item" data-metric="alumnosInscriptosFueraDeCupo">
+        <button type="button" class="summary-info" aria-label="Más información sobre Alumnos inscriptos fuera de cupo" aria-describedby="outside-capacity-help" aria-controls="outside-capacity-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Alumnos inscriptos fuera de cupo: <strong id="outside-capacity-value">0</strong></span>
+        <span id="outside-capacity-help" class="summary-help" role="tooltip">Alumnos inscriptos fuera de cupo: estudiantes registrados o identificados para el período actual que no pudieron ser absorbidos por el cupo asignado.</span>
       </span>
-      <span class="summary-item">
-        <button type="button" class="summary-info" aria-label="Más información sobre Demanda insatisfecha" aria-describedby="planned-capacity-help" aria-controls="planned-capacity-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
-        <span>Demanda insatisfecha: <strong id="planned-capacity-value">0</strong></span>
-        <span id="planned-capacity-help" class="summary-help" role="tooltip">Quería cursar ahora, pero no pudo por capacidad.</span>
+      <span class="summary-item" data-metric="demandaFutura">
+        <button type="button" class="summary-info" aria-label="Más información sobre Demanda futura" aria-describedby="future-demand-help" aria-controls="future-demand-help" aria-expanded="false"><span aria-hidden="true">i</span></button>
+        <span>Demanda futura: <strong id="future-demand-value">0</strong></span>
+        <span id="future-demand-help" class="summary-help" role="tooltip">Demanda futura: estudiantes que desean cursar la materia en el período siguiente, pero no son inscriptos del período actual.</span>
       </span>
     </div>
   </section>
@@ -58,7 +58,7 @@
           <p class="eyebrow">Detalle por materia</p>
           <h2 id="demand-title">Demanda y causas</h2>
         </div>
-        <p class="unsatisfied-key"><span aria-hidden="true"></span> Demanda sin satisfacer</p>
+        <p id="outside-capacity-key" class="unsatisfied-key"><span aria-hidden="true"></span> Alumnos inscriptos fuera de cupo</p>
       </div>
       <div id="demand-list" class="demand-list" tabindex="-1"></div>
     </section>
