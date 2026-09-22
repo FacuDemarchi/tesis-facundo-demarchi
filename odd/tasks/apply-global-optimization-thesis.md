@@ -23,7 +23,7 @@ Apply the approved global-classroom-optimization proposal to `documento/tesis.md
 
 - [x] **T2 — Regenerate the affected use-case figure.** Renamed CU-11 and shortened the Figure 2 CU-13 node to its identifier, with the CU-13 clarification placed immediately below Figure 2 in the manuscript. Rendered only Figure 2 with `mmdc -i figura-2-casos-de-uso.mmd -o figura-2-casos-de-uso.png -w 1600 -b white -p puppeteer-config.json -c mermaid-config.json --scale 2`; `python3 verificar-tamanos.py` reports 1420 × 2502 px, 368 × 648 pt, and 8,8 pt for Figure 2. The checker flags only the documented Figure 3 8,3 pt debt; `git diff --check` passed and no other figure source or PNG changed.
 
-- [ ] **T3 — Verify and close the thesis candidate.** Check manuscript terminology, requirement/use-case/test traceability, numerical evidence, no-timetabling/read-only boundaries, figure references/assets, Markdown integrity, unchanged unrelated figures, and native review; record commits and limitations.
+- [x] **T3 — Verify and close the thesis candidate.** Verified manuscript terminology, requirement/use-case/test traceability, numerical evidence, no-timetabling/read-only boundaries, figure references/assets, Markdown integrity, unchanged unrelated figures, and native review. Work-unit commits: `d3db2d8`, `e3ec149`.
 
 ## Work routing
 
@@ -36,3 +36,6 @@ Apply the approved global-classroom-optimization proposal to `documento/tesis.md
 
 - T1: `git diff --check` passed; targeted consistency checks confirmed RF-23–RF-25, CU-11/CU-13, CP-23–CP-25, the base metrics, CP-SAT scope, fixed schedules/teachers, and the absence of CP-20/CP-21 references. No figure files changed.
 - Limitation: no table-of-contents page numbers were changed because the repository provides no deterministic pagination source.
+- T2 independent verification confirmed the regenerated Figure 2 at 1420 × 2502 px, 368 × 648 pt and 8,8 pt; only the unchanged Figure 3 remains below the 8,5 pt policy threshold. The CU-13 node is intentionally concise and its full meaning is stated immediately below Figure 2.
+- T3 independent verification passed for §§3.3/3.4/6.1, RF-23–RF-25, CU-11/CU-13, CP-23–CP-25, metrics `19/19/0/3/45/26`, CP-SAT scope, fixed schedules/teachers, read-only boundaries, figure assets and unchanged unrelated figures. Changed text budget before this closure was 116 lines plus the Figure 2 binary. Known limitations: pre-existing Figure 3 text-size debt, no deterministic pagination/TOC verification, and no independent runtime reproduction of the already verified optimizer metrics.
+- Native review `review-d0bf2a785c7e2a71` approved and was acknowledged. Informational finding `R3-001` at `documento/tesis.md:416` did not open a correction.
