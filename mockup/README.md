@@ -34,7 +34,7 @@ El mockup contiene solamente:
 
 Se retiraron el encabezado descriptivo, las estadísticas y la leyenda inferior. La barra superior solo aporta el contexto y la navegación temporal solicitados; no incorpora funcionalidades de planificación.
 
-No contiene paneles de planificación, preferencias, restricciones ni resultados de CP-SAT.
+A diferencia de `panel-seleccion/`, este mockup no contiene panel de selección, preferencias, restricciones ni resultados del motor: su alcance es el grafo y la navegación temporal.
 
 ## Edición
 

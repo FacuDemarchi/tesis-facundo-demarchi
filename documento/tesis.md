@@ -353,6 +353,7 @@ Requerimientos candidatos
 | RC-09 | Consultar aulas, capacidades y disponibilidad. | Fuente institucional, identificadores, horarios, modalidad y frecuencia de actualización |
 | RC-10 | Consultar disponibilidad docente y restricciones para abrir una nueva cátedra. | Área responsable, reglas de asignación y permisos |
 | RC-11 | Integrar el flujo con el CRM institucional. | Estructura del ticket, estados y mecanismos de consulta y actualización |
+| RC-12 | Descargar la selección simulada del cierre como PDF, con la trazabilidad del escenario. | Aceptación institucional del documento como respaldo de la selección |
 Nota. Elaboración propia.
 # 7. Desarrollo del prototipo
 ## 7.1. Metodología y proceso de construcción asistido por IA
