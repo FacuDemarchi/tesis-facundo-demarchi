@@ -39,10 +39,17 @@ that today announces a limit it cannot evaluate.
       admits three and models no validated institutional limit; the new case `CP-26` covers lowering the
       maximum and `Tabla 8` links it to RF-14. `decisiones.md` moves P-06 to its resolved list and drops
       the cross-reference that pointed at it from P-04.
-- [ ] **T3 — Manuscript: recommendations inside CU-04 (P-07).** One sentence in the `CU-04` block of
-      §7.2.3 making the acceptance step explicit; `decisiones.md` records the resolution.
-- [ ] **T4 — Manuscript: name the coverage tool (P-08).** §4.2 and `Tabla 1` name `pytest-cov`;
-      `decisiones.md` records the resolution.
+- [x] **T3 — Manuscript: recommendations inside CU-04 (P-07).** §7.2.3 gained one sentence in prose:
+      recommendations belong to CU-04 and enter the set used by the engine only after the student's
+      explicit acceptance. It is prose and not a field of the `CU-04` block because that block does not
+      exist: `Tabla 7` details CU-01, CU-05, CU-06, CU-09, CU-13 and CU-11 only, while CU-04 lives in the
+      catalog and the traceability matrix. The first attempt appended the step to `CU-05`'s flow and was
+      reverted: the matrix maps RF-15 to CU-04. `decisiones.md` moves P-07 to its resolved list.
+- [x] **T4 — Manuscript: name the coverage tool (P-08).** §4.2 states that test coverage is measured
+      with `pytest-cov` (coverage.py) and kept as evidence, and `Tabla 1` gained the row
+      `Cobertura de pruebas | pytest-cov (coverage.py) | Medición de la cobertura de las pruebas como
+      evidencia de verificación`. `decisiones.md` moves P-08 to its resolved list and updates the stale
+      historical mention that had left the gap open.
 - [ ] **T5 — Verification and native review.** Independent read-only verification of the candidate and
       the native review of the committed range.
 

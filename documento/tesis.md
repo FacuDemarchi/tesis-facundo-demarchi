@@ -190,6 +190,7 @@ La arquitectura evitará dependencias exclusivas de un proveedor de infraestruct
 ### Entornos de desarrollo y control de versiones
 Git y GitHub se utilizarán para el control de versiones y la revisión de cambios. GitHub Actions ejecutará la integración continua y verificará la instalación reproducible de dependencias, las migraciones, el análisis estático, las pruebas automatizadas y la compilación del frontend.
 Pytest verificará las reglas del dominio, la persistencia, la API y los escenarios del solver. Hypothesis permitirá comprobar propiedades generales, como la ausencia de superposiciones y el cumplimiento de las restricciones obligatorias. HTTPX y Schemathesis verificarán la API y su correspondencia con la especificación OpenAPI.
+La cobertura de las pruebas se medirá con pytest-cov (coverage.py) y se conservará como evidencia de cada versión evaluada.
 Playwright cubrirá un conjunto acotado de recorridos completos de la interfaz y se complementará con axe-core para detectar problemas básicos de accesibilidad. Ruff y mypy verificarán el código Python, mientras que TypeScript y ESLint verificarán el frontend.
 Las herramientas manuales de consulta de la API podrán utilizarse durante la exploración, pero no constituirán la evidencia principal de verificación. El entorno de desarrollo no dependerá de un editor específico: la reproducción del proyecto estará determinada por sus archivos de configuración, versiones, contenedores y comandos documentados.
 Tabla 1
@@ -204,6 +205,7 @@ Síntesis del stack tecnológico propuesto
 | Optimización | OR-Tools CP-SAT | Generación y evaluación de alternativas de cursado |
 | Base de datos | PostgreSQL | Persistencia relacional e integridad de la información |
 | Pruebas del backend | Pytest, Hypothesis y HTTPX | Verificación del dominio, propiedades y API |
+| Cobertura de pruebas | pytest-cov (coverage.py) | Medición de la cobertura de las pruebas como evidencia de verificación |
 | Contratos de API | Schemathesis | Pruebas automáticas derivadas de OpenAPI |
 | Interfaz y accesibilidad | Playwright y axe-core | Verificación de flujos completos y accesibilidad |
 | Calidad del backend | Ruff y mypy | Análisis estático, formato y verificación de tipos |
@@ -447,6 +449,7 @@ Descripción de los casos de uso centrales
 | Requerimientos | RF-25 |
 Nota. Elaboración propia.
 Para la rama institucional, CU-13 permite al operador institucional provisional iniciar una evaluación global de aulas sobre las cátedras existentes y consultar su resultado por materia. Si persiste demanda fuera de cupo, CU-11 puede iniciarse por separado con ese residuo. Ambas evaluaciones conservan la trazabilidad de los datos y del resultado, pero no generan, aprueban ni aplican cambios en el sistema académico oficial.
+En el recorrido del estudiante, la aceptación de las recomendaciones pertenece a CU-04. El sistema puede proponer materias habilitadas que el estudiante no seleccionó, con su justificación, y solo las incorpora al conjunto que utiliza el motor después de esa aceptación expresa.
 ### 7.2.4. Diagrama de colaboración
 La colaboración representa el escenario Solicitar alternativas de cursado e incorpora el camino de verificación local inmediata previsto para la selección y el registro de demanda agregada al cierre.
 Figura 5. Colaboración del escenario «Solicitar alternativas de cursado».
