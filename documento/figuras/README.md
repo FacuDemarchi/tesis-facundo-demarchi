@@ -90,14 +90,14 @@ versionado es el registro de lo que efectivamente está insertado en el document
 | Archivo | Sección | Relación | Inserción | Texto |
 | --- | --- | --- | --- | --- |
 | `figura-1-arquitectura` | 6.1.3 | 0,74 | 468 × 636 pt | 16,7 pt |
-| `figura-2-casos-de-uso` | 7.2.1 | 0,58 | 373 × 648 pt | 8,6 pt |
+| `figura-2-casos-de-uso` | 7.2.1 | 0,57 | 368 × 648 pt | 8,8 pt |
 | `figura-3-entidades-academicas` | 7.2.2 | 1,72 | 468 × 272 pt | 8,3 pt |
 | `figura-4-entidades-planificacion` | 7.2.2 | 1,59 | 468 × 294 pt | 9,4 pt |
 | `figura-5-colaboracion` | 7.2.4 | 0,22 | 140 × 648 pt | 10,1 pt |
 
-Las figuras 2 y 3 quedan en el límite inferior. La 2 conserva además una
-indentación despareja de algunos casos, heredada de los enlaces invisibles que
-fijan el orden; es cosmética y no afecta la lectura.
+La figura 3 queda en el límite inferior. La 2 conserva además una indentación
+despareja de algunos casos, heredada de los enlaces invisibles que fijan el
+orden; es cosmética y no afecta la lectura.
 
 ## Estado en el documento
 
@@ -108,7 +108,7 @@ los números 4 a 7 sin que existieran las figuras 1 a 3.
 | Figura en la tesis | Archivo | Sección | Inserción |
 | --- | --- | --- | --- |
 | Figura 1 | `figura-1-arquitectura` | 6.1.3 | 468 × 636 pt |
-| Figura 2 | `figura-2-casos-de-uso` | 7.2.1 | 373 × 648 pt |
+| Figura 2 | `figura-2-casos-de-uso` | 7.2.1 | 368 × 648 pt |
 | Figura 3 | `figura-3-entidades-academicas` | 7.2.2 | 468 × 272 pt |
 | Figura 4 | `figura-4-entidades-planificacion` | 7.2.2 | 468 × 294 pt |
 | Figura 5 | `figura-5-colaboracion` | 7.2.4 | 140 × 646 pt |
