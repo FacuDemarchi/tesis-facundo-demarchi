@@ -374,8 +374,26 @@ Nota. Elaboración propia.
 Figura 4. Entidades de planificación y gestión de demanda.
 Nota. Elaboración propia.
 ### 7.2.3. Descripción de casos de uso
-Se describen los cuatro casos de uso centrales del recorrido del estudiante y dos casos de la rama institucional. Cada uno registra los siete campos previstos en el diseño: objetivo, actor, precondiciones, flujo principal, flujos alternativos, postcondiciones y requerimientos relacionados.
+El catálogo siguiente enumera los catorce casos de uso, con su actor y los requerimientos relacionados. La tabla posterior describe en detalle los cuatro casos de uso centrales del recorrido del estudiante y dos de la rama institucional, cada uno con los siete campos previstos en el diseño: objetivo, actor, precondiciones, flujo principal, flujos alternativos, postcondiciones y requerimientos relacionados.
 Tabla 6
+Catálogo de casos de uso
+| CU | Nombre | Actor | Requerimientos |
+| CU-01 | Consultar el plan de estudios | Estudiante | RF-01, RF-02, RF-12, RF-20 |
+| CU-02 | Consultar el estado de una materia | Estudiante | RF-12 |
+| CU-03 | Configurar preferencias y restricciones | Estudiante | RF-03, RF-14 |
+| CU-04 | Seleccionar materias y declarar intención | Estudiante | RF-03, RF-11, RF-15 |
+| CU-05 | Asistir a la inscripción del período actual | Estudiante | RF-04, RF-10, RF-14, RF-19 |
+| CU-06 | Solicitar alternativas de cursado | Estudiante | RF-05, RF-06, RF-13, RF-16, RF-18 |
+| CU-07 | Visualizar la distribución semanal | Estudiante | RF-06 |
+| CU-08 | Comparar alternativas | Estudiante | RF-08 |
+| CU-09 | Consultar la explicación de conflictos | Estudiante | RF-07, RF-19, RNF-03 |
+| CU-10 | Consultar la demanda agregada | Operador institucional provisional | RF-17 |
+| CU-11 | Evaluar apertura de nueva cátedra ante residuo | Operador institucional provisional | RF-17, RF-25 |
+| CU-12 | Registrar una materia sin cupo | Estudiante | RF-11, RF-21, RF-22 |
+| CU-13 | Evaluar reasignación global de aulas | Operador institucional provisional | RF-23, RF-24, RF-25 |
+| CU-14 | Aprobar o rechazar una propuesta | Operador institucional provisional | RF-26 |
+Nota. Elaboración propia.
+Tabla 7
 Descripción de los casos de uso centrales
 | Campo | Contenido |
 | CU-01 · Consultar el plan de estudios |  |
@@ -440,8 +458,8 @@ Las pruebas producidas mediante TDD y los comprobantes generados por RDD formar�
 Pytest verificará las reglas del dominio, la persistencia, la API y los escenarios controlados del solver. Hypothesis comprobará invariantes generales de las alternativas generadas. Schemathesis verificará los contratos publicados mediante OpenAPI y Playwright cubrirá los recorridos críticos de la interfaz, incluyendo verificaciones automáticas y manuales de accesibilidad.
 La verificación técnica no reemplazará la validación con estudiantes y representantes de la universidad. Esta validación estará orientada a determinar si las explicaciones son comprensibles, si las alternativas resultan útiles y si el prototipo responde a las necesidades identificadas.
 La evaluación técnica de la reasignación global de aulas utilizará escenarios sintéticos, reproducibles y sin datos personales. Para cada escenario se registrarán los estudiantes fuera de cupo iniciales, los absorbidos, la demanda residual, los movimientos de aula, la capacidad libre antes y después de absorber la demanda agrupada, el tiempo de ejecución y la repetibilidad ante entradas idénticas; además, se verificará que horarios y docentes permanezcan fijos y que ninguna aula concentre cátedras con superposición horaria. En el escenario base controlado se registran 19 estudiantes fuera de cupo iniciales, 19 absorbidos, 0 de demanda residual, 3 movimientos de aula, 45 asientos libres antes de la absorción y 26 después. Estos valores describen datos simulados del prototipo y no una intervención institucional.
-La Tabla 7 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
-Tabla 7
+La Tabla 8 resume la trazabilidad entre requerimientos, casos de uso y casos de prueba; las celdas vacías indican que el requerimiento no tiene caso propio en ese nivel.
+Tabla 8
 Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | Requerimiento | Casos de uso | Casos de prueba | Verificación cuando no hay caso de prueba |
 | RF-01 | CU-01 |  | Prueba de integración del endpoint del plan |
@@ -455,15 +473,15 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RF-09 |  |  | Prueba de integración del mecanismo de carga |
 | RF-10 | CU-05 | CP-10 |  |
 | RF-11 | CU-04, CU-12 | CP-09, CP-10, CP-12 |  |
-| RF-12 | CU-02 | CP-02, CP-09 |  |
+| RF-12 | CU-01, CU-02 | CP-02, CP-09 |  |
 | RF-13 | CU-06 | CP-12 |  |
-| RF-14 | CU-03 | CP-11 |  |
+| RF-14 | CU-03, CU-05 | CP-11 |  |
 | RF-15 | CU-04 | CP-13 |  |
 | RF-16 | CU-06 | CP-14 |  |
 | RF-17 | CU-10, CU-11 | CP-15 |  |
-| RF-18 |  | CP-04 |  |
-| RF-19 | CU-09 | CP-16 |  |
-| RF-20 |  | CP-18 |  |
+| RF-18 | CU-06 | CP-04 |  |
+| RF-19 | CU-05, CU-09 | CP-16 |  |
+| RF-20 | CU-01 | CP-18 |  |
 | RF-21 | CU-12 | CP-19 |  |
 | RF-22 | CU-12 | CP-19 |  |
 | RF-23 | CU-13 | CP-23 |  |
@@ -472,7 +490,7 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RF-26 | CU-14 | CP-22 |  |
 | RNF-01 |  |  | Protocolo de medición del percentil 95 |
 | RNF-02 |  | CP-01 |  |
-| RNF-03 |  | CP-03 |  |
+| RNF-03 | CU-09 | CP-03 |  |
 | RNF-04 |  | CP-05 |  |
 | RNF-05 |  |  | Análisis estático y revisión de la estructura de módulos |
 | RNF-06 |  | CP-06 |  |
@@ -484,7 +502,7 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RNF-12 |  | CP-17 |  |
 Nota. Elaboración propia.
 ### 7.3.2. Diseño de casos de pruebas
-Tabla 8
+Tabla 9
 Diseño de casos de prueba
 | ID | Caso | Resultado esperado | Requerimientos |
 | Reglas de dominio y solver |  |  |  |
