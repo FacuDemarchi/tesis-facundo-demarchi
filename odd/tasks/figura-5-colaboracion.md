@@ -66,8 +66,25 @@ The old figure's 472 px width is what turned it into a ribbon with a full-page h
 
 ## Tasks
 
-- [ ] **T1 — Redraw the source** `figura-5-colaboracion.mmd` and render the PNG.
-- [ ] **T2 — Verify** with `verificar-tamanos.py` (>= 8,5 pt) and by looking at the rendered PNG.
+- [x] **T1 — Redraw the source** `figura-5-colaboracion.mmd` and render the PNG.
+      Nine lifelines with underlined identifiers, eleven messages as numbered arrows with their
+      direction, reading order from the actor at the top. Spacing is set inside the figure with an
+      `init` directive rather than in the shared config, because the eleven labels collided at the
+      config's `nodeSpacing: 16` / `rankSpacing: 18`.
+
+      **Evidencia**: `render.sh` reproduce `figura-1` byte a byte con mmdc 11.17.0, así que el pipeline
+      compartido era seguro de correr; el PNG pasó de 472 x 2178 px a 1556 x 1348 px.
+- [x] **T2 — Verify** with `verificar-tamanos.py` and by looking at the rendered PNG.
+
+      **Evidencia**: la inserción queda en 468 x 405 pt (16,5 x 14,3 cm) con 10,2 pt de texto aparente,
+      contra el mínimo de 8,5; la figura anterior insertaba 140 x 648 pt, una cinta de ancho 4,9 cm y
+      alto de página completa. El PNG renderizado se miró: sin rótulos superpuestos.
+
+      **Hallazgo que produjo**: `figura-3-entidades-academicas.png` queda en 8,3 pt, por debajo del
+      mínimo del propio verificador (1924 x 1118 px: demasiado ancha para su contenido). Es previo a
+      este cambio y queda fuera de alcance. Además, `figura-2-casos-de-uso.png` no reproduce byte a
+      byte —mismas dimensiones, 954 x 2190—, así que su re-renderización se revirtió para no meter un
+      cambio ajeno en el commit.
 - [ ] **T3 — Propagate to the live Doc** once the author approves the look: replace the inline image in
       §7.2.4 keeping its position and the caption below it, then verify the mirror.
 
