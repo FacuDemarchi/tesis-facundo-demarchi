@@ -4,7 +4,7 @@ const states = {
   enrolled: { label: 'Inscripta', symbol: 'I' }, 'no-capacity': { label: 'Sin cupo', symbol: '0' },
   planned: { label: 'Planificada', symbol: 'P' }, review: { label: 'Solicitud en revisión', symbol: 'R' }
 };
-const MAX_SELECTED_COURSES = 3;
+let selectedCourseLimit = 3;
 
 const courses = [
   ['C01',1,1,'Herramientas matemáticas I – Álgebra','approved','sa'], ['C02',1,2,'Herramientas matemáticas II – Análisis','approved','sa'], ['C03',1,3,'Introducción a los algoritmos','approved','sa'], ['C04',1,4,'Desarrollo emprendedor','approved','sa'], ['C05',1,5,'Sistemas de información','approved','sa'], ['C06',1,6,'Idioma extranjero I','approved','sa'],
@@ -68,6 +68,14 @@ let wheelScrollTarget = null;
 let wheelAnimationFrame = null;
 
 function currentPeriod() { return periods[periodIndex]; }
+function configuredBimesterLimit() { return selectedCourseLimit; }
+// Concordancia del singular: el máximo configurable puede ser una sola materia.
+function limitLabel(count) { return count === 1 ? '1 materia' : `${count} materias`; }
+function siblingBimester(label = currentPeriod().label) {
+  const bimester = label.split(' · ')[0];
+  const number = bimester.slice(0, -1);
+  return `${number}${bimester.endsWith('A') ? 'B' : 'A'}`;
+}
 function isSelectionFlowActive() { return selectionOpen || resultsOpen; }
 function courseStateForPeriod(course, label = currentPeriod().label) {
   if (enrolledForPeriod(label).has(course.id)) return 'enrolled';
@@ -145,7 +153,7 @@ function renderColumns() {
       const presentation = coursePresentation(course);
       const isMarked = currentDraft().has(course.id);
       const intention = isMarked ? intentionFor(course) : '';
-      const disabled = !selectionOpen || !isCourseSelectable(course) || (!isMarked && currentDraft().size >= MAX_SELECTED_COURSES);
+      const disabled = !selectionOpen || !isCourseSelectable(course) || (!isMarked && currentDraft().size >= configuredBimesterLimit());
       return `<button class="course ${presentation.className} category-${course.category}" data-course="${course.id}" type="button" style="--slot:${course.slot}" aria-pressed="${Boolean(intention)}" ${disabled ? 'disabled' : ''}>
         <span class="course-state"><span aria-hidden="true">${presentation.state.symbol}</span> ${presentation.state.label}</span>
         <strong><span>${course.id}</span> · ${course.name}</strong>
@@ -289,15 +297,17 @@ function renderPanel() {
     }).join('') : '<li class="empty-state">Todavía no hay materias marcadas.</li>';
   }
 
+  const bimesterLimit = configuredBimesterLimit();
   const bimestreCap = document.querySelector('[data-cap="bimestre"]');
   if (bimestreCap) {
-    bimestreCap.textContent = `Bimestrales ${selected.length}/${MAX_SELECTED_COURSES}`;
-    bimestreCap.dataset.overCap = String(selected.length > MAX_SELECTED_COURSES);
+    bimestreCap.textContent = `Bimestrales ${selected.length}/${bimesterLimit}`;
+    bimestreCap.dataset.overCap = String(selected.length > bimesterLimit);
   }
   const cuatrimestreCap = document.querySelector('[data-cap="cuatrimestre"]');
   if (cuatrimestreCap) {
-    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/6`;
-    cuatrimestreCap.dataset.overCap = String(selected.length > 6);
+    const cuatrimestreLimit = Math.min(6, 2 * bimesterLimit);
+    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/${cuatrimestreLimit} · ${siblingBimester()} sin datos`;
+    cuatrimestreCap.dataset.overCap = String(selected.length > cuatrimestreLimit);
   }
 
   renderAvailability();
@@ -343,8 +353,9 @@ function markCourse(id) {
       announceSelection(`${id} no se puede marcar porque ${reason}.`);
       return;
     }
-    if (currentDraft().size >= MAX_SELECTED_COURSES) {
-      announceSelection(`Solo se pueden marcar hasta ${MAX_SELECTED_COURSES} materias.`);
+    const bimesterLimit = configuredBimesterLimit();
+    if (currentDraft().size >= bimesterLimit) {
+      announceSelection(`Solo se pueden marcar hasta ${limitLabel(bimesterLimit)}: es el máximo que configuraste.`);
       return;
     }
     currentDraft().set(id, 'student');
@@ -599,6 +610,11 @@ function movePeriod(direction) {
 document.querySelector('#period-prev').addEventListener('click', () => movePeriod(-1));
 document.querySelector('#period-next').addEventListener('click', () => movePeriod(1));
 primaryAction.addEventListener('click', openSelection);
+document.querySelector('#bimester-limit').addEventListener('change', event => {
+  selectedCourseLimit = Number(event.target.value);
+  updateInterface();
+  announceSelection(`Máximo por bimestre actualizado a ${limitLabel(selectedCourseLimit)}.`);
+});
 document.querySelector('#panel-primary-action').addEventListener('click', advanceStage);
 document.querySelector('#panel-cancel-action').addEventListener('click', cancelSelection);
 resultsClose.addEventListener('click', closeResults);

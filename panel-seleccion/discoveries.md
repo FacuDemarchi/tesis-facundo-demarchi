@@ -16,9 +16,9 @@ El ciclo de cuatro clics convertía una operación de pertenencia al borrador en
 
 Durante la selección, las materias aprobadas y bloqueadas permanecen deshabilitadas de forma nativa. En `2A · 2026`, C19, C20 y C23 también quedan deshabilitadas como inscripciones existentes. `markCourse()` rechaza su incorporación por llamadas programáticas según el estado efectivo del período; los demás estados conservan el comportamiento existente.
 
-### 2.2. El borrador del bimestre admite hasta tres materias — **regla explícita del autor**
+### 2.2. El borrador del bimestre usa un máximo configurable — **regla explícita del autor**
 
-Cada borrador del período actual admite un máximo estricto de tres materias marcadas. El conteo se toma del borrador completo, no de la oferta publicada: una materia sin cátedra, como C24, ocupa uno de los tres lugares. Al alcanzar el máximo, toda tarjeta no marcada que de otro modo sería seleccionable queda deshabilitada de forma nativa; las tres materias ya marcadas siguen habilitadas para que se pueda quitar una y liberar el lugar de inmediato. `markCourse()` conserva primero la operación de quitar y, para una incorporación, defiende el tope después de rechazar los estados aprobada y bloqueada, también frente a llamadas programáticas.
+El estudiante puede configurar el máximo estricto por bimestre en 1, 2 o 3 materias; el valor predeterminado es 3. El conteo se toma del borrador completo, no de la oferta publicada: una materia sin cátedra, como C24, ocupa uno de esos lugares. Al alcanzar el máximo vigente, toda tarjeta no marcada que de otro modo sería seleccionable queda deshabilitada de forma nativa; las ya marcadas siguen habilitadas para que se pueda quitar una y liberar el lugar de inmediato. `markCourse()` conserva primero la operación de quitar y, para una incorporación, defiende el tope después de rechazar los estados aprobada y bloqueada, también frente a llamadas programáticas.
 
 ### 3. La intención es derivada y de solo lectura — **bug de modelo de interacción; regla de negocio decidida**
 
@@ -28,7 +28,7 @@ El `<select>` permitía al estudiante declarar una intención que el escenario d
 
 ### 4. La granularidad pertenece al resultado — **decisión mal ubicada**
 
-El bloque de granularidad se eliminó del borrador. RF-13 pide informar la granularidad **del resultado**: nivel de cátedra con oferta publicada y nivel de materia con oferta pendiente. Ese dato debe aparecer en la futura pantalla de resultados de la optimización, no antes de ejecutar el motor. El contador del encabezado refleja todas las materias marcadas del borrador, incluida una con oferta pendiente; el tope estricto de tres se aplica sobre ese mismo total.
+El bloque de granularidad se eliminó del borrador. RF-13 pide informar la granularidad **del resultado**: nivel de cátedra con oferta publicada y nivel de materia con oferta pendiente. Ese dato debe aparecer en la futura pantalla de resultados de la optimización, no antes de ejecutar el motor. El contador del encabezado refleja todas las materias marcadas del borrador, incluida una con oferta pendiente; el máximo estricto configurable se aplica sobre ese mismo total.
 
 ### 5. El CTA del panel cierra la selección — **bug de transición; vocabulario de D-03**
 
@@ -44,7 +44,7 @@ La planificación no ejecuta CP-SAT ni abre el modal de resultados. Los seis res
 
 ### 7. La inscripción existente no pertenece al borrador — **semántica de escenario**
 
-C19, C20 y C23 son contexto de inscripción existente de `2A · 2026`, no decisiones de planificación. Por eso el borrador de ese período empieza vacío, no las lista ni las cuenta contra el máximo de tres; sus tarjetas quedan deshabilitadas. C27 queda `Disponible`; C25 y C26, en cambio, pueden entrar como materias `deseada` aunque no tengan cátedras publicadas, y el acordeón informa ese estado vacío.
+C19, C20 y C23 son contexto de inscripción existente de `2A · 2026`, no decisiones de planificación. Por eso el borrador de ese período empieza vacío, no las lista ni las cuenta contra el máximo configurable por bimestre; sus tarjetas quedan deshabilitadas. C27 queda `Disponible`; C25 y C26, en cambio, pueden entrar como materias `deseada` aunque no tengan cátedras publicadas, y el acordeón informa ese estado vacío.
 
 ### 8. El panel migra como modal flotante sobre el grafo — **corrección de interacción revisada por el autor**
 
@@ -86,8 +86,8 @@ La transacción solo termina al confirmar la inscripción, aceptar el plan o usa
 ### Reglas académicas y selección
 
 - El grafo transcribe correlatividades, pero no especifica el tipo de requisito: aprobada, regularizada, cursada simultánea, equivalencia, excepción o condición de período. No sustituye una validación académica.
-- El tope de seis por cuatrimestre necesita conocer también el otro bimestre. Una planificación para `1B` solo conoce el consumo de `1B`; si no recibe el borrador o la inscripción de `1A`, no puede declarar que el límite cuatrimestral está disponible.
-- Una materia sin oferta publicada no tiene bimestre conocido para una futura validación académica completa. Aun así, la regla explícita del autor para este borrador cuenta toda materia marcada, incluida esa materia, contra el máximo estricto de tres; el mockup no usa esa marca para afirmar una validación institucional del límite de seis.
+- El tope de seis por cuatrimestre necesita conocer también el otro bimestre. Una planificación para `1B` solo conoce el consumo de `1B`; si no recibe el borrador o la inscripción de `1A`, no puede declarar que el límite cuatrimestral está disponible. La maqueta ahora muestra el consumo conocido contra `min(6, 2 × máximo configurado)` y declara por nombre el bimestre hermano sin datos (`1A` para `1B`, `2B` para `2A`), en vez de presentar el conteo como completo.
+- Una materia sin oferta publicada no tiene bimestre conocido para una futura validación académica completa. Aun así, la regla explícita del autor para este borrador cuenta toda materia marcada, incluida esa materia, contra el máximo estricto configurable; el mockup no usa esa marca para afirmar una validación institucional del límite de seis.
 - Falta una regla para materias anuales, intensivas, equivalencias y actividades que ocupan más de un bimestre; el modelo actual presupone que una oferta pertenece a un período.
 
 ### Operación, accesibilidad y continuidad
@@ -140,7 +140,7 @@ La tensión con el documento **quedó resuelta el 2026-09-18**, y por eso no es 
 
 - **RC-UX-12:** distinguir selección a nivel materia de selección a nivel cátedra e informar la consecuencia sobre horarios, cupos y promesas del sistema, en el resultado de optimización.
 - **RC-UX-13:** conservar y explicar el origen, vigencia y completitud de cada oferta usada para validar un borrador.
-- **RC-UX-14:** evaluar los topes solo con bimestres conocidos y declarar explícitamente la parte del cuatrimestre que falta conocer.
+- **RC-UX-14:** evaluar los topes solo con bimestres conocidos y declarar explícitamente la parte del cuatrimestre que falta conocer. La maqueta lo resuelve declarando el bimestre hermano sin datos y limitando la referencia mostrada a `min(6, 2 × máximo configurado)`; todavía requiere validación institucional del tope reglamentario, de los datos vigentes del bimestre hermano y de cuándo una configuración del estudiante puede aplicarse a esa regla.
 - **RC-UX-15:** definir formalmente la traducción de `no considerar` a restricciones y flexibilizaciones de optimización.
 - **RC-UX-16:** separar visual y semánticamente las explicaciones de infactibilidad del resultado de las alternativas producidas por una ejecución global.
 - **RC-UX-17:** ofrecer una alternativa navegable al grafo que mantenga selección, intención y avisos sincronizados.

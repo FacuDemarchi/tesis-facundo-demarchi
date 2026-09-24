@@ -381,8 +381,7 @@ CU-13 muestra el resultado global y su proyección en las tarjetas, pero no modi
 
 # Pendientes
 
-- **P-07 — Recomendaciones como interacción propia.** Resuelta el 2026-09-17 en lo que respecta a la trazabilidad: RF-15 quedó en CU-04 y CP-13, RF-16 en CU-06 y CP-14. Queda abierto **solo si preferís** que recibir y aceptar recomendaciones sea un caso de uso propio, lo que exigiría agregar CU-15 y regenerar la Figura 2.
-- **P-08 — Herramienta de cobertura sin nombrar.** 7.3.1 afirma que la integración continua conservará la cobertura como evidencia, y ninguna sección nombra la herramienta que la produce. Agregarla al stack de 4.2 y a la Tabla 1, o quitar la afirmación.
+Sin pendientes abiertos en esta lista.
 
 ## Preferencias acotadas el 2026-09-18
 
@@ -412,12 +411,15 @@ Los hallazgos y los requerimientos candidatos de los mockups **no se duplican ac
 
 ## Decisiones por tomar
 
-- **P-06 — Convivencia del tope de 3 con la carga máxima configurable.** D-04 fija 3 materias por bimestre como límite no contemplado, y la tesis (§1) define la carga máxima como restricción dura si existe un límite institucional validado, o configurable por el estudiante si no. Falta precisar cómo conviven: ¿el límite configurable puede llegar hasta 3 y no más, y qué se muestra cuando el estudiante intenta una cuarta?
+Sin decisiones abiertas en esta lista.
 
 ## Resueltas
 
 - ~~**P-01 — Clasificación de D-04.**~~ Resuelta el 2026-09-16: se documenta en la sección "No contempla" de la tesis.
 - ~~**D-02 contradecía la tesis.**~~ Resuelta el 2026-09-16: D-02 se reformuló con dos niveles (intención por materia y preferencias de cursado), alineada con las secciones 3.1 y 3.3 y con el vocabulario de §1.
+- ~~**P-06 — Convivencia del tope de 3 con la carga máxima configurable.**~~ Resuelta el 2026-09-24: el máximo por bimestre pasa a ser configurable entre una y tres materias dentro del máximo que admita el escenario, la configuración solo puede ser más estricta y, cuando exista un límite institucional validado, rige el más bajo. El intento de excederlo se bloquea indicando el límite aplicable. Implementado en la maqueta de selección (`panel-seleccion/`) y reflejado en §1, §3.4, RF-14 y el nuevo CP-26.
+- ~~**P-07 — Recomendaciones como interacción propia.**~~ Resuelta el 2026-09-24: recibir y aceptar recomendaciones no constituye un caso de uso propio. La aceptación queda como paso explícito atribuido a CU-04 en §7.2.3, con RF-15 y CP-13 como traza; un `CU-15` habría documentado una interacción que ninguna maqueta implementa.
+- ~~**P-08 — Herramienta de cobertura sin nombrar.**~~ Resuelta el 2026-09-24: se nombra `pytest-cov` (coverage.py) en §4.2 y en la Tabla 1, de modo que la afirmación de integración continua de §7.3.1 queda trazable a la herramienta que produce esa evidencia.
 
 ## Resueltas por el documento de tesis
 
@@ -425,7 +427,7 @@ Estas cuatro se registraron como pendientes por error: la tesis las resuelve, tr
 
 - ~~**P-02 — Rol de la carga máxima personal.**~~ Resuelta por la tesis §1: "La carga académica máxima será una restricción dura cuando exista un límite institucional validado; en ausencia de esa regla, funcionará como límite configurable por el estudiante."
 - ~~**P-03 — Dos momentos de uso.**~~ Resuelta por la tesis §1, 2.1 y 3.1: el prototipo "diferencie dos operaciones: la asistencia a la inscripción del período académico actual y la planificación del siguiente período soportado por el MVP". Recogida en D-01 como un motor con dos modos.
-- ~~**P-04 — Dónde se define el límite de carga.**~~ Resuelta por la misma oración de §1 que P-02: el límite queda definido por la existencia o no de una regla institucional validada. Lo que queda por decidir es solo su convivencia con D-04, registrada como P-06.
+- ~~**P-04 — Dónde se define el límite de carga.**~~ Resuelta por la misma oración de §1 que P-02: el límite queda definido por la existencia o no de una regla institucional validada.
 - ~~**P-05 — Tensión de vocabulario.**~~ Resuelta en D-03: "inscribir" es legítimo para el período actual y está vedado para las intenciones condicionadas del siguiente.
 
 ## Acceso al documento
@@ -554,7 +556,7 @@ La Tabla 1 es la síntesis del stack tecnológico en 4.2. Se revisó contra la p
 
 **2. Una fila que no respondía a su columna.** La última fila decía «Evidencia | Cobertura y resultados automatizados | Trazabilidad de la verificación técnica». La columna se llama **Tecnologías** y las otras dieciséis filas nombran herramientas; esa nombraba artefactos. Se eliminó en lugar de inventar una herramienta, porque nombrar `coverage` o `pytest-cov` sería una decisión de stack que no me corresponde tomar.
 
-**Hueco que la fila dejó al descubierto.** La sección 7.3.1 afirma que la integración continua conservará «la cobertura» entre las evidencias de cada versión, pero **el documento no nombra ninguna herramienta que la produzca**. O se agrega al stack, o la afirmación queda sin respaldo. Queda como P-08.
+**Hueco que la fila dejó al descubierto.** La sección 7.3.1 afirma que la integración continua conservará «la cobertura» entre las evidencias de cada versión, pero **el documento no nombra ninguna herramienta que la produzca**. O se agrega al stack, o la afirmación queda sin respaldo. Queda como P-08, resuelta el 2026-09-24 al nombrar `pytest-cov` (coverage.py) en §4.2 y en la Tabla 1.
 
 **Lo que se dejó sin tocar.** «ELK» y «SQLAlchemy 2» son más específicos en la tabla que en la prosa («un algoritmo de disposición jerárquica», «SQLAlchemy»). No son contradicciones: son afirmaciones más fuertes en el cuadro que en el texto. Conviene confirmar que están decididas. Y el orden de las filas mezcla criterios, así que un agrupamiento por bloques mejoraría la lectura; se dejó por ser cosmético y requerir mover filas en el documento.
 

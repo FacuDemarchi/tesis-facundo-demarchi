@@ -38,7 +38,10 @@
     </div>
 
     <aside id="selection-panel" class="selection-panel" aria-label="Panel de selección de materias" hidden>
-      <div id="panel-cap-line" class="panel-cap-line"><span class="cap-inline" data-cap="bimestre" data-over-cap="false"></span><span class="cap-separator" aria-hidden="true">-</span><span class="cap-inline" data-cap="cuatrimestre" data-over-cap="false"></span></div>
+      <div id="panel-cap-line" class="panel-cap-line">
+        <div class="panel-cap-counters"><span class="cap-inline" data-cap="bimestre" data-over-cap="false"></span><span class="cap-separator" aria-hidden="true">-</span><span class="cap-inline" data-cap="cuatrimestre" data-over-cap="false"></span></div>
+        <label class="bimester-limit-control" for="bimester-limit">Máximo por bimestre<select id="bimester-limit" name="bimester-limit"><option value="1">1 materia</option><option value="2">2 materias</option><option value="3" selected>3 materias</option></select></label>
+      </div>
 
       <section class="panel-section availability-section" aria-labelledby="availability-title">
         <h2 id="availability-title">Restricción</h2>
