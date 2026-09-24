@@ -29,12 +29,19 @@ documentary debt that the section cites.
       catalog row of `CU-05` and the `RF-05` traceability cell credit both use cases; `decisiones.md`
       marks the debt rows resolved.
 - [x] **T3 — Write §7.2.5.** Four paragraphs: the floating panel, its entry buttons per period and its
-      repositioning rule with the hysteresis and the WCAG 2.2 criterion 2.4.11 case; the panel contents
-      (configurable maximum with its counters, the availability constraints, the marked subjects with
-      their derived intention and the professor preference); the closing per period, the results screen
-      with the granularity indicator and the recovery actions, and the download as a candidate
-      requirement `RC-12`; and the institutional branch with the aggregate demand, the explicit global
-      reallocation and its projection, and the separate residual evaluation.
+      repositioning rule with the hysteresis thresholds and the accepted cost of covering the first
+      columns at zero scroll; the panel contents (configurable maximum with its counters and its blocked
+      confirmations, the availability constraints, the marked subjects with their offer and motive, and
+      the professor preference); the closing per period, the results screen with the granularity
+      indicator and the recovery actions, and the download as a candidate requirement `RC-12`; and the
+      institutional branch with the aggregate demand, the explicit global reallocation and its
+      projection, and the separate residual evaluation.
+
+      Two corrections after an independent verification: the section no longer claims a focus guard
+      (the mockup deliberately lacks it, per `panel-seleccion/discoveries.md`) nor cites WCAG criterion
+      2.4.11, and it no longer puts the derived intention inside the panel list. The opening sentence
+      states that the mockups are the design reference and that the prototype completes the views with
+      the scope of §3.3.
 - [ ] **T4 — Verification and native review.** Independent read-only verification of the candidate and
       the native review of the committed range.
 
