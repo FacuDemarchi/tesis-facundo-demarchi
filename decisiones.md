@@ -412,12 +412,13 @@ Los hallazgos y los requerimientos candidatos de los mockups **no se duplican ac
 
 ## Decisiones por tomar
 
-- **P-06 — Convivencia del tope de 3 con la carga máxima configurable.** D-04 fija 3 materias por bimestre como límite no contemplado, y la tesis (§1) define la carga máxima como restricción dura si existe un límite institucional validado, o configurable por el estudiante si no. Falta precisar cómo conviven: ¿el límite configurable puede llegar hasta 3 y no más, y qué se muestra cuando el estudiante intenta una cuarta?
+Sin decisiones abiertas en esta lista.
 
 ## Resueltas
 
 - ~~**P-01 — Clasificación de D-04.**~~ Resuelta el 2026-09-16: se documenta en la sección "No contempla" de la tesis.
 - ~~**D-02 contradecía la tesis.**~~ Resuelta el 2026-09-16: D-02 se reformuló con dos niveles (intención por materia y preferencias de cursado), alineada con las secciones 3.1 y 3.3 y con el vocabulario de §1.
+- ~~**P-06 — Convivencia del tope de 3 con la carga máxima configurable.**~~ Resuelta el 2026-09-24: el máximo por bimestre pasa a ser configurable entre una y tres materias dentro del máximo que admita el escenario, la configuración solo puede ser más estricta y, cuando exista un límite institucional validado, rige el más bajo. El intento de excederlo se bloquea indicando el límite aplicable. Implementado en la maqueta de selección (`panel-seleccion/`) y reflejado en §1, §3.4, RF-14 y el nuevo CP-26.
 
 ## Resueltas por el documento de tesis
 
@@ -425,7 +426,7 @@ Estas cuatro se registraron como pendientes por error: la tesis las resuelve, tr
 
 - ~~**P-02 — Rol de la carga máxima personal.**~~ Resuelta por la tesis §1: "La carga académica máxima será una restricción dura cuando exista un límite institucional validado; en ausencia de esa regla, funcionará como límite configurable por el estudiante."
 - ~~**P-03 — Dos momentos de uso.**~~ Resuelta por la tesis §1, 2.1 y 3.1: el prototipo "diferencie dos operaciones: la asistencia a la inscripción del período académico actual y la planificación del siguiente período soportado por el MVP". Recogida en D-01 como un motor con dos modos.
-- ~~**P-04 — Dónde se define el límite de carga.**~~ Resuelta por la misma oración de §1 que P-02: el límite queda definido por la existencia o no de una regla institucional validada. Lo que queda por decidir es solo su convivencia con D-04, registrada como P-06.
+- ~~**P-04 — Dónde se define el límite de carga.**~~ Resuelta por la misma oración de §1 que P-02: el límite queda definido por la existencia o no de una regla institucional validada.
 - ~~**P-05 — Tensión de vocabulario.**~~ Resuelta en D-03: "inscribir" es legítimo para el período actual y está vedado para las intenciones condicionadas del siguiente.
 
 ## Acceso al documento

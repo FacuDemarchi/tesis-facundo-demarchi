@@ -33,9 +33,12 @@ that today announces a limit it cannot evaluate.
 
       Known limitation of the mockup: it models only the student's own configuration, so the
       institutional validated limit of the decision is not simulated here.
-- [ ] **T2 — Manuscript: state how the caps coexist (P-06).** §3.3 and RF-14 state the 1–3 range, the
-      lower-limit-wins rule and the blocked fourth attempt with the applicable limit named; a new test
-      case covers lowering the maximum, and the traceability matrix links it.
+- [x] **T2 — Manuscript: state how the caps coexist (P-06).** §1 and RF-14 now state the configurable
+      range, that the configuration can only be stricter, that the lower of the two rules governs and
+      that the blocked attempt names the applicable limit; §3.4 records that the prototype's scenario
+      admits three and models no validated institutional limit; the new case `CP-26` covers lowering the
+      maximum and `Tabla 8` links it to RF-14. `decisiones.md` moves P-06 to its resolved list and drops
+      the cross-reference that pointed at it from P-04.
 - [ ] **T3 — Manuscript: recommendations inside CU-04 (P-07).** One sentence in the `CU-04` block of
       §7.2.3 making the acceptance step explicit; `decisiones.md` records the resolution.
 - [ ] **T4 — Manuscript: name the coverage tool (P-08).** §4.2 and `Tabla 1` name `pytest-cov`;
