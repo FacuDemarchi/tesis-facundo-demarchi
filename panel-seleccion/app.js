@@ -491,7 +491,12 @@ function openSelection() {
   updateInterface();
 }
 function advanceStage() {
-  if (!selectedCourses().length) return;
+  const selection = selectedCourses();
+  if (!selection.length) return;
+  if (selection.length > configuredBimesterLimit()) {
+    announceSelection(`El borrador tiene ${selection.length} materias y el máximo configurado es ${limitLabel(configuredBimesterLimit())}: hay que liberar lugar para continuar.`);
+    return;
+  }
   if (currentPeriod().runsSolver) openResults();
   else applyPlan();
 }
