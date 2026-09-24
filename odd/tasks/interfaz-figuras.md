@@ -37,9 +37,25 @@ reference so each screenshot is cited where its surface is described.
 
 ## Tasks
 
-- [ ] **T1 — Write the captions and the in-text references** in `documento/tesis.md`.
-- [ ] **T2 — Propagate the same text to the live Doc** and verify the mirror: four caption-plus-note
-      pairs below their images, four prose citations, and an empty text diff against the manuscript.
+- [x] **T1 — Write the captions and the in-text references** in `documento/tesis.md` (commit `90a8833`).
+      Eight new lines —four captions and the four `Nota. Elaboración propia.` lines— plus four prose
+      citations, one per figure. Figures 6 to 9 are each cited twice: in their caption and from the
+      sentence that describes the surface they show.
+
+      **Evidencia**: el manuscrito pasa de 579 a 587 líneas; `grep -c "Figura N"` da 2 para N = 6..9 y
+      1 para N = 1..5, así que la convención existente no se tocó.
+- [x] **T2 — Propagate the same text to the live Doc** and verify the mirror.
+      Four caption-plus-note pairs inserted immediately below their image paragraphs (indices 75767,
+      75769, 75771 and 75773, processed in descending order so the insertions cannot invalidate the
+      pending indices), with the caption as plain `NORMAL_TEXT` and the note italic and centred, as the
+      figures 1 to 5 already were.
+
+      **Hallazgo que produjo**: el primer plan de citas llevaba cuatro operaciones y le faltaba la de
+      `(Figura 6)`; la comprobación del espejo la detectó antes de cerrar la tarea. El plan quedó en
+      cinco operaciones.
+
+      **Evidencia**: revisión `ANLCKQntH52mINBZ…`; el texto desde `# 1. Introducción` es idéntico al
+      manuscrito; las 10 imágenes siguen en línea; cada captura queda seguida por su leyenda y su nota.
 
 ## Work routing
 
