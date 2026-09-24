@@ -71,7 +71,7 @@ La información fragmentada impide registrar de manera persistente la intención
 Desde la ingeniería de software, el problema no se define como una mera deficiencia visual. Se identifican cuatro limitaciones del sistema de información: cobertura incompleta del estado curricular visible; ausencia de persistencia y trazabilidad de materias deseadas todavía no inscribibles; inexistencia de un mecanismo automático que genere combinaciones válidas bajo restricciones; y separación entre la demanda estudiantil y el trámite institucional de apertura de cátedra. Las métricas de línea base —tiempo de planificación, reingresos, dificultad e incertidumbre— fueron medidas mediante el relevamiento estudiantil y se analizan en la sección 5. Diagnóstico.
 Cierre del relevamiento estudiantil. El relevamiento cuantitativo a estudiantes se cerró con (45 respuestas) y se documenta en , documento de trabajo que concentra los instrumentos y las evidencias del proceso actual. Los resultados y sus limitaciones se presentan en la sección 5. Diagnóstico.
 ### Propuesta de solución general
-Se propone diseñar y evaluar un prototipo web que diferencie dos operaciones: la asistencia a la inscripción del período académico actual y la planificación del siguiente período soportado por el MVP. El sistema representará el plan de estudios como un grafo curricular (véase Anexo D), mostrará el estado y el motivo de disponibilidad de cada materia y permitirá registrar para el período siguiente intenciones de cursado condicionadas, sin tratarlas como inscripciones ni asumir la aprobación de materias todavía en curso. Cuando exista oferta publicada, generará alternativas de cátedras sin superposición; en caso contrario, planificará a nivel de materia y señalará que la oferta está pendiente.
+Se propone diseñar y evaluar un prototipo web que diferencie dos operaciones: la asistencia a la inscripción del período académico actual y la planificación del siguiente período soportado por el MVP. El sistema representará el plan de estudios como un grafo curricular (véase Anexo D), mostrará el estado y el motivo de disponibilidad de cada materia y permitirá registrar para el período siguiente intenciones de cursado condicionadas, sin tratarlas como inscripciones ni asumir la aprobación de materias todavía en curso. Para el período académico actual, cuando exista oferta publicada, generará alternativas de cátedras sin superposición; en caso contrario, planificará a nivel de materia y señalará que la oferta está pendiente. El período de planificación no ejecuta el motor: al confirmar el borrador, las materias declaradas pasan a estado planificado y conservan su condición de intención.
 Para el período actual, el motor considerará como restricciones duras las correlatividades cumplidas según la normativa institucional, la oferta, los cupos y la incompatibilidad horaria. Para el período siguiente, la inscripción vigente en una materia precorrelativa podrá habilitar únicamente una intención condicionada como hipótesis de diseño pendiente de validación institucional; antes de convertirla en una inscripción deberá recalcularse con los resultados académicos oficiales. La carga académica máxima será una restricción dura cuando exista un límite institucional validado; en ausencia de esa regla, será un límite configurable por el estudiante dentro del máximo que el escenario admita, de modo que la configuración solo puede ser más estricta. Cuando ambas reglas coexistan regirá la más baja, y el intento de excederla se bloqueará indicando el límite aplicable. La preferencia del estudiante por un profesor de una materia se tratará como criterio de optimización, y sus restricciones de disponibilidad, es decir los días en que no puede cursar, como restricción dura.
 Entre las materias seleccionadas y habilitadas para cursar, el sistema priorizará aquellas cuya aprobación produzca un mayor impacto en el avance curricular. Este impacto se medirá primero por la cantidad de materias pendientes que quedarían habilitadas directamente; ante un empate, se considerará la cantidad de materias descendientes aún pendientes en el grafo y, luego, el grado de satisfacción de las preferencias configuradas por el estudiante. Esta prioridad se implementará como un criterio de optimización.
 Además, el sistema podrá recomendar materias que el estudiante no haya seleccionado, siempre que estén habilitadas, formen parte de la oferta del período y su aprobación contribuya al avance curricular, especialmente cuando permita desbloquear otras materias pendientes. Cada recomendación deberá incluir una justificación y solo podrá incorporarse al conjunto de materias utilizado por el motor para generar alternativas de cursado después de la aceptación expresa del estudiante.
@@ -121,7 +121,7 @@ Representar y permitir consultar los períodos 1A, 1B, 2A y 2B, sin modificar la
 Calcular y explicar el estado de cada materia: aprobada, habilitada para inscripción, condicionada para el período siguiente, bloqueada por correlatividad o no disponible por falta de cátedra o de cupo. Cuando el estudiante seleccione una materia sin cupo del período actual, podrá incorporarla a su planificación con estado planificada y motivo falta de cupo.
 Permitir la selección múltiple de materias, la preferencia por un profesor de cada materia y el registro de los días en que el estudiante no puede cursar.
 Generar hasta tres alternativas ordenadas cuando existan combinaciones válidas; si existen menos, mostrar todas las disponibles.
-Garantizar en los casos de prueba que el 100 % de las alternativas presentadas para el período actual respete correlatividades, cupos, período, el límite de carga aplicable y la ausencia de superposición; las alternativas futuras que aún dependan de una precorrelativa cursada u oferta no confirmada deberán quedar clasificadas como condicionadas y no como válidas para inscripción.
+Garantizar en los casos de prueba que el 100 % de las alternativas presentadas respete correlatividades, cupos, período, el límite de carga aplicable y la ausencia de superposición, y que se ofrezcan como válidas para la inscripción del período académico actual. El período de planificación no ejecuta el motor: conserva las intenciones declaradas, que quedan clasificadas como condicionadas cuando dependen de una precorrelativa cursada o de oferta no confirmada, y no produce alternativas ni una pantalla de resultados.
 Resolver en cinco segundos o menos al menos el 95 % de las ejecuciones de escenarios controlados, conforme al protocolo de evaluación definido para el caso de estudio.
 Detectar escenarios infactibles e identificar las restricciones, materias y cátedras involucradas.
 Registrar una única intención vigente por alumno, materia y período, con estado y motivo explícitos, incluyendo las intenciones planificadas por falta de cupo y evitando duplicaciones en la demanda.
@@ -386,7 +386,7 @@ Catálogo de casos de uso
 | CU-02 | Consultar el estado de una materia | Estudiante | RF-12 |
 | CU-03 | Configurar preferencias y restricciones | Estudiante | RF-03, RF-14 |
 | CU-04 | Seleccionar materias y declarar intención | Estudiante | RF-03, RF-11, RF-15 |
-| CU-05 | Asistir a la inscripción del período actual | Estudiante | RF-04, RF-10, RF-14, RF-19 |
+| CU-05 | Asistir a la inscripción del período actual | Estudiante | RF-04, RF-05, RF-10, RF-14, RF-19 |
 | CU-06 | Solicitar alternativas de cursado | Estudiante | RF-05, RF-06, RF-13, RF-16, RF-18 |
 | CU-07 | Visualizar la distribución semanal | Estudiante | RF-06 |
 | CU-08 | Comparar alternativas | Estudiante | RF-08 |
@@ -412,17 +412,17 @@ Descripción de los casos de uso centrales
 | Objetivo | Construir una selección válida para el período vigente |
 | Actor | Estudiante |
 | Precondiciones | Oferta del período publicada, con correlatividades, cupos y horarios cargados |
-| Flujo principal | 1. El estudiante indica las materias que quiere cursar. 2. El sistema verifica correlatividades, cupos, límite de carga y superposición. 3. El estudiante configura preferencias y restricciones. 4. El sistema valida la selección resultante |
+| Flujo principal | 1. El estudiante indica las materias que quiere cursar. 2. El sistema verifica correlatividades, cupos, límite de carga y superposición. 3. El estudiante configura preferencias y restricciones. 4. El sistema valida la selección resultante. 5. El estudiante solicita las alternativas de cursado del escenario y el sistema las presenta para la inscripción |
 | Flujos alternativos | Restricción incumplida: se informa en el momento. Selección imposible: se explican los conflictos y se proponen flexibilizaciones |
 | Postcondiciones | Selección válida para el período actual, sin inscripción efectiva |
-| Requerimientos | RF-10, RF-04, RF-14, RF-19 |
+| Requerimientos | RF-04, RF-05, RF-10, RF-14, RF-19 |
 | CU-06 · Solicitar alternativas de cursado |  |
-| Objetivo | Obtener alternativas compatibles para el período siguiente |
+| Objetivo | Obtener alternativas compatibles, válidas para la inscripción del período académico actual |
 | Actor | Estudiante |
-| Precondiciones | Intenciones declaradas y preferencias configuradas |
-| Flujo principal | 1. El estudiante confirma el escenario. 2. El sistema ejecuta el motor una única vez. 3. El motor devuelve hasta tres alternativas con su estado. 4. El sistema indica la granularidad y presenta las alternativas |
+| Precondiciones | Selección declarada para el período actual, con preferencias y restricciones configuradas |
+| Flujo principal | 1. El estudiante confirma el escenario. 2. El sistema ejecuta el motor una única vez. 3. El motor devuelve hasta tres alternativas con su estado. 4. El sistema indica la granularidad y presenta las alternativas como válidas para la inscripción |
 | Flujos alternativos | Oferta pendiente: el resultado se presenta a nivel de materia. Límite temporal: se informa el estado sin presentarlo como definitivo. Infactible: se explican las restricciones involucradas |
-| Postcondiciones | Alternativas disponibles para comparación, con su escenario registrado |
+| Postcondiciones | Alternativas válidas para inscripción disponibles para comparación, con su escenario registrado |
 | Requerimientos | RF-05, RF-06, RF-13, RF-18 |
 | CU-09 · Consultar la explicación de conflictos |  |
 | Objetivo | Comprender por qué no se obtuvo una combinación completa |
@@ -471,7 +471,7 @@ Trazabilidad entre requerimientos, casos de uso y casos de prueba
 | RF-02 | CU-01 |  | Verificación manual de la interfaz y revisión con axe-core |
 | RF-03 | CU-03, CU-04 |  | Prueba de interfaz de configuración |
 | RF-04 | CU-05 | CP-01, CP-02, CP-11 |  |
-| RF-05 | CU-06 |  | Escenario con múltiples soluciones equivalentes |
+| RF-05 | CU-05, CU-06 |  | Escenario con múltiples soluciones equivalentes |
 | RF-06 | CU-06, CU-07 | CP-07 |  |
 | RF-07 | CU-09 | CP-03, CP-16 |  |
 | RF-08 | CU-08 | CP-07 |  |

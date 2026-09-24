@@ -407,6 +407,8 @@ Cambios que dejan pendientes las decisiones D-10 a D-18. Se aplican antes de esc
 | 7.2.5 | La sección entera: panel flotante y su regla, cierre con descarga, indicador de granularidad en el resultado, rama institucional y la proyección de CU-13 global en las tarjetas (D-11, D-13, D-14, D-18, D-21) |
 | `mockup/` | El panel flotante y su regla solo existen en `panel-seleccion/`; el README de `mockup/` sigue diciendo que no contiene paneles de planificación |
 
+**Resueltas el 2026-09-24.** Las dos primeras filas quedaron saldadas al alinear el manuscrito con la revisión del D-10 del 2026-09-19, que además supera la primera versión de esa decisión: el motor y la pantalla de resultados son superficie del período de inscripción, `CU-06` se reorientó a ese período y el período de planificación no ejecuta el motor. La fila de `Tabla 5` se resolvió con `RC-12` y la de `mockup/` con el alcance explícito de su README.
+
 Los hallazgos y los requerimientos candidatos de los mockups **no se duplican acá**: viven en `panel-seleccion/discoveries.md`, que es su fuente, según la convención de encabezado de este archivo.
 
 ## Decisiones por tomar
