@@ -21,12 +21,20 @@ documentary debt that the section cites.
       needed: institutional acceptance of the document as a selection backup), and `mockup/README.md`
       scoped its statement to its own artifact, pointing at `panel-seleccion/` for the selection panel,
       preferences, constraints and engine results (D-18, and the deuda row about `mockup/`).
-- [ ] **T2 — Align the manuscript with the revised D-10.** §1's promise, §3.3's classification, the
-      `CU-06` block, the `RF-05` traceability row and `CP-07`. Depends on the author's choice.
-- [ ] **T3 — Write §7.2.5.** Floating panel and its repositioning rule (D-11), the closing with the
-      download as a function of the closing and not as a numbered flow step (D-13, D-18), the
-      granularity indicator in the result (D-13), the institutional branch (D-21), the global CU-13
-      projection in the cards, and the configurable per-bimester maximum (P-06).
+- [x] **T2 — Align the manuscript with the revised D-10.** Option chosen by the author: `CU-06` moves to the
+      inscription period. §1 scopes alternative generation to the current period and states that the
+      planning period does not run the engine; §3.3 drops the retired `condicionada` result variant for
+      future alternatives; the `CU-05` block gained the alternatives step and `RF-05`; the `CU-06` block
+      now targets the inscription period and presents its alternatives as valid for enrolment; the
+      catalog row of `CU-05` and the `RF-05` traceability cell credit both use cases; `decisiones.md`
+      marks the debt rows resolved.
+- [x] **T3 — Write §7.2.5.** Four paragraphs: the floating panel, its entry buttons per period and its
+      repositioning rule with the hysteresis and the WCAG 2.2 criterion 2.4.11 case; the panel contents
+      (configurable maximum with its counters, the availability constraints, the marked subjects with
+      their derived intention and the professor preference); the closing per period, the results screen
+      with the granularity indicator and the recovery actions, and the download as a candidate
+      requirement `RC-12`; and the institutional branch with the aggregate demand, the explicit global
+      reallocation and its projection, and the separate residual evaluation.
 - [ ] **T4 — Verification and native review.** Independent read-only verification of the candidate and
       the native review of the committed range.
 
