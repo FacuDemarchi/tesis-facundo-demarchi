@@ -50,8 +50,28 @@ that today announces a limit it cannot evaluate.
       `Cobertura de pruebas | pytest-cov (coverage.py) | Medición de la cobertura de las pruebas como
       evidencia de verificación`. `decisiones.md` moves P-08 to its resolved list and updates the stale
       historical mention that had left the gap open.
-- [ ] **T5 — Verification and native review.** Independent read-only verification of the candidate and
-      the native review of the committed range.
+- [x] **T5 — Verification and native review.** Independent read-only verification of the committed range
+      plus the parent's extended interaction pass; native review of the candidate afterwards.
+
+      Verifier verdicts: claims 2, 3, 4, 6, 8, 9, 10, 11 and 12 PASS; claims 1 and 5 PARTIAL; claim 7
+      FAIL literally. Claim 7 is a claim-wording artifact and not a defect: RF-14 deliberately says
+      `dentro del máximo admitido por el escenario` and §3.4 pins the prototype's three, so the range is
+      stated by the manuscript pair and not by the requirement alone. Claims 1 and 5 were closed by the
+      parent pass below. The verifier also reported that it reused an existing server on port 8080 whose
+      repository root it could not establish; provenance was re-established separately: fresh server on
+      port 8099 serving the repository root, all five panel files fetched over HTTP and byte-compared
+      against the committed tree, clean worktree, fresh browser profile and a distinct debug port (9233).
+
+      Parent's extended pass (`/tmp/verif-carga/panel-extended.cjs`): the limit control is focusable and
+      responds to the keyboard (`ArrowUp` moved 3 to 2, and both counters and the announcement followed);
+      per-period drafts stay isolated (cancelling `1B` discards its draft, `2A` starts empty and
+      returning to `1B` shows none of `2A`'s); the professor preference accordion offers two radios that
+      respond and are announced; with a non-empty draft the primary action opens the results modal for
+      `1B · 2026` with its granularity line, and closing it preserves the draft.
+
+      Not verified anywhere: the accordion's `aria-expanded` value (the node is re-rendered, so the stale
+      reference is inconclusive), and the enrollment confirmation and following-period plan acceptance,
+      which this candidate does not touch.
 
 ## Work routing
 
@@ -71,7 +91,9 @@ that today announces a limit it cannot evaluate.
   `chrome-headless-shell --headless --disable-gpu --no-sandbox --virtual-time-budget=4000 --dump-dom
   http://127.0.0.1:8080/panel-seleccion/`. Interaction checks use the same cached Chrome with
   `--remote-debugging-port=9222` and CDP over Node's global `WebSocket`; the scripts live outside the
-  repository (`/tmp/verif-carga/panel-limit.cjs`, `panel-overflow.cjs`, `panel-limit1.cjs`).
+  repository (`/tmp/verif-carga/panel-limit.cjs`, `panel-overflow.cjs`, `panel-limit1.cjs`,
+  `panel-extended.cjs`). Always kill by pid file: `pkill -f "http.server"` matches the shell's own
+  command line and kills the session.
 - T1 interaction evidence, observed on the served mockup with a fresh profile (so nothing is cached):
   - `1B · 2026` at rest: `Bimestrales 0/3` and `Cuatrimestrales 0/6 · 1A sin datos`.
   - Selecting 2: `Bimestrales 0/2` and `Cuatrimestrales 0/4 · 1A sin datos`, with the announcement
@@ -86,3 +108,20 @@ that today announces a limit it cannot evaluate.
     `data-over-cap="true"`; unmarking one returns to `2/2`.
   - Moving to `2A · 2026` declares the sibling as `2B`: `Cuatrimestrales 0/6 · 2B sin datos`.
   - `node --check panel-seleccion/app.js` passes.
+
+## Follow-ups not done here
+
+- **The manuscript contradicts the revised D-10 about who executes the motor.** The revision of
+  2026-09-19 recorded in `decisiones.md` states that the planning period does not run the engine and
+  that CP-SAT and the results screen belong to the current period, but the manuscript still describes
+  the opposite for the planning period: §1 at `documento/tesis.md:74` (both operations generate
+  alternatives), the `CU-06` block at `documento/tesis.md:425` (`2. El sistema ejecuta el motor una
+  única vez. 3. El motor devuelve hasta tres alternativas…`), the traceability row `RF-05 → CU-06` at
+  `documento/tesis.md:473` and `CP-07` at `documento/tesis.md:532`. The `deuda documental` row
+  `RF-05 pasa de CU-06 a CU-05, CU-06` (`decisiones.md:401`) predates that revision and is now stale.
+  Which use case owns engine execution is an author decision, so this is recorded and not applied.
+- Table-of-contents page numbers: this candidate adds lines to `documento/tesis.md`, so the static TOC
+  in the repository and the one in the live Google Doc need a refresh after propagation.
+- The propagation itself is blocked: the `gdocs-api` refresh token was revoked or expired on
+  2026-09-24 (`invalid_grant`), so the Doc mirror cannot be read or written until `gdocs-api auth` runs
+  again.
