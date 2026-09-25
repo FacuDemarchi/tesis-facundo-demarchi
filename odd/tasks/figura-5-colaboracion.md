@@ -85,8 +85,20 @@ The old figure's 472 px width is what turned it into a ribbon with a full-page h
       este cambio y queda fuera de alcance. Además, `figura-2-casos-de-uso.png` no reproduce byte a
       byte —mismas dimensiones, 954 x 2190—, así que su re-renderización se revirtió para no meter un
       cambio ajeno en el commit.
-- [ ] **T3 — Propagate to the live Doc** once the author approves the look: replace the inline image in
-      §7.2.4 keeping its position and the caption below it, then verify the mirror.
+- [x] **T3 — Propagate to the live Doc.** Replaced the inline image in §7.2.4: inserted the new PNG
+      first and verified it, then deleted the old object, keeping the paragraph centred and the caption
+      and note untouched below it.
+
+      **Evidencia**: el objeto nuevo es `kix.mz1yohs195w9`, 16,51 x 14,30 cm, centrado, con «Figura 5.
+      Colaboración del escenario «Solicitar alternativas de cursado».» y su nota justo debajo; la imagen
+      vieja (4,94 x 22,79 cm) ya no está; el documento sigue con 10 imágenes; el texto no cambió; y desde
+      §1 el Doc es idéntico a `main` más las leyendas de §7.2.5. Revisión `ANLCKQlrZj7y…`.
+      Se bajó el PNG del `contentUri` del documento y se miró: es el diagrama nuevo.
+
+      **Mecánica, para repetirla**: la subida a Drive necesita permiso abierto (`type=anyone`,
+      `role=reader`) porque la API busca la imagen de forma anónima; se cerró con `drive_unshare` apenas
+      el Doc quedó con su propia copia. La copia vieja en Drive (id `1Ol7EqJ…`) quedó obsoleta y no se
+      borró: son dos archivos con el mismo nombre en la carpeta de la app.
 
 ## Out of scope
 
