@@ -385,6 +385,65 @@ Verification is programmatic: contrast arithmetic, `sha256sum` on the three clon
 literals, and `impeccable detect --json`. The final visual confirmation belongs to the author opening
 `http://localhost:8080/<surface>/`.
 
+## Audit remediation (2026-09-27)
+
+The audit scored the system 14/20 and produced two P1s, two P2s I could close and a set of P3s. All the
+closable ones are closed, in four commits, each one verified before the next.
+
+### What was closed
+
+| Finding | Measure before | After |
+| --- | --- | --- |
+| **P1** No page had an `h1` | 0 `h1` across five pages | one `h1` per page, with the plan label folded **inside** the heading so no kicker sits above it and no copy changed |
+| **P1** Help control below the legal target | `.summary-info` 18×18 px | 24×24 px, the WCAG 2.2 SC 2.5.8 minimum |
+| **P2** Palette as literals | 156 hex literals against 37 `var()` uses in `panel-seleccion` | primitives plus role aliases; **0 literals outside `:root`** in all five files; `var()` uses now 211 / 119 / 119 / 119 / 115 |
+| **P2** The two kickers | `kicker-above-heading: 1` | deleted with their dead rules; the detector now reports **0** |
+| Dead CSS carrying off-palette colours | `#57ade9`, `#0b9287` in `.stats div` | the graph header, stats and legend rule groups removed (119 → 66 colour declarations in each scenario sheet) |
+
+### The proof for the refactor
+
+Every colour declaration was resolved through its `var()` chain and compared against the previous
+revision, selector by selector, individual selector inside grouped rules: **zero values changed**, and
+every removed declaration belongs to a documented dead group. `panel-seleccion` and
+`institucional-demanda` keep identical declaration counts (168 and 105). Two false alarms of my own
+checker are worth recording: it first flagged everything as removed because it filtered on `#` in the
+value (which the refactor had just removed), and later counted `--course-bg`, `--course-color`,
+`--slot` and `--panel-inset` as dangling — those are per-element custom properties set by the state
+rules or by JavaScript, not gaps.
+
+### One regression I introduced and the detector caught
+
+Wrapping the label and the name in one heading made the name a `span`, and the label rule targets every
+`span` in its container at specificity (0,1,1), which beats a bare class (0,1,0). The career name was
+rendering 10 px, uppercase and in the label colour instead of 14 px and white. Fixed by scoping the
+name rule to its container (0,2,0). **The detector surfaced it as an uppercase-body-text finding, not as
+a size or colour one**: the heading count, the dead-selector grep and the contrast arithmetic were all
+green while the title was visibly wrong. That is the argument for running the detector even when every
+check you wrote yourself passes.
+
+### Detector movement
+
+54 findings on the migrated state, **78** the moment `DESIGN.md` existed (a new family, `design-system-*`,
+compares the code against the record), and **43** after the remediation. Closed to zero:
+`low-contrast`, `kicker-above-heading`, `all-caps-body`, `design-system-color`, `design-system-radius`,
+and `design-system-font-size` from 29 to **1**.
+
+The 43 that remain are the families already triaged as earned or pre-existing: `side-tab` 10 (the
+category stripe and callout rules), `overused-font` 10 (Inter, deliberate), `undersized-ui-text` 8 and
+`tiny-text` 5 (the inherited density), `repeating-stripes-gradient` 4 (the accessible state pattern),
+`gpt-thin-border-wide-shadow` 4 and `cramped-padding` 1 (pre-existing in the institutional view).
+
+### Still open, and why
+
+- **`font-size: 1.08rem`** (≈17.28 px) in the institutional view is the only value with no neighbour on
+the declared ramp. It is part of the same debt as the rem scale below; declaring a 17 px token to
+silence a checker would legitimise an arbitrary number.
+- **The institutional rem ramp has 15 distinct values**, several neighbours 0.01 rem apart. Recorded in
+  `DESIGN.md` as «La Regla de las Dos Escalas» and as debt: consolidating it to seven steps changes the
+  visual and needs the author's eyes, so it is a decision, not a cleanup.
+- **Focus-strip clipping** is still `UNVERIFIED`: `html, body { overflow: hidden }` may crop the ring on
+the cards at the edge of the canvas, and that needs rendered geometry. Only the author can close it.
+
 ## Next step
 
 `audit panel-seleccion/` against the system `DESIGN.md` now records, then the finish review. Nothing is
