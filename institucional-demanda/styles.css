@@ -36,7 +36,7 @@ button:focus-visible, select:focus-visible, .skip-link:focus-visible { outline: 
 .brand { display: grid; gap: 3px; }
 .brand span { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .brand span { color: var(--c-slate-teal); }
-.brand-title{display:grid;gap:3px;margin:0;font-size:1rem;font-weight:800}.brand-name{font-size:1rem;font-weight:800;letter-spacing:normal;text-transform:none;color:var(--c-white)}
+.brand-title{display:grid;gap:3px;margin:0;font-size:1rem;font-weight:800}.brand .brand-name{font-size:1rem;font-weight:800;letter-spacing:normal;text-transform:none;color:var(--c-white)}
 .actor { justify-self: end; margin: 0; padding: 8px 11px; border: 1px solid var(--c-slate-teal); border-radius: 999px; color: var(--blue-soft); font-size: .88rem; }
 .topbar-period { justify-self: center; max-width: 100%; }
 .topbar-period .period-kind { margin: 0; color: var(--blue-soft); font-size: .82rem; font-weight: 700; }
