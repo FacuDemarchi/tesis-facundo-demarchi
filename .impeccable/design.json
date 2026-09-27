@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T21:33:00Z",
+  "title": "Design System: Planificador académico para Ingeniería en Software",
+  "extensions": {
+    "colorMeta": {
+      "institutional-green": {
+        "role": "primary",
+        "displayName": "Verde institucional",
+        "canonical": "#046353",
+        "tonalRamp": ["#000604", "#000f0b", "#022017", "#0c3729", "#1f5645", "#3e7e6a", "#6daf9b", "#b0ebd9"]
+      },
+      "institutional-green-deep": {
+        "role": "primary",
+        "displayName": "Verde institucional profundo",
+        "canonical": "#00523f",
+        "tonalRamp": ["#000604", "#000f0b", "#022017", "#0c3729", "#1f5645", "#3e7e6a", "#6daf9b", "#b0ebd9"]
+      },
+      "institutional-ink": {
+        "role": "neutral",
+        "displayName": "Tinta institucional",
+        "canonical": "#043a31",
+        "tonalRamp": ["#000604", "#020f0b", "#081d17", "#15332a", "#2b5146", "#4d786c", "#7ca99d", "#bee6db"]
+      },
+      "muted-green": {
+        "role": "neutral",
+        "displayName": "Verde apagado",
+        "canonical": "#006c5b",
+        "tonalRamp": ["#000604", "#000f0b", "#002117", "#09382a", "#1c5745", "#3b7f6a", "#6ab19b", "#adedda"]
+      },
+      "institutional-gold": {
+        "role": "secondary",
+        "displayName": "Dorado institucional",
+        "canonical": "#eba310",
+        "tonalRamp": ["#080300", "#150900", "#2c1300", "#4f2200", "#7e3a03", "#aa5f1a", "#dc9143", "#fed5a2"]
+      },
+      "review-magenta": {
+        "role": "tertiary",
+        "displayName": "Magenta de revisión",
+        "canonical": "#6a2482",
+        "tonalRamp": ["#0a0011", "#190128", "#2d0943", "#481764", "#6b2e8b", "#9550b8", "#c781e9", "#efcdfe"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "#f4f7fb",
+        "tonalRamp": ["#040405", "#0a0b0c", "#161719", "#292b2d", "#444649", "#696c70", "#9a9da1", "#d8dbde"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Línea",
+        "canonical": "#cad5e2",
+        "tonalRamp": ["#030406", "#080b0f", "#13181e", "#252b34", "#3f4752", "#636d79", "#949eab", "#d3dce7"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Título de la superficie en las maquetas de escenario. 29px, peso 800." },
+      "headline": { "displayName": "Headline", "purpose": "Encabezado del modal de resultados. 22px, peso 800." },
+      "title": { "displayName": "Title", "purpose": "Título de alternativa y nombre de materia. 15-16px, peso 800." },
+      "body": { "displayName": "Body", "purpose": "El grueso de la interfaz, 12px. Es el tamaño dominante del sistema." },
+      "label": { "displayName": "Label", "purpose": "Etiquetas en mayúsculas espaciadas de la barra de período, encabezados de sección y grilla semanal. 10-11px." },
+      "micro": { "displayName": "Micro", "purpose": "Etiqueta de estado de la tarjeta y sello MARCADA. Piso de 8-9px, siempre con señales redundantes." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 6px 14px #043a3124", "purpose": "La materia descansa sobre el plano." },
+      { "name": "card-hover", "value": "0 10px 22px #043a3130", "purpose": "Respuesta de elevación al hover; sube 2px." },
+      { "name": "card-marked", "value": "0 0 0 4px #046353, 0 10px 22px #043a3138", "purpose": "Anillo verde de selección sobre el plano." },
+      { "name": "panel", "value": "0 22px 44px #043a3147", "purpose": "Capa de trabajo flotante; sin borde, la sombra es su límite." },
+      { "name": "modal", "value": "0 30px 64px #043a3159", "purpose": "Capa de decisión, sobre el velo #043a3166." },
+      { "name": "institutional-ambient", "value": "0 5px 12px #043a310d", "purpose": "Elevación ambiental de la barra de resumen institucional." },
+      { "name": "institutional-section", "value": "0 8px 22px #043a310d", "purpose": "Elevación ambiental de las secciones de demanda." },
+      { "name": "institutional-tooltip", "value": "0 6px 16px #043a3322", "purpose": "Ayuda contextual del resumen institucional." },
+      { "name": "warning-ring", "value": "0 0 0 3px #f19f26", "purpose": "Anillo de la tarjeta institucional con demanda insatisfecha." },
+      { "name": "focus-inner", "value": "0 0 0 2px #043a31", "purpose": "Anillo interior del foco de dos tonalidades; nunca decorativo." }
+    ],
+    "motion": [
+      { "name": "interaction", "value": ".15s", "purpose": "Transición de tarjeta (opacidad, transform, sombra), caret del acordeón y ayuda contextual. No hay animaciones de entrada." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce)", "purpose": "Desactiva la transición de tarjeta y fuerza scroll-behavior auto en la vista institucional; el desplazamiento del grafo se aplica de inmediato." },
+      { "name": "wheel-to-horizontal", "value": "0.25 per frame", "purpose": "Animación única que aproxima el desplazamiento horizontal del grafo al 25% por cuadro, con límites en los bordes." }
+    ],
+    "breakpoints": [
+      { "name": "scenarios", "value": "640px", "purpose": "Familia de escenarios: la barra de período pasa a columna." },
+      { "name": "panel-and-institutional", "value": "760px", "purpose": "Panel de selección a la parte inferior con máximo 48vh; el topbar institucional pasa a columna y la grilla de demanda a dos columnas." },
+      { "name": "institutional-narrow", "value": "470px", "purpose": "La grilla de demanda colapsa a una columna." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón de confirmación",
+      "kind": "button",
+      "refersTo": "button-commit",
+      "description": "La acción que avanza: confirmar la etapa, aceptar el plan, confirmar la inscripción simulada.",
+      "html": "<button class=\"ds-btn-commit\" type=\"button\">Confirmar inscripción</button>",
+      "css": ".ds-btn-commit { padding: 10px 13px; border: 0; border-radius: 8px; background: #046353; color: #fff; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; transition: background .15s; } .ds-btn-commit:hover { background: #00523f; } .ds-btn-commit:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31; } .ds-btn-commit:disabled { cursor: not-allowed; opacity: .45; }"
+    },
+    {
+      "name": "CTA de atención",
+      "kind": "button",
+      "refersTo": "button-attention",
+      "description": "El único botón dorado del sistema. Abre la etapa desde la barra de período; lleva tinta oscura encima.",
+      "html": "<button class=\"ds-btn-attention\" type=\"button\">Iniciar la inscripción</button>",
+      "css": ".ds-btn-attention { min-height: 38px; padding: 8px 12px; border: 1px solid #f19f26; border-radius: 7px; background: #eba310; color: #1e1e1e; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; } .ds-btn-attention:hover { background: #f19f26; } .ds-btn-attention:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31; }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Cancelar, cerrar, volver a ejecutar. Fondo blanco y borde de línea fuerte.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Cancelar</button>",
+      "css": ".ds-btn-secondary { padding: 10px 13px; border: 1px solid #6d6e71; border-radius: 8px; background: #fff; color: #043a31; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 800; cursor: pointer; } .ds-btn-secondary:hover { border-color: #006c5b; background: #f4f7fb; } .ds-btn-secondary:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31; }"
+    },
+    {
+      "name": "Tarjeta de materia aprobada",
+      "kind": "card",
+      "refersTo": "course-card",
+      "description": "Un nodo del plano. Caja fija con el nombre arriba, el metadato y la etiqueta de estado abajo a la derecha, y la categoría codificada en el borde izquierdo de 7px.",
+      "html": "<button class=\"ds-course ds-course-approved ds-course-process\" type=\"button\"><strong>Algoritmos <span>✓</span></strong><small>Cuatrimestre 3 <span>✓</span></small><em>Aprobada ✓</em></button>",
+      "css": ".ds-course { display: flex; flex-direction: column; justify-content: space-between; width: 272px; height: 118px; padding: 11px 12px; border: 2px solid #15803d; border-left-width: 7px; border-left-color: #046353; border-radius: 10px; background: #dcfce7; color: #15803d; box-shadow: 0 6px 14px #043a3124; text-align: left; font-family: Inter, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: opacity .15s, transform .15s, box-shadow .15s; } .ds-course strong { color: #043a31; font-size: 12px; line-height: 1.25; } .ds-course strong span, .ds-course small span { color: #15803d; } .ds-course small { color: #006c5b; font-size: 9px; } .ds-course em { align-self: flex-end; color: #043a31; font-size: 8px; font-style: normal; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; } .ds-course:hover { transform: translateY(-2px); box-shadow: 0 10px 22px #043a3130; } .ds-course:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31, 0 10px 22px #043a3130; }"
+    },
+    {
+      "name": "Tarjeta de materia bloqueada",
+      "kind": "card",
+      "refersTo": "course-card",
+      "description": "El mismo nodo con el estado que además del color usa rayado. El patrón es una señal de accesibilidad: dice «acá hay algo distinto» sin depender del color.",
+      "html": "<button class=\"ds-course-blocked ds-course-blocked-correlativity\" type=\"button\"><strong>Bases de Datos <span>×</span></strong><small>Cuatrimestre 4 <span>×</span></small><em>Bloqueada ×</em></button>",
+      "css": ".ds-course-blocked { display: flex; flex-direction: column; justify-content: space-between; width: 272px; height: 118px; padding: 11px 12px; border: 2px solid #b91c1c; border-left-width: 7px; border-left-color: #be123c; border-radius: 10px; color: #b91c1c; background: repeating-linear-gradient(135deg, #fee2e2, #fee2e2 10px, #fcd5d8 10px, #fcd5d8 13px); box-shadow: 0 6px 14px #043a3124; text-align: left; font-family: Inter, ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-course-blocked strong { color: #043a31; font-size: 12px; line-height: 1.25; } .ds-course-blocked strong span, .ds-course-blocked small span { color: #b91c1c; } .ds-course-blocked small { color: #006c5b; font-size: 9px; } .ds-course-blocked em { align-self: flex-end; color: #043a31; font-size: 8px; font-style: normal; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; } .ds-course-blocked:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31, 0 10px 22px #043a3130; }"
+    },
+    {
+      "name": "Chip de estado institucional",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "Resume el estado de la demanda de una materia en la vista del operador institucional. Pasa al fondo de advertencia con tinta #8e3608 cuando la demanda queda insatisfecha.",
+      "html": "<span class=\"ds-chip\">Con cupo</span><span class=\"ds-chip ds-chip-warning\">Sin cupo</span>",
+      "css": ".ds-chip { display: inline-block; padding: 5px 8px; border-radius: 999px; background: #e5f1ef; color: #006c5b; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: .7rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; } .ds-chip-warning { margin-left: 6px; background: #fff0df; color: #8e3608; }"
+    },
+    {
+      "name": "Panel de selección flotante",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "La capa de trabajo del estudiante. Flota sobre el grafo sin reservar ancho y migra de lado según el desplazamiento del lienzo. No lleva borde: su límite es la sombra.",
+      "html": "<section class=\"ds-panel\"><p class=\"ds-panel-eyebrow\">Carga del borrador</p><p class=\"ds-panel-counter\">2 de 3 materias</p><div class=\"ds-panel-section\"><h2>Días que no podés cursar</h2><button class=\"ds-day\" type=\"button\" aria-pressed=\"true\">Martes</button></div></section>",
+      "css": ".ds-panel { width: 360px; padding: 18px; border-radius: 14px; background: #fff; box-shadow: 0 22px 44px #043a3147; font-family: Inter, ui-sans-serif, system-ui, sans-serif; } .ds-panel-eyebrow { margin: 0; color: #006c5b; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; } .ds-panel-counter { margin: 4px 0 0; color: #043a31; font-size: 12px; font-weight: 800; } .ds-panel-section { margin-top: 15px; padding-top: 13px; border-top: 1px solid #cad5e2; } .ds-panel-section h2 { margin: 0 0 8px; color: #043a31; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; } .ds-day { padding: 6px 8px; border: 1px solid #6d6e71; border-radius: 6px; background: #fff; color: #043a31; font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; } .ds-day[aria-pressed=\"true\"] { border-color: #b91c1c; background: #fee2e2; color: #b91c1c; } .ds-day:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31; }"
+    },
+    {
+      "name": "Aviso de datos simulados",
+      "kind": "custom",
+      "refersTo": "notice",
+      "description": "Declara que los datos son simulados, que es un prototipo de tesis y que no es un sistema oficial. Texto real del documento, nunca un tooltip.",
+      "html": "<footer class=\"ds-notice\"><strong>Datos simulados</strong><span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span></footer>",
+      "css": ".ds-notice { display: grid; gap: 4px; padding: 15px 17px; border-left: 5px solid #6a2482; border-radius: 8px; background: #eeeafd; color: #6a2482; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: .88rem; line-height: 1.4; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El plano de correlatividades",
+    "overview": "Este sistema se comporta como un plano de ingeniería: cada materia tiene un lugar, un estado rotulado y una razón visible. No hay nada decorativo que no esté declarando algo. El grafo es la pieza central y ocupa el ancho completo porque el plan de estudios es el objeto de trabajo, no un fondo sobre el que se apilan paneles. Las tarjetas se alinean a una grilla de columnas por cuatrimestre y se conectan con aristas que muestran la correlatividad, de modo que la estructura académica se lee de un vistazo antes de leer una sola palabra.\n\nLa densidad es deliberada y sobria. La jerarquía se construye con estructura y tipografía —tamaño, peso y mayúsculas espaciadas—, nunca con decoración. El color no es adorno: cada estado tiene color, etiqueta y patrón, porque el vocabulario de estados es el contenido más importante de la interfaz y no puede depender de una sola señal. El verde institucional confirma y avanza; el dorado llama la atención; el resto del espectro pertenece a los estados académicos.\n\nAnti-referencia explícita: un dashboard SaaS genérico. Nada de gradientes, ni de métricas grandes con etiqueta chica, ni de un color de acento repartido por cada bloque. El prototipo tampoco debe parecer el sistema oficial de la universidad: declara en cada superficie que los datos son simulados y que no es un sistema oficial.",
+    "keyCharacteristics": [
+      "Grafo horizontal con desplazamiento propio como superficie principal; el panel flota por encima sin reservar espacio.",
+      "Ocho estados de materia, cada uno con color de fondo, color de primer plano, etiqueta y símbolo, y dos de ellos con rayado además.",
+      "Densidad de 8 a 13 px en toda la interfaz: es un plano, no un folleto.",
+      "Fondo neutro frío, superficies blancas y verde institucional profundo solo donde hay jerarquía real.",
+      "Profundidad por capas con alpha sobre la tinta institucional, sin backdrop-filter y sin animaciones de entrada."
+    ],
+    "rules": [
+      { "name": "La Regla de las Dos Voces", "body": "El dorado llama la atención y nunca confirma; el verde confirma y nunca llama la atención. Un control no puede usar las dos.", "section": "colors" },
+      { "name": "La Regla del Foco que no es Relleno", "body": "El anillo de foco tiene su propio token y jamás reutiliza el relleno de un botón. Un solo tono no alcanza acá: el dorado da 2.15:1 sobre blanco y 1.86:1 sobre el verde claro, así que el indicador es de dos tonos.", "section": "colors" },
+      { "name": "La Regla del Color Declarado", "body": "Ningún color se usa para decir algo que el texto no diga también. Los estados llevan etiqueta y símbolo; los avisos son texto real, nunca un tooltip.", "section": "colors" },
+      { "name": "La Regla de una Sola Voz", "body": "No hay fuente de display decorativa. Si algo necesita destacarse, sube de peso o de tamaño, o pasa a mayúsculas espaciadas.", "section": "typography" },
+      { "name": "La Regla del Piso Redundante", "body": "Ningún texto de 8 px puede ser la única señal de nada. Si baja de 10 px, tiene que venir acompañado de color, forma y patrón.", "section": "typography" },
+      { "name": "La Regla de la Sombra con Papel", "body": "Cada nivel de sombra pertenece a una capa concreta: tarjeta, panel, modal. Si algo flota y no es una de esas tres cosas, no lleva sombra.", "section": "elevation" },
+      { "name": "La Regla del Foco de Dos Tonalidades", "body": "El indicador de foco es dorado por fuera y tinta por dentro: outline 3px #eba310 con offset 2px y box-shadow 0 0 0 2px #043a31. El anillo interior aporta el 11.81:1 que el dorado no tiene sobre fondos claros, y el dorado aporta el 5.91:1 que la tinta no tiene sobre la barra verde profunda. Ninguna regla que declare box-shadow sobre un elemento enfocable puede pisar ese anillo.", "section": "elevation" },
+      { "name": "La Regla del Borde que Informa", "body": "Ningún borde existe solo para decorar. Si un borde se elimina y no se pierde información, no debería estar: por eso el panel y el modal no tienen borde y se apoyan en su sombra.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do usá el verde institucional para lo que confirma y avanza, y el dorado solo para atención y foco.",
+      "Do acompañá cada estado con etiqueta y símbolo, y sumá rayado cuando el estado pide otra señal además del color.",
+      "Do mantené el anillo de foco de dos tonalidades, y si una regla necesita su propia sombra, incluí 0 0 0 2px #043a31 primero en la lista.",
+      "Do reservá la línea fuerte #6d6e71 para delimitar controles y la línea clara #cad5e2 para separar contenido.",
+      "Do dejá que el grafo ocupe el ancho y que las capas floten encima: el panel no reserva espacio.",
+      "Do declarar en texto visible que los datos son simulados y que el prototipo no es el sistema oficial de la universidad."
+    ],
+    "donts": [
+      "Don't usar el dorado como color de texto sobre fondos claros: 2.15:1. Es relleno o anillo, nunca tinta.",
+      "Don't dejar que un color solo cuente algo. Sin etiqueta y símbolo, el vocabulario de estados deja de ser accesible.",
+      "Don't reutilizar un token de color en dos fondos opuestos: el mismo valor que funciona sobre el panel blanco puede desaparecer sobre la barra verde profunda.",
+      "Don't cambiar los tintes del rayado por el color de primer plano del estado: el rayado es una señal de patrón, no un relleno, y su función es pasar inadvertido mientras dice «acá hay algo distinto».",
+      "Don't poner borde a las capas flotantes: el panel y el modal se definen por su sombra.",
+      "Don't introducir una fuente decorativa, un gradiente, un backdrop-filter o una animación de entrada. Este sistema es un plano, no una landing.",
+      "Don't presentar el prototipo como el sistema oficial de la universidad ni usar su nombre como sello."
+    ]
+  }
+}
