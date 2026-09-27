@@ -12,6 +12,7 @@ colors:
   institutional-gold-hover: "#f19f26"
   ink-on-gold: "#1e1e1e"
   published-teal: "#007a5e"
+  slate-teal: "#98dbce"
   review-magenta: "#6a2482"
   review-magenta-soft: "#eeeafd"
   warning: "#b54708"
@@ -59,11 +60,29 @@ typography:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "12px"
     lineHeight: 1.4
+  body-sm:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "11px"
+    fontWeight: 700
+  meta:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "9px"
   label:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "10px"
     fontWeight: 700
     letterSpacing: "0.06em"
+  title-sm:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "13px"
+  subhead:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "14px"
+    fontWeight: 800
+  title-lg:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "16px"
+    fontWeight: 800
   micro:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "8px"
@@ -71,6 +90,7 @@ typography:
     letterSpacing: "0.04em"
 rounded:
   badge: "4px"
+  badge-lg: "5px"
   control-sm: "6px"
   control: "7px"
   action: "8px"
@@ -174,6 +194,7 @@ dorado de atención, y el espectro de estados académicos que vive por encima de
 - **Verde apagado** (`#006c5b`): texto secundario, metadatos, etiquetas de grilla. 6.37:1 sobre blanco.
 - **Línea** (`#cad5e2`): separadores y bordes decorativos entre filas, celdas y secciones.
 - **Línea fuerte** (`#6d6e71`): borde de todo control interactivo —botones de navegación, selectores, alternadores de día, acordeón—. Un control necesita 3:1 contra su fondo y la línea clara solo da 1.49:1, así que la línea suave nunca delimita algo con lo que se interactúa.
+- **Verde grisáceo de etiqueta** (`#98dbce`): la etiqueta del plan y de la carrera en la barra oscura, y el borde del actor institucional. Es un valor **sólo para fondos oscuros**: sobre blanco mide 1.57:1 y ahí nunca se usa como texto.
 - **Papel** (`#f4f7fb`): el fondo del lienzo donde flota el grafo.
 - **Panel** (`#ffffff`): tarjetas, panel flotante y modal.
 
@@ -221,10 +242,15 @@ está instalada, sin `@font-face` ni descarga de red.
 ### Hierarchy
 - **Display** (800, 29px, tracking .01em): el título de la superficie en las maquetas de escenario.
 - **Headline** (800, 22px): el encabezado del modal de resultados.
-- **Title** (800, 15–16px): el título de una alternativa y el nombre de materia en la tarjeta.
-- **Body** (400–700, 12px, alto de línea 1.4): el grueso de la interfaz. Es el tamaño dominante del sistema y aparece 21 veces.
-- **Label** (700, 10–11px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, columnas de la grilla semanal.
-- **Micro** (800, 8–9px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema y existe solo porque el estado tiene cuatro señales redundantes.
+- **Title large** (800, 16px): el encabezado de una alternativa dentro del modal.
+- **Title** (800, 15px): el período académico en la barra.
+- **Subhead** (800, 14px): el nombre del plan y de la carrera, dentro del `h1` de la barra de período.
+- **Title small** (400–800, 13px): el encabezado y el texto del resumen de desenlace.
+- **Body** (400–700, 12px, alto de línea 1.4): el grueso de la interfaz. Es el tamaño dominante del sistema, con 23 usos.
+- **Body small** (700, 11px): alternadores de día y encabezados de la grilla semanal.
+- **Label** (700, 10px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, columnas de la grilla semanal.
+- **Meta** (400, 9px): el renglón de cuatrimestre de la tarjeta de materia.
+- **Micro** (800, 8px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema y existe solo porque el estado tiene cuatro señales redundantes.
 
 ### Named Rules
 **La Regla de una Sola Voz.** No hay fuente de display decorativa. Si algo necesita destacarse, sube de
@@ -232,6 +258,14 @@ peso o de tamaño, o pasa a mayúsculas espaciadas.
 
 **La Regla del Piso Redundante.** Ningún texto de 8 px puede ser la única señal de nada. Si baja de 10
 px, tiene que venir acompañado de color, forma y patrón.
+
+**La Regla de las Dos Escalas.** El plano del estudiante se mide en píxeles y su rampa es deliberada:
+diez pasos, de 8 a 22 px, con el 12 px como centro de gravedad. La vista institucional se mide en `rem`
+porque es una superficie de lectura, no un plano. **Deuda declarada**: esa segunda rampa tiene quince
+valores distintos y varios vecinos que se separan por 0.01 rem —`.82` contra `.83`, `.72` contra `.73`—,
+que a 16 px de base no son dos roles sino dos números. Consolidarla a siete pasos es trabajo pendiente,
+no una decisión tomada: cualquier paso que no se pueda nombrar por su propósito no pertenece a la
+escala.
 
 ## Layout
 
