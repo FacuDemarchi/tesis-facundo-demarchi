@@ -191,6 +191,100 @@ must not be the only thing removed by a narrow viewport.
 - Prose and frontmatter are in Spanish, matching `decisiones.md` and the scenario READMEs, while
   `odd/tasks/*.md` and commit messages stay English.
 
+## Token architecture (audit remediation, 2026-09-27)
+
+The audit found the palette written as raw hex literals inside the rules — 156 literals against 37 `var()`
+uses in `panel-seleccion` — even though tokens already existed in `:root`. This is the remediation
+spec: extract the palette into a primitive layer plus role aliases, so no colour literal lives outside
+`:root`. It is appearance-preserving: no pixel may change.
+
+### Primitive layer (literals live only here)
+
+```css
+  /* Primitivas de color */
+  --c-green:#046353; --c-green-deep:#00523f; --c-green-soft:#e5f1ef; --c-deep:#003e34;
+  --c-ink:#043a31; --c-muted:#006c5b; --c-line:#cad5e2; --c-line-strong:#6d6e71;
+  --c-paper:#f4f7fb; --c-white:#fff; --c-slate-teal:#98dbce;
+  --c-gold:#eba310; --c-gold-hover:#f19f26; --c-ink-on-gold:#1e1e1e;
+  --c-teal:#007a5e; --c-magenta:#6a2482; --c-magenta-soft:#eeeafd; --c-violet:#7c3aed;
+  --c-rust:#c2410c; --c-rose:#be123c;
+  --c-amber-structure:#b45309; --c-amber-ground:#ffedd5; --c-amber-ink:#431407;
+  --c-stripe-no-offer:#fde7ac; --c-stripe-blocked:#fcd5d8;
+  --c-warning:#b54708; --c-warning-soft:#fff0df; --c-warning-ink:#8e3608;
+  /* Primitivas de sombra (tinta con alpha) */
+  --c-shadow-card:#043a3124; --c-shadow-card-hover:#043a3130; --c-shadow-card-marked:#043a3138;
+  --c-shadow-panel:#043a3147; --c-shadow-modal:#043a3159; --c-scrim:#043a3166;
+  --c-shadow-ambient:#043a310d; --c-shadow-tooltip:#043a3133;
+```
+
+### Role layer (what the rules consume)
+
+The four student stylesheets end up with `--ink`, `--muted`, `--line`, `--line-strong`, `--paper`,
+`--panel`, `--green`, `--green-deep`, `--green-soft`, `--deep`, `--gold`, `--gold-hover`,
+`--ink-on-gold`, `--focus`, `--focus-inner`, `--amber-structure`, `--amber-ground`, `--amber-ink`,
+`--stripe-no-offer`, `--stripe-blocked`, `--category-process`, `--category-sa`, `--category-pp`,
+`--category-general`, `--edge-dashed`, `--review-soft`, plus the shadow roles `--shadow-card`,
+`--shadow-card-hover`, `--shadow-card-marked`, `--shadow-panel`, `--shadow-modal`, `--scrim`,
+`--shadow-ambient`, `--shadow-tooltip`. The eight state pairs keep their existing names and their
+literal values, except `--review:#6a2482` and `--review-bg:#eeeafd`, which become `var(--c-magenta)`
+and `var(--c-magenta-soft)`.
+
+`institucional-demanda` keeps its own names pointed at the same primitives: `--navy:var(--c-ink)`,
+`--blue:var(--c-teal)`, `--blue-soft:var(--c-green-soft)`, `--teal:var(--c-green)`,
+`--teal-soft:var(--c-green-soft)`, `--violet:var(--c-magenta)`, `--violet-soft:var(--c-magenta-soft)`,
+`--warning:var(--c-warning)`, `--warning-soft:var(--c-warning-soft)`, `--warning-ink:var(--c-warning-ink)`.
+
+### Rule-level replacement table
+
+| Literal | Role |
+| --- | --- |
+| `#043a31` | `var(--ink)` |
+| `#006c5b` | `var(--muted)` |
+| `#cad5e2` | `var(--line)` |
+| `#6d6e71` | `var(--line-strong)` |
+| `#f4f7fb` | `var(--paper)` |
+| `#fff` in `background` | `var(--panel)` |
+| `#fff` in `color` | `var(--c-white)` |
+| `#046353` | `var(--green)` |
+| `#00523f` | `var(--green-deep)` |
+| `#e5f1ef` | `var(--green-soft)` |
+| `#003e34` | `var(--deep)` |
+| `#eba310` in `outline` | `var(--focus)` |
+| `#eba310` elsewhere | `var(--gold)` |
+| `#f19f26` | `var(--gold-hover)` |
+| `#1e1e1e` | `var(--ink-on-gold)` |
+| `#98dbce` | `var(--c-slate-teal)` — light-on-dark accent only, never on white (1.57:1) |
+| `#fde7ac` / `#fcd5d8` | `var(--stripe-no-offer)` / `var(--stripe-blocked)` |
+| `#b45309` / `#ffedd5` / `#431407` | `var(--amber-structure)` / `var(--amber-ground)` / `var(--amber-ink)` |
+| `#b54708` / `#fff0df` / `#8e3608` | `var(--warning)` / `var(--warning-soft)` / `var(--warning-ink)` |
+| `#007a5e` | `var(--published)`; in the institutional file `var(--blue)` |
+| `#6a2482` / `#eeeafd` | `var(--review)` / `var(--review-soft)`; institutional `var(--violet)` / `var(--violet-soft)` |
+| `#7c3aed` on the dashed edge | `var(--edge-dashed)` |
+| `#be123c` | `var(--category-sa)` |
+| `#c2410c` as a category border | `var(--category-pp)` |
+| `#b91c1c` | `var(--blocked)` |
+| `#92400e` | `var(--no-offer)` |
+| `#dbeafe`, `#dcfce7`, `#fee2e2`, `#fef3c7`, `#e0f2fe`, `#ede9fe` | the matching `--*-bg` state role |
+| `#043a3124`, `#043a3130`, `#043a3138`, `#043a3147`, `#043a3159`, `#043a3166`, `#043a310d`, `#043a3133` | the matching `--shadow-*` / `--scrim` role |
+
+### Dead rules to delete (mockup family only)
+
+Verified: `mockup/app.js` emits only `course-state`, `term`, `term-grid`, `category-${course.category}`
+and the course classes, and `mockup/index.html` contains none of the selectors below. Delete these
+groups in `mockup/`, `periodo-2A/` and `periodo-2B/` **only**: `.graph-header` and `.graph-header p`;
+the bare `h1` rule; `.stats`, `.stats div`, `.stats dt`, `.stats dd`; `.legend`, `.legend h2`,
+`.legend-grid`, `.legend-item`, `.legend-item b`; `.category-row`, `.category`, `.category::before`,
+`.category.process::before`, `.category.sa::before`, `.category.pp::before`, `.line`, `.line.dashed`,
+`.note`, `.course.marked`, `.course.marked::after`, `.period-navigation .primary-action`, `.sr-only`,
+`.eyebrow`.
+
+Two cautions. **Do not** remove any `.course.category-*` rule: those names are produced by
+interpolation and exist at runtime. In `panel-seleccion`, remove only `.subject-origin` from the
+grouped selector `.subject-meta,.subject-origin,.subject-motive` — that is the one dead class it has.
+
+Removing that block also removes the two colours that sat outside the palette (`#57ade9`, `#0b9287`),
+which lived only in `.stats div`.
+
 ## Steps
 
 - [x] Feature document and Engram mirror.
