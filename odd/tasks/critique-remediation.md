@@ -174,17 +174,28 @@ outside-close ran on `click`, which never reaches the document when the click la
 that card re-renders itself and the event's target is detached — so the legend stayed open over the plan.
 It now runs on `pointerdown` in the capture phase.
 
-### An open finding: the two arrow strokes have no rule
+### The two arrow strokes: from an open finding to a rule (`0d7520b`)
 
-The plan draws 12 continuous and 14 dashed correlativity arrows. Nothing in the repository documents the
-difference, and the data does not contain one: `C14→C19` is dashed while `C17→C22` is continuous, with
+The plan drew 12 continuous and 14 dashed correlativity arrows. Nothing in the repository documented the
+difference, and the data did not contain one: `C14→C19` was dashed while `C17→C22` was continuous, with
 identical structural signatures (same column gap, same year transition, same vertical offset). Across all
-26 edges, both strokes occur at column gaps of 1 and 2 and across the same year transitions.
+26 edges, both strokes occurred at column gaps of 1 and 2 and across the same year transitions. The first
+version of the legend therefore labelled the strokes as what they were — «Trazo continuo» and «Trazo
+punteado» — and claimed no meaning, because there was none to claim.
 
-So the legend labels the strokes as what they are — «Trazo continuo» and «Trazo punteado» — and claims no
-meaning, because there is none to claim. Naming the difference would be inventing it. This is a decision
-for the author: make the fixture consistent, document a criterion and fix the fixture to match it, or
-accept the strokes as visual variety.
+**The author supplied the criterion**: the stroke says one thing only, whether the arrow crosses over other
+columns of the plan. Dashed spans two columns or more; continuous joins adjacent columns, including the
+same one. Thirteen of the twenty-six edges were wrong under it — twelve single-column edges were dashed and
+one two-column edge was continuous.
+
+| After the fix | Count | Rendered evidence |
+| --- | --- | --- |
+| Continuous | 23 | `strokeDasharray: none` |
+| Dashed | 3 | `strokeDasharray: 9px, 7px` — exactly the long spans: C31→C39, C32→C41, C36→C44 |
+
+`DESIGN.md` records it as **La Regla del Trazo que Cruza**, mirrored in the sidecar's `narrative.rules`, and
+the legend now names the meaning instead of only the stroke. **Writing the legend is what exposed the
+debt**: the attempt to name what the dashed stroke distinguished revealed that it distinguished nothing.
 
 ### A note on the visual check (U2)
 
