@@ -80,11 +80,25 @@ verificación renderizada —no con el reporte del que escribe— en cada tarea.
 | --- | --- | --- |
 | T1 · confirmación visible | `9a118e0` | Medición renderizada: franja visible tras confirmar, 12px, `--green-soft` sobre la barra oscura a **10,97:1**, 1 línea en 1400×900 y 3 líneas envueltas en 390×844 sin recorte ni scroll horizontal, y `display:none` en reposo (`barHeight` 73 en escritorio y 243 en móvil, sin cambio respecto de antes de la feature). |
 | T2 · contador sin corte | `5f2d3bc` | Medición renderizada: contenedor 324/324 en 1400×900 y 322/322 en 390×844, sin recorte en ningún estado, sin scroll horizontal en el panel, los dos contadores en filas de 17 px, y el estado de exceso intacto (`Bimestrales 3/1` en `rgb(185,28,28)` con el tope en 1). El separador `-` ya no está en el DOM. |
-| T3 · polaridad de días | — | (pendiente) |
-| T4 · plano angosto | — | **bloqueada por decisión del autor** |
-| T5 · borde dorado | — | (pendiente) |
-| T6 · `DESIGN.md` | — | (pendiente) |
+| T3 · polaridad de días | `3333242` | Medición renderizada + árbol de accesibilidad: el grupo expone `role=group` con el nombre «RESTRICCIÓN Días en los que no puedo asistir.», la polaridad es visible antes de cualquier clic (`polarityVisibleBeforeAnyClick: true`), el `aria-label` viejo ya no está, los seis botones conservan su texto y su estado, un clic sigue poniendo «lunes · no puedo asistir» en `--blocked`, el censo sub-11 px sigue en cero y el detector del proyecto sigue en 0. |
+| T4 · plano angosto | — | **bloqueada**: el autor volvió a contestar «no lo sé». Recomendación del padre para cuando decida: conservar el lienzo y agregarle un índice de 10 anclas con la barra en una fila (es la única salida que no reescribe el producto y resuelve el salto de ~2500 px). No se toca nada hasta que haya decisión. |
+| T5 · borde dorado | `c870a6b` | Medición renderizada: los cuatro lados del bloque de restricción computan `--line` (`rgb(202,213,226)`) sobre el relleno `--green-soft`, y **ningún borde dorado sobrevive dentro del panel** (`goldBordersInsidePanel: []`). Detector del proyecto en 0. |
+| T6 · `DESIGN.md` | `ad79234` | `DESIGN.md:443` y `.impeccable/design.json:134` describen el orden medido en el DOM (etiqueta de estado arriba a la derecha en 11 px, nombre en 35, metadato en 74), y `design.json` sigue siendo JSON válido. |
+| T1 · corrección del alto de la barra | `ab3a14e` | Medición contra el árbol previo a T1 en un worktree: a 1024×768 la barra vuelve a **90 px en reposo** (eran 142 por el `flex-wrap`) y **115 con mensaje** (eran 183); a 1400×900 queda en 73 en reposo y baja de 114 a **98** con mensaje; en móvil no cambia nada (243 / 301). |
 
-## Efectos medidos que quedan abiertos
+## Decisiones del autor registradas
 
-- **La barra crece cuando aparece un anuncio**: 73 → 114 px en 1400×900 (una línea) y 243 → 301 px en 390×844 (tres líneas). El salto ocurre una sola vez en escritorio (los mensajes miden una línea) y **oscila en móvil** entre 1 y 3 líneas según el mensaje. Las dos salidas son reservar la línea siempre (barra más alta y estable, sin espacio muerto cuando no hay mensaje) o dejarlo como está (barra más baja, salto de una línea al aparecer el primer anuncio). Es una decisión de presupuesto de la barra y se resuelve junto con **T4**, que es la dueña de ese presupuesto en pantallas angostas.
+- **Alto de la barra con la franja**: «dejarlo como está». No se reserva la línea; la franja cuesta 25 px cuando hay mensaje.
+- **T4**: sin decisión («no lo sé»).
+
+## Desvío de ruteo, declarado
+
+`gentle-ai-worker` **dejó de ser usable** en esta feature: en T3 devolvió `status: blocked` («`gentle_review` is not available in this runtime») y en T5/T6 no respondió más que con su guarda de revisión. Además, **en las cinco veces que sí editó reportó `files_changed: none` o `partial`**. Lo que queda registrado honestamente:
+
+- **T1, T2 y T3** los escribió el writer (T3 aplicó el marcado exacto antes de bloquearse); cada uno se verificó en disco y con medición propia antes de commitear.
+- **T5, T6 y la corrección del alto de la barra** los aplicó el padre **inline**, porque no hay ficha nativa `Agent` en este runtime y la rol de paquete está bloqueada. Es un desvío del ruteo obligatorio, con esta justificación y este alcance reducido (un archivo por cambio).
+- La verificación **nunca** salió del reporte del writer: en los tres casos en que reportó cero cambios, los cambios estaban en disco y eran correctos.
+
+## Efecto de T1, medido y corregido
+
+La franja hace crecer la barra cuando aparece un mensaje: **73 → 98 px** en 1400×900 (una línea) y **243 → 301 px** en 390×844 (tres líneas). El primer cambio de T1 había dejado además un costo mayor en anchos intermedios —a 1024×768 la barra pasaba de 90 a 142 px en reposo porque `flex-wrap: wrap` hacía apilar el contexto y la navegación— y eso se corrigió en `ab3a14e` midiendo contra el árbol previo. Queda abierto solo esto: en móvil la barra **oscila** entre 1 y 3 líneas según la longitud del mensaje, y el autor eligió no reservar la línea.
