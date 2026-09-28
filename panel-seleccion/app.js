@@ -19,7 +19,7 @@ const courses = [
 ].map(([id, term, slot, name, state, category]) => ({ id, term, slot, name, state, category }));
 
 const edges = [
-  ['C02','C08','solid'], ['C03','C09','solid'], ['C09','C10','solid'], ['C06','C11','solid'], ['C11','C17','solid'], ['C14','C19','routed'], ['C15','C20','routed'], ['C16','C21','routed'], ['C17','C22','solid'], ['C19','C25','routed'], ['C20','C26','routed'], ['C21','C27','routed'], ['C22','C28','solid'], ['C24','C30','solid'], ['C25','C31','routed'], ['C26','C32','routed'], ['C28','C33','solid'], ['C29','C34','solid'], ['C30','C35','routed'], ['C31','C39','solid'], ['C32','C41','routed'], ['C34','C37','routed'], ['C35','C38','routed'], ['C36','C40','routed'], ['C36','C44','routed'], ['C44','C46','solid']
+  ['C02','C08','solid'], ['C03','C09','solid'], ['C09','C10','solid'], ['C06','C11','solid'], ['C11','C17','solid'], ['C14','C19','solid'], ['C15','C20','solid'], ['C16','C21','solid'], ['C17','C22','solid'], ['C19','C25','solid'], ['C20','C26','solid'], ['C21','C27','solid'], ['C22','C28','solid'], ['C24','C30','solid'], ['C25','C31','solid'], ['C26','C32','solid'], ['C28','C33','solid'], ['C29','C34','solid'], ['C30','C35','solid'], ['C31','C39','routed'], ['C32','C41','routed'], ['C34','C37','solid'], ['C35','C38','solid'], ['C36','C40','solid'], ['C36','C44','routed'], ['C44','C46','solid']
 ];
 
 const periods = [
@@ -306,7 +306,7 @@ function renderPanel() {
   const cuatrimestreCap = document.querySelector('[data-cap="cuatrimestre"]');
   if (cuatrimestreCap) {
     const cuatrimestreLimit = Math.min(6, 2 * bimesterLimit);
-    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/${cuatrimestreLimit} · ${siblingBimester()} sin datos`;
+    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/${cuatrimestreLimit} · ${siblingBimester()} sin oferta publicada`;
     cuatrimestreCap.dataset.overCap = String(selected.length > cuatrimestreLimit);
   }
 
@@ -397,7 +397,7 @@ function aulaLabel(aulaId) {
   return data.aulas.find(aula => aula.id === aulaId)?.nombre || aulaId;
 }
 function renderWeeklyGrid(alternative) {
-  const dayOrder = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+  const dayOrder = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
   const franjas = alternative.asignaciones.flatMap(assignment => assignment.franjas.map(franja => ({ ...franja, assignment })));
   if (!franjas.length) return '';
   const days = dayOrder.filter(day => franjas.some(franja => franja.dia === day));
@@ -701,3 +701,28 @@ window.addEventListener('resize', () => {
   fitGraphToViewport();
   updatePanelSide();
 });
+
+// Leyenda del plano (U4): un popover desde la barra de período.
+const legendToggle = document.querySelector('#legend-toggle');
+const legendPanel = document.querySelector('#legend-panel');
+const legendClose = document.querySelector('#legend-close');
+function setLegendOpen(open, restoreFocus = true) {
+  legendPanel.hidden = !open;
+  legendToggle.setAttribute('aria-expanded', String(open));
+  if (restoreFocus) {
+    if (open) legendClose.focus(); else legendToggle.focus();
+  }
+}
+legendToggle.addEventListener('click', () => setLegendOpen(legendPanel.hidden));
+legendClose.addEventListener('click', () => setLegendOpen(false));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !legendPanel.hidden) setLegendOpen(false);
+});
+// Capture phase on pointerdown: a click on a course card re-renders that card, and the
+// resulting click event never reaches the document, so a click-phase handler would leave
+// the legend open on top of the plan.
+document.addEventListener('pointerdown', event => {
+  if (legendPanel.hidden) return;
+  if (event.target.closest('#legend-panel, #legend-toggle')) return;
+  setLegendOpen(false, false);
+}, true);
