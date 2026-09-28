@@ -28,6 +28,12 @@
         "canonical": "#006c5b",
         "tonalRamp": ["#000604", "#000f0b", "#002117", "#09382a", "#1c5745", "#3b7f6a", "#6ab19b", "#adedda"]
       },
+      "slate-teal": {
+        "role": "neutral",
+        "displayName": "Verde grisáceo de etiqueta",
+        "canonical": "#98dbce",
+        "tonalRamp": ["#000604", "#000f0c", "#041f19", "#0f352c", "#235348", "#437b6e", "#73ad9f", "#b5e9dd"]
+      },
       "institutional-gold": {
         "role": "secondary",
         "displayName": "Dorado institucional",
@@ -57,7 +63,12 @@
       "display": { "displayName": "Display", "purpose": "Título de la superficie en las maquetas de escenario. 29px, peso 800." },
       "headline": { "displayName": "Headline", "purpose": "Encabezado del modal de resultados. 22px, peso 800." },
       "title": { "displayName": "Title", "purpose": "Título de alternativa y nombre de materia. 15-16px, peso 800." },
-      "body": { "displayName": "Body", "purpose": "El grueso de la interfaz, 12px. Es el tamaño dominante del sistema." },
+      "body": { "displayName": "Body", "purpose": "El grueso de la interfaz, 12px. Es el tamaño dominante del sistema, con 23 usos." },
+      "body-sm": { "displayName": "Body pequeño", "purpose": "Alternadores de día y encabezados de la grilla semanal. 11px, peso 700." },
+      "meta": { "displayName": "Metadato", "purpose": "El renglón de cuatrimestre de la tarjeta de materia. 9px." },
+      "title-sm": { "displayName": "Title pequeño", "purpose": "Encabezado del resumen de desenlace. 13px." },
+      "subhead": { "displayName": "Subhead", "purpose": "El nombre del plan y de la carrera dentro del h1 de la barra de período. 14px, peso 800." },
+      "title-lg": { "displayName": "Title grande", "purpose": "Encabezado de alternativa dentro del modal. 16px, peso 800." },
       "label": { "displayName": "Label", "purpose": "Etiquetas en mayúsculas espaciadas de la barra de período, encabezados de sección y grilla semanal. 10-11px." },
       "micro": { "displayName": "Micro", "purpose": "Etiqueta de estado de la tarjeta y sello MARCADA. Piso de 8-9px, siempre con señales redundantes." }
     },
@@ -166,6 +177,7 @@
       { "name": "La Regla del Color Declarado", "body": "Ningún color se usa para decir algo que el texto no diga también. Los estados llevan etiqueta y símbolo; los avisos son texto real, nunca un tooltip.", "section": "colors" },
       { "name": "La Regla de una Sola Voz", "body": "No hay fuente de display decorativa. Si algo necesita destacarse, sube de peso o de tamaño, o pasa a mayúsculas espaciadas.", "section": "typography" },
       { "name": "La Regla del Piso Redundante", "body": "Ningún texto de 8 px puede ser la única señal de nada. Si baja de 10 px, tiene que venir acompañado de color, forma y patrón.", "section": "typography" },
+      { "name": "La Regla de las Dos Escalas", "body": "El plano del estudiante se mide en píxeles y su rampa es deliberada: diez pasos, de 8 a 22 px, con el 12 px como centro de gravedad. La vista institucional se mide en rem porque es una superficie de lectura, no un plano. Deuda declarada: esa segunda rampa tiene quince valores distintos y varios vecinos que se separan por 0.01 rem —.82 contra .83, .72 contra .73—, que a 16 px de base no son dos roles sino dos números. Consolidarla a siete pasos es trabajo pendiente, no una decisión tomada.", "section": "typography" },
       { "name": "La Regla de la Sombra con Papel", "body": "Cada nivel de sombra pertenece a una capa concreta: tarjeta, panel, modal. Si algo flota y no es una de esas tres cosas, no lleva sombra.", "section": "elevation" },
       { "name": "La Regla del Foco de Dos Tonalidades", "body": "El indicador de foco es dorado por fuera y tinta por dentro: outline 3px #eba310 con offset 2px y box-shadow 0 0 0 2px #043a31. El anillo interior aporta el 11.81:1 que el dorado no tiene sobre fondos claros, y el dorado aporta el 5.91:1 que la tinta no tiene sobre la barra verde profunda. Ninguna regla que declare box-shadow sobre un elemento enfocable puede pisar ese anillo.", "section": "elevation" },
       { "name": "La Regla del Borde que Informa", "body": "Ningún borde existe solo para decorar. Si un borde se elimina y no se pierde información, no debería estar: por eso el panel y el modal no tienen borde y se apoyan en su sombra.", "section": "shapes" }
