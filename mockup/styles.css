@@ -67,5 +67,5 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:2px;box-shado
 .course.category-process{border-left-color:var(--category-process)}.course.category-sa{border-left-color:var(--category-sa)}.course.category-pp{border-left-color:var(--category-pp)}.course.category-general{border-left-color:var(--category-general)}
 .connections{position:absolute;z-index:1;inset:0;overflow:visible;pointer-events:none}
 .edge{fill:none;stroke:var(--green);stroke-width:3;opacity:.8}.edge.routed{stroke:var(--edge-dashed);stroke-dasharray:9 7}.connections marker path{fill:var(--green)}
-@media(max-width:640px){.period-bar{align-items:flex-start;flex-direction:column;gap:8px}.period-navigation{width:100%;justify-content:space-between}.period-display{min-width:0;padding-inline:8px}.period-navigation button{font-size:12px}}
+@media(max-width:640px){.period-bar{align-items:flex-start;flex-direction:column;gap:8px}.period-navigation{width:100%;justify-content:space-between}.period-display{min-width:0;padding-inline:8px}}
 @media(prefers-reduced-motion:reduce){.course{transition:none}}

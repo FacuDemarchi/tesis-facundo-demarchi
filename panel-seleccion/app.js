@@ -483,6 +483,7 @@ function renderResults() {
 function openSelection() {
   selectionOpen = true;
   selectionPanel.hidden = false;
+  setPanelCollapsed(false);
   primaryAction.blur();
   canvas.dataset.panel = 'open';
   updatePanelSide();
@@ -701,6 +702,16 @@ window.addEventListener('resize', () => {
   fitGraphToViewport();
   updatePanelSide();
 });
+
+// Panel colapsable en pantalla angosta (U5). La manija solo existe a <=760px: arriba, el
+// panel flota como tarjeta y no hay nada que plegar.
+const panelHandle = document.querySelector('#panel-collapse');
+function setPanelCollapsed(collapsed) {
+  selectionPanel.dataset.collapsed = String(collapsed);
+  panelHandle.setAttribute('aria-expanded', String(!collapsed));
+  panelHandle.textContent = collapsed ? 'Mostrar el panel de selección' : 'Ocultar el panel de selección';
+}
+panelHandle.addEventListener('click', () => setPanelCollapsed(selectionPanel.dataset.collapsed !== 'true'));
 
 // Leyenda del plano (U4): un popover desde la barra de período.
 const legendToggle = document.querySelector('#legend-toggle');
