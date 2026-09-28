@@ -440,7 +440,7 @@ distingue, hay que dejar de distinguir.
 - **Background:** el fondo del estado, con el color del estado en el borde y en los `span` anidados.
 - **Shadow Strategy:** ver Elevation & Depth; el hover sube 2 px.
 - **Border:** 2 px de color de estado, 7 px en el lado izquierdo para la categoría.
-- **Internal Padding:** 11 px vertical y 12 px horizontal, en una caja fija de 272 × 118 px con el nombre arriba y la etiqueta de estado abajo a la derecha.
+- **Internal Padding:** 11 px vertical y 12 px horizontal, en una caja fija de 272 × 118 px, con la etiqueta de estado alineada a la derecha en la primera línea, el nombre de la materia en el medio y el metadato de intención y categoría abajo.
 - **Disabled:** `filter: saturate(.7)` y `cursor: not-allowed`; nunca usan solo la opacidad para decir «no disponible».
 
 ### Inputs / Fields
