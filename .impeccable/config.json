@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-09-28T02:49:36.181Z",
+        "reason": "Inter es la cara de trabajo deliberada del sistema (DESIGN.md): una sola voz tipografica, sin @font-face ni descarga de red, con caida a las fuentes del sistema. Decision del autor, no un default sin examinar."
+      }
+    ]
+  }
+}
