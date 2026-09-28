@@ -408,6 +408,14 @@ categoría de la materia.
 se pierde información, no debería estar: por eso el panel y el modal no tienen borde y se apoyan en su
 sombra.
 
+**La Regla del Trazo que Cruza.** Las correlatividades se dibujan con dos trazos y el trazo dice una sola
+cosa: si la flecha cruza por encima de otras columnas del plano. `routed` —punteado— une materias
+separadas por dos columnas o más; `solid` —continuo— une columnas contiguas, incluida la misma. Cuando
+la distinción no tenía regla, catorce de veintiséis flechas iban punteadas y el trazo no significaba
+nada; con la regla aplicada quedan tres, y las tres son los tramos largos. Un trazo sin criterio es
+decoración con apariencia de dato, y la leyenda del plano lo delata: si no se puede nombrar qué
+distingue, hay que dejar de distinguir.
+
 ## Components
 
 ### Buttons

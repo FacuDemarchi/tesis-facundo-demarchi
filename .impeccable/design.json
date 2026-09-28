@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-28T16:10:00Z",
+  "generatedAt": "2026-09-28T17:05:00Z",
   "title": "Design System: Planificador académico para Ingeniería en Software",
   "extensions": {
     "colorMeta": {
@@ -188,7 +188,8 @@
       { "name": "La Regla de la Medida", "body": "La prosa se mide en caracteres y el dato en píxeles. El texto corrido del modal de resultados se limita con --measure-prose (65ch), un solo número para todos sus bloques: avisos, resumen de desenlace, explicación de causas, nota de simulador y nota al pie de alternativa. Las tablas, las grillas y las métricas siguen ocupando el ancho que necesitan: la medida es una regla, no un accidente del layout.", "section": "typography" },
       { "name": "La Regla de la Sombra con Papel", "body": "Cada nivel de sombra pertenece a una capa concreta: tarjeta, panel, modal. Si algo flota y no es una de esas tres cosas, no lleva sombra.", "section": "elevation" },
       { "name": "La Regla del Foco de Dos Tonalidades", "body": "El indicador de foco es dorado por fuera y tinta por dentro: outline 3px #eba310 con offset 2px y box-shadow 0 0 0 2px #043a31. El anillo interior aporta el 11.81:1 que el dorado no tiene sobre fondos claros, y el dorado aporta el 5.91:1 que la tinta no tiene sobre la barra verde profunda. Ninguna regla que declare box-shadow sobre un elemento enfocable puede pisar ese anillo.", "section": "elevation" },
-      { "name": "La Regla del Borde que Informa", "body": "Ningún borde existe solo para decorar. Si un borde se elimina y no se pierde información, no debería estar: por eso el panel y el modal no tienen borde y se apoyan en su sombra.", "section": "shapes" }
+      { "name": "La Regla del Borde que Informa", "body": "Ningún borde existe solo para decorar. Si un borde se elimina y no se pierde información, no debería estar: por eso el panel y el modal no tienen borde y se apoyan en su sombra.", "section": "shapes" },
+      { "name": "La Regla del Trazo que Cruza", "body": "Las correlatividades se dibujan con dos trazos y el trazo dice una sola cosa: si la flecha cruza por encima de otras columnas del plano. Punteado une materias separadas por dos columnas o más; continuo une columnas contiguas, incluida la misma. Un trazo sin criterio es decoración con apariencia de dato.", "section": "shapes" }
     ],
     "dos": [
       "Do usá el verde institucional para lo que confirma y avanza, y el dorado solo para atención y foco.",
