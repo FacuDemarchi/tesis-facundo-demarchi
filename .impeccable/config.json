@@ -8,6 +8,51 @@
         "value": "inter",
         "createdAt": "2026-09-28T02:49:36.181Z",
         "reason": "Inter es la cara de trabajo deliberada del sistema (DESIGN.md): una sola voz tipografica, sin @font-face ni descarga de red, con caida a las fuentes del sistema. Decision del autor, no un default sin examinar."
+      },
+      {
+        "rule": "edge-flush-cards",
+        "value": "*",
+        "files": [
+          "panel-seleccion/index.html"
+        ],
+        "createdAt": "2026-09-28T16:39:37.375Z",
+        "reason": "El lienzo es un contenedor con scroll: en reposo la columna del borde queda a medio ver, y al final del recorrido hay 52px de aire y ninguna tarjeta cortada. Medido en los dos extremos del scroll."
+      },
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "*/index.html"
+        ],
+        "createdAt": "2026-09-28T16:39:37.397Z",
+        "reason": "El rayado diagonal es la cuarta senal redundante del estado sin oferta o bloqueada, junto con color, borde y simbolo. Lo exige La Regla del Piso Redundante de DESIGN.md."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "*/styles.css"
+        ],
+        "createdAt": "2026-09-28T16:39:37.418Z",
+        "reason": "El borde izquierdo no decora: codifica la categoria de la materia (Proceso, Req. SA, Req. PP, General) y el estado, y la leyenda del plano ahora lo nombra. Las reglas de 3 a 5px marcan bloques de explicacion y avisos; DESIGN.md lo documenta en La Regla del Borde que Informa."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "*/index.html"
+        ],
+        "createdAt": "2026-09-28T16:39:37.439Z",
+        "reason": "Mismo caso que en las hojas: el borde izquierdo informa categoria o estado, documentado en La Regla del Borde que Informa de DESIGN.md."
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "panel-seleccion/index.html"
+        ],
+        "createdAt": "2026-09-28T16:41:31.794Z",
+        "reason": "Es la sombra de elevacion de la leyenda flotante (--shadow-panel, la misma del panel y del modal), y cae sobre el papel del lienzo, no sobre la barra. DESIGN.md exige que las capas flotantes se definan por su sombra: sin ella son un borde, que la misma regla prohibe. El detector la lee como glow porque su ancestro es la barra verde."
       }
     ]
   }
