@@ -79,7 +79,7 @@ verificación renderizada —no con el reporte del que escribe— en cada tarea.
 | Tarea | Commit | Verificación |
 | --- | --- | --- |
 | T1 · confirmación visible | `9a118e0` | Medición renderizada: franja visible tras confirmar, 12px, `--green-soft` sobre la barra oscura a **10,97:1**, 1 línea en 1400×900 y 3 líneas envueltas en 390×844 sin recorte ni scroll horizontal, y `display:none` en reposo (`barHeight` 73 en escritorio y 243 en móvil, sin cambio respecto de antes de la feature). |
-| T2 · contador sin corte | — | (pendiente) |
+| T2 · contador sin corte | `5f2d3bc` | Medición renderizada: contenedor 324/324 en 1400×900 y 322/322 en 390×844, sin recorte en ningún estado, sin scroll horizontal en el panel, los dos contadores en filas de 17 px, y el estado de exceso intacto (`Bimestrales 3/1` en `rgb(185,28,28)` con el tope en 1). El separador `-` ya no está en el DOM. |
 | T3 · polaridad de días | — | (pendiente) |
 | T4 · plano angosto | — | **bloqueada por decisión del autor** |
 | T5 · borde dorado | — | (pendiente) |
