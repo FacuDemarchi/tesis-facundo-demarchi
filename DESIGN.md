@@ -66,7 +66,7 @@ typography:
     fontWeight: 700
   meta:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
-    fontSize: "9px"
+    fontSize: "11px"
   label:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "11px"
@@ -85,7 +85,7 @@ typography:
     fontWeight: 800
   micro:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
-    fontSize: "8px"
+    fontSize: "11px"
     fontWeight: 800
     letterSpacing: "0.04em"
   reading-micro:
@@ -278,8 +278,13 @@ está instalada, sin `@font-face` ni descarga de red.
 - **Body** (400–700, 12px, alto de línea 1.4): el grueso de la interfaz. Es el tamaño dominante del sistema, con 23 usos.
 - **Body small** (700, 11px): alternadores de día y encabezados de la grilla semanal.
 - **Label** (700, 11px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, columnas de la grilla semanal.
-- **Meta** (400, 9px): el renglón de cuatrimestre de la tarjeta de materia.
-- **Micro** (800, 8px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema y existe solo porque el estado tiene cuatro señales redundantes.
+- **Meta** (400, 11px): el renglón de cuatrimestre de la tarjeta de materia.
+- **Micro** (800, 11px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema.
+
+**Un solo piso, tres roles.** `Body small`, `Meta`, `Label` y `Micro` convergen en **11 px** y se distinguen por
+peso, caja, tracking y color, no por tamaño. Es la consecuencia buscada: el sistema perdió su sótano de 8 px
+y la rampa en píxeles pasó de diez valores a siete. Un texto que baja de 11 px no está en la rampa, sin
+excepción y sin señal redundante que lo rescate.
 
 **Escala de lectura (`rem`).** La vista institucional es una superficie de lectura, así que su rampa se
 mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como token en el `:root` de
@@ -297,18 +302,17 @@ mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como t
 **La Regla de una Sola Voz.** No hay fuente de display decorativa. Si algo necesita destacarse, sube de
 peso o de tamaño, o pasa a mayúsculas espaciadas.
 
-**La Regla del Piso Redundante.** Ningún texto funcional del plano baja de 11 px. La única excepción es
-la etiqueta de estado de la tarjeta de materia: 8 px dentro de una caja fija de 272×118 px, y solo
-porque el estado se dice cuatro veces —color, borde, símbolo y rayado—. Bajar del piso exige traer esa
-redundancia encima; sin ella, el texto sube. El metadato de 9 px de la misma tarjeta es el otro
-habitante del sótano, por la misma razón: comparte una caja que no puede crecer.
+**La Regla del Piso Redundante.** Ningún texto funcional del plano baja de 11 px, sin excepción. La
+redundancia sigue siendo obligatoria —cada estado se dice con color, borde, símbolo, caja y patrón— pero ya
+no compra tamaño: las cuatro señales hacen legible el estado, no autorizan a encogerlo. Un texto que no
+puede leerse no se salva con otras tres señales.
 
 **La Regla de las Dos Escalas.** El plano del estudiante se mide en píxeles y su rampa es deliberada:
-nueve pasos, de 8 a 22 px, con el 12 px como centro de gravedad y el 11 px como piso de todo texto
-funcional. El 10 px quedó retirado: no había rol que no pudiera nombrarse un paso más arriba. La vista
-institucional se mide en `rem` porque es una superficie de lectura, no un plano: siete pasos, cada uno
-nombrable por su propósito. Las dos escalas se encuentran en 12 px, y ese encuentro es lo que sostiene
-una sola voz entre el plano y la lectura.
+siete pasos, de 11 a 22 px, con el 12 px como centro de gravedad y el 11 px como piso de todo texto
+funcional. El 10 px y el 8 px quedaron retirados: la rampa empezó con diez valores y un sótano, y terminó
+con siete y un solo piso. La vista institucional se mide en `rem` porque es una superficie de lectura, no
+un plano: siete pasos, cada uno nombrable por su propósito. Las dos escalas se encuentran en 12 px, y ese
+encuentro es lo que sostiene una sola voz entre el plano y la lectura.
 
 **La Regla del Paso Nombrable.** Un paso existe si se puede nombrar por su propósito. La rampa de
 lectura llegó a tener quince valores distintos; se consolidó a siete. Los vecinos que se separaban por
@@ -325,10 +329,11 @@ que el piso sube.
 
 **La Regla de la Medida.** La prosa se mide en caracteres y el dato en píxeles. El texto corrido del
 modal de resultados se limita con `--measure-prose` (`65ch`), un solo número para todos sus bloques:
-avisos, resumen de desenlace, explicación de causas, nota de simulador y nota al pie de alternativa.
-Las tablas, las grillas y las métricas siguen ocupando el ancho que necesitan. Un párrafo que comparte
-el ancho de una tabla de 1140 px no se vuelve legible por tener el tamaño correcto: la medida es una
-regla, no un accidente del layout.
+avisos, resumen de desenlace, explicación de causas, nota de simulador y nota al pie de alternativa. La
+medida se declara **sobre el elemento que tiene el texto**, nunca sobre su contenedor: `ch` se resuelve
+contra el `font-size` del propio elemento, y un `65ch` heredado de un contenedor de 16 px da casi el doble
+de caracteres por línea en un párrafo de 13 px. Las tablas, las grillas y las métricas siguen ocupando el
+ancho que necesitan: la medida es una regla, no un accidente del layout.
 
 ## Layout
 
@@ -379,7 +384,11 @@ panel, modal. Si algo flota y no es una de esas tres cosas, no lleva sombra.
 `outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31`. El anillo interior
 aporta el 11.81:1 que el dorado no tiene sobre fondos claros, y el dorado aporta el 5.91:1 que la tinta
 no tiene sobre la barra verde profunda. Ninguna regla que declare `box-shadow` sobre un elemento
-enfocable puede pisar ese anillo: si necesita su propia sombra, la incluye primero en su lista.
+enfocable puede pisar ese anillo: si necesita su propia sombra, la incluye primero en su lista. El lienzo
+del plano es el único caso **full-bleed**: ahí el anillo se compone **dentro** de la caja
+(`outline-offset: -3px` más `inset`), porque `html` y `body` recortan con `overflow: hidden` y un anillo
+exterior se perdería contra el borde de la ventana. El orden no cambia: dorado contra el borde, tinta por
+dentro.
 
 ## Shapes
 
@@ -403,7 +412,7 @@ sombra.
 
 ### Buttons
 - **Shape:** esquinas de 7 a 8 px, alto mínimo 32 a 42 px según superficie, texto a 12–13 px en peso 800.
-- **Commit (verde):** relleno institucional con texto blanco (`padding: 10px 13px`). Es la acción que avanza: confirmar la etapa, aceptar el plan, confirmar la inscripción simulada. Hover a verde profundo. Deshabilitado con opacidad .45 y `cursor: not-allowed`.
+- **Commit (verde):** relleno institucional con texto blanco (`padding: 10px 13px`). Es la acción que avanza: confirmar la etapa, aceptar el plan, confirmar la inscripción simulada. El botón que confirma la inscripción dentro del modal también va en verde: es una confirmación, no una advertencia. Hover a verde profundo. Deshabilitado con opacidad .45 y `cursor: not-allowed`.
 - **Attention (dorado):** el CTA que abre la etapa en la barra de período, con tinta oscura encima y texto en peso 800. Hover a dorado claro. Es el único botón dorado de la interfaz.
 - **Secondary:** fondo blanco, borde de línea fuerte, tinta institucional. Cancelar, cerrar, volver a ejecutar.
 - **Alerta (ámbar):** borde y texto en la familia de advertencia sobre blanco, con hover sobre `#ffedd5`. Son las recuperaciones de un desenlace no viable.
