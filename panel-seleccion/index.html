@@ -24,6 +24,7 @@
       <button type="button" id="primary-action" class="primary-action">Iniciar la inscripción</button>
       <button type="button" id="legend-toggle" aria-expanded="false" aria-controls="legend-panel">Leyenda</button>
     </nav>
+    <p id="selection-status" aria-live="polite"></p>
 
     <div id="legend-panel" class="legend-panel" hidden aria-labelledby="legend-title">
       <h2 id="legend-title">Leyenda del plano</h2>
@@ -70,13 +71,14 @@
     <aside id="selection-panel" class="selection-panel" aria-label="Panel de selección de materias" hidden>
       <button type="button" id="panel-collapse" class="panel-handle" aria-expanded="true" aria-controls="panel-body">Ocultar el panel de selección</button>
       <div id="panel-cap-line" class="panel-cap-line">
-        <div class="panel-cap-counters"><span class="cap-inline" data-cap="bimestre" data-over-cap="false"></span><span class="cap-separator" aria-hidden="true">-</span><span class="cap-inline" data-cap="cuatrimestre" data-over-cap="false"></span></div>
+        <div class="panel-cap-counters"><span class="cap-inline" data-cap="bimestre" data-over-cap="false"></span><span class="cap-inline" data-cap="cuatrimestre" data-over-cap="false"></span></div>
         <label class="bimester-limit-control" for="bimester-limit">Máximo por bimestre<select id="bimester-limit" name="bimester-limit"><option value="1">1 materia</option><option value="2">2 materias</option><option value="3" selected>3 materias</option></select></label>
       </div>
 
       <section class="panel-section availability-section" aria-labelledby="availability-title">
         <h2 id="availability-title">Restricción</h2>
-        <div id="unavailable-days" class="day-toggles" aria-label="Días en los que no puede asistir">
+        <p class="availability-hint" id="availability-hint">Días en los que no puedo asistir.</p>
+        <div id="unavailable-days" class="day-toggles" role="group" aria-labelledby="availability-title availability-hint">
           <button type="button" data-unavailable-day="lunes" aria-pressed="false">lunes</button>
           <button type="button" data-unavailable-day="martes" aria-pressed="false">martes</button>
           <button type="button" data-unavailable-day="miércoles" aria-pressed="false">miércoles</button>
@@ -128,8 +130,6 @@
       </div>
     </footer>
   </section>
-  <p id="selection-status" class="sr-only" aria-live="polite"></p>
-
   <script src="../comun/datos-simulados.js"></script>
   <script src="../comun/resultados-simulados.js"></script>
   <script src="app.js?v=20"></script>
