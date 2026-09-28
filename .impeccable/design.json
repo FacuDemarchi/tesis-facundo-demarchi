@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-27T21:33:00Z",
+  "generatedAt": "2026-09-28T01:45:00Z",
   "title": "Design System: Planificador académico para Ingeniería en Software",
   "extensions": {
     "colorMeta": {
@@ -70,7 +70,14 @@
       "subhead": { "displayName": "Subhead", "purpose": "El nombre del plan y de la carrera dentro del h1 de la barra de período. 14px, peso 800." },
       "title-lg": { "displayName": "Title grande", "purpose": "Encabezado de alternativa dentro del modal. 16px, peso 800." },
       "label": { "displayName": "Label", "purpose": "Etiquetas en mayúsculas espaciadas de la barra de período, encabezados de sección y grilla semanal. 10-11px." },
-      "micro": { "displayName": "Micro", "purpose": "Etiqueta de estado de la tarjeta y sello MARCADA. Piso de 8-9px, siempre con señales redundantes." }
+      "micro": { "displayName": "Micro", "purpose": "Etiqueta de estado de la tarjeta y sello MARCADA. Piso de 8-9px, siempre con señales redundantes." },
+      "reading-micro": { "displayName": "Lectura: micro", "purpose": "Etiquetas en mayúsculas y piso de la escala de lectura. .75rem = 12px, peso 800." },
+      "reading-label": { "displayName": "Lectura: etiqueta", "purpose": "Cromo de control y etiquetas secundarias: etiqueta de período, controles, tooltip. .8rem = 12.8px." },
+      "reading-body-sm": { "displayName": "Lectura: cuerpo chico", "purpose": "Prosa secundaria, listas y filas de definición. .84rem = 13.44px." },
+      "reading-body": { "displayName": "Lectura: cuerpo", "purpose": "Prosa de lectura: avisos de datos simulados, línea de resumen, actor. .9rem = 14.4px." },
+      "reading-title-sm": { "displayName": "Lectura: título chico", "purpose": "Nombre del plan y de la carrera, valores de resumen, título de tarjeta. 1rem = 16px, peso 800." },
+      "reading-value": { "displayName": "Lectura: valor", "purpose": "El valor destacado que se escanea en la fila de categoría. 1.08rem = 17.28px, peso 800." },
+      "reading-display": { "displayName": "Lectura: display", "purpose": "Título de la superficie de lectura. 1.35rem = 21.6px, peso 800." }
     },
     "shadows": [
       { "name": "card-rest", "value": "0 6px 14px #043a3124", "purpose": "La materia descansa sobre el plano." },

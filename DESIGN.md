@@ -88,6 +88,35 @@ typography:
     fontSize: "8px"
     fontWeight: 800
     letterSpacing: "0.04em"
+  reading-micro:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: ".75rem"
+    fontWeight: 800
+    letterSpacing: "0.06em"
+  reading-label:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: ".8rem"
+    fontWeight: 700
+  reading-body-sm:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: ".84rem"
+  reading-body:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: ".9rem"
+    lineHeight: 1.45
+  reading-title-sm:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "1rem"
+    fontWeight: 800
+  reading-value:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "1.08rem"
+    fontWeight: 800
+  reading-display:
+    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    fontSize: "1.35rem"
+    fontWeight: 800
+    letterSpacing: "-0.02em"
 rounded:
   badge: "4px"
   badge-lg: "5px"
@@ -252,6 +281,18 @@ está instalada, sin `@font-face` ni descarga de red.
 - **Meta** (400, 9px): el renglón de cuatrimestre de la tarjeta de materia.
 - **Micro** (800, 8px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema y existe solo porque el estado tiene cuatro señales redundantes.
 
+**Escala de lectura (`rem`).** La vista institucional es una superficie de lectura, así que su rampa se
+mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como token en el `:root` de
+`institucional-demanda/styles.css`, y ningún `font-size` de esa hoja es un literal:
+
+- **`--fs-micro`** (`.75rem`, 12 px, 800, mayúsculas): etiquetas en mayúsculas y piso de la escala — marca, encabezados de sección, chips de estado.
+- **`--fs-label`** (`.8rem`, 12.80 px): cromo de control y etiquetas secundarias — etiqueta de período, controles, tooltip, código de materia, filas de detalle del plan global.
+- **`--fs-body-sm`** (`.84rem`, 13.44 px): cuerpo chico — prosa secundaria, listas y filas de definición.
+- **`--fs-body`** (`.9rem`, 14.40 px): cuerpo de lectura — avisos de datos simulados, línea de resumen, actor.
+- **`--fs-title-sm`** (`1rem`, 16 px): título chico — nombre del plan y de la carrera, valores de resumen, título de tarjeta.
+- **`--fs-value`** (`1.08rem`, 17.28 px): valor destacado — el número que se escanea en la fila de categoría.
+- **`--fs-display`** (`1.35rem`, 21.60 px): display — título de la superficie.
+
 ### Named Rules
 **La Regla de una Sola Voz.** No hay fuente de display decorativa. Si algo necesita destacarse, sube de
 peso o de tamaño, o pasa a mayúsculas espaciadas.
@@ -261,11 +302,21 @@ px, tiene que venir acompañado de color, forma y patrón.
 
 **La Regla de las Dos Escalas.** El plano del estudiante se mide en píxeles y su rampa es deliberada:
 diez pasos, de 8 a 22 px, con el 12 px como centro de gravedad. La vista institucional se mide en `rem`
-porque es una superficie de lectura, no un plano. **Deuda declarada**: esa segunda rampa tiene quince
-valores distintos y varios vecinos que se separan por 0.01 rem —`.82` contra `.83`, `.72` contra `.73`—,
-que a 16 px de base no son dos roles sino dos números. Consolidarla a siete pasos es trabajo pendiente,
-no una decisión tomada: cualquier paso que no se pueda nombrar por su propósito no pertenece a la
-escala.
+porque es una superficie de lectura, no un plano: siete pasos, cada uno nombrable por su propósito. Las
+dos escalas se encuentran en 12 px, y ese encuentro es lo que sostiene una sola voz entre el plano y la
+lectura.
+
+**La Regla del Paso Nombrable.** Un paso existe si se puede nombrar por su propósito. La rampa de
+lectura llegó a tener quince valores distintos; se consolidó a siete. Los vecinos que se separaban por
+0.01 rem —`.82` contra `.83`, `.72` contra `.73`— no eran dos roles sino dos números. Un valor nuevo
+que no se pueda nombrar no entra a la escala: entra a un paso existente. Y si dos pasos dejan de
+distinguirse en el uso, sobra el que no tenga propósito propio — hoy se sostienen `--fs-label`
+(12.80 px) y `--fs-body-sm` (13.44 px), separados por 0.64 px, porque uno es cromo de control y el otro
+prosa.
+
+**La Regla del Piso de 12 px.** Ningún texto de la superficie de lectura baja de 12 px. En el plano el
+piso es 8 px y existe solo porque el estado tiene cuatro señales redundantes; en la lectura no hay
+señal redundante que rescate a un texto más chico que el piso, así que el piso sube.
 
 ## Layout
 
@@ -365,8 +416,8 @@ centro, y la navegación a la derecha con botones de 38 px de alto mínimo. Sus 
 durante la transacción de selección en lugar de permitir un cambio a mitad de camino.
 
 ### Chip de estado (institucional)
-Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsculas a 0.7 rem; cuando la
-demanda queda insatisfecha pasan al fondo de advertencia con tinta `#8e3608`.
+Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsculas en `--fs-micro`
+(12 px); cuando la demanda queda insatisfecha pasan al fondo de advertencia con tinta `#8e3608`.
 
 ### Aviso de datos simulados
 Bloque con regla izquierda de 5 px, fondo `#eeeafd` y tinta `#6a2482` en la vista institucional; línea
