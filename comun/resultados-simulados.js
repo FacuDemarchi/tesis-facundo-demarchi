@@ -28,14 +28,14 @@ window.RESULTADOS_SIMULADOS = {
             id: 'ALT-2', titulo: 'Sin huecos entre clases', nota: 'Es factible: respeta cada restricción dura, pero no es óptima porque usa 4 días en lugar de 2.',
             asignaciones: [
               { materiaId: 'C19', catedraId: 'CAT-C19-02', docenteId: 'D09', aulaId: 'B-203', franjas: [{ dia: 'martes', desde: '10:00', hasta: '12:00' }, { dia: 'jueves', desde: '10:00', hasta: '12:00' }] },
-              { materiaId: 'C20', catedraId: 'CAT-C20-04', docenteId: 'D08', aulaId: 'B-201', franjas: [{ dia: 'miercoles', desde: '08:00', hasta: '10:00' }, { dia: 'viernes', desde: '08:00', hasta: '10:00' }] },
+              { materiaId: 'C20', catedraId: 'CAT-C20-04', docenteId: 'D08', aulaId: 'B-201', franjas: [{ dia: 'miércoles', desde: '08:00', hasta: '10:00' }, { dia: 'viernes', desde: '08:00', hasta: '10:00' }] },
               { materiaId: 'C23', catedraId: 'CAT-C23-01', docenteId: 'D04', aulaId: 'A-102', franjas: [{ dia: 'martes', desde: '08:00', hasta: '10:00' }] }
             ]
           },
           {
             id: 'ALT-3', titulo: 'Una clase por día', nota: 'Distribuye la cursada en cinco días dentro de esta combinación simulada.',
             asignaciones: [
-              { materiaId: 'C19', catedraId: 'CAT-C19-01', docenteId: 'D01', aulaId: 'A-102', franjas: [{ dia: 'lunes', desde: '18:00', hasta: '20:00' }, { dia: 'miercoles', desde: '18:00', hasta: '20:00' }] },
+              { materiaId: 'C19', catedraId: 'CAT-C19-01', docenteId: 'D01', aulaId: 'A-102', franjas: [{ dia: 'lunes', desde: '18:00', hasta: '20:00' }, { dia: 'miércoles', desde: '18:00', hasta: '20:00' }] },
               { materiaId: 'C20', catedraId: 'CAT-C20-02', docenteId: 'D03', aulaId: 'B-201', franjas: [{ dia: 'martes', desde: '18:00', hasta: '20:00' }, { dia: 'jueves', desde: '18:00', hasta: '20:00' }] },
               { materiaId: 'C23', catedraId: 'CAT-C23-02', docenteId: 'D07', aulaId: 'A-102', franjas: [{ dia: 'viernes', desde: '10:00', hasta: '12:00' }] }
             ]
@@ -64,7 +64,7 @@ window.RESULTADOS_SIMULADOS = {
             id: 'ALT-2', titulo: 'Sin huecos entre clases', nota: 'Es factible: respeta cada restricción dura, pero no es óptima porque usa 4 días en lugar de 2.',
             asignaciones: [
               { materiaId: 'C19', catedraId: 'CAT-C19-02', docenteId: 'D09', aulaId: 'B-203', franjas: [{ dia: 'martes', desde: '10:00', hasta: '12:00' }, { dia: 'jueves', desde: '10:00', hasta: '12:00' }] },
-              { materiaId: 'C20', catedraId: 'CAT-C20-04', docenteId: 'D08', aulaId: 'B-201', franjas: [{ dia: 'miercoles', desde: '08:00', hasta: '10:00' }, { dia: 'viernes', desde: '08:00', hasta: '10:00' }] },
+              { materiaId: 'C20', catedraId: 'CAT-C20-04', docenteId: 'D08', aulaId: 'B-201', franjas: [{ dia: 'miércoles', desde: '08:00', hasta: '10:00' }, { dia: 'viernes', desde: '08:00', hasta: '10:00' }] },
               { materiaId: 'C23', catedraId: 'CAT-C23-01', docenteId: 'D04', aulaId: 'A-102', franjas: [{ dia: 'martes', desde: '08:00', hasta: '10:00' }] }
             ]
           }

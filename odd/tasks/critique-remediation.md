@@ -99,8 +99,12 @@ inspection pass over everything above.
 1. Rendered characters per line land inside 45–75 for every prose block in the modal.
 2. The rendered detector's `undersized-ui-text` findings reach **zero** on the plan surfaces.
 3. The canvas focus ring is the two-tone ring, visible at 1400×900 and at 390×844, and never clipped.
-4. The day rename is exhaustive: zero unaccented `miercoles`/`sabado` in any `.js` or `.html`, and the
-   weekly grid still renders every day after it.
+4. The day rename is exhaustive — zero unaccented `miercoles`/`sabado` — and the vocabulary still round-trips:
+   the toggle's key, the per-period blocked-day set and the announcement all use the accented form, and the
+   grids render the data's days accented. **The grids do not respond to a restriction**, and that is by
+   design: the alternatives are fixtures and the solver is simulated through the demonstrator select, so
+   the correct check is that the key still matches, not that a column disappears. The first version of this
+   criterion assumed the grid would react and was wrong.
 5. The four sheets agree on every shared role; no card clips its text, in the worst case the render can
    find.
 6. `impeccable detect` introduces no new rule, and each closed rule is reported with its cause.
@@ -135,7 +139,22 @@ before and after: the static scan never saw the card text, because the state lab
 injected by the script. The rule that counted 92 of them only exists in the rendered page. A static scan
 that comes back clean says nothing about the legibility of what the runtime builds.
 
-### A note on the visual check
+### U3 — copy
+
+| Claim | Evidence |
+| --- | --- |
+| Exhaustive rename | 15 occurrences replaced (12 `miercoles`, 3 `sabado`) across `comun/datos-simulados.js`, `comun/resultados-simulados.js`, `panel-seleccion/app.js` and `panel-seleccion/index.html`; `grep` for the unaccented forms returns **0**, and `node --check` passes on all three scripts |
+| The days render accented | grid headers read «Lunes, Martes, Miércoles, Jueves, Viernes»; the toggles read «Miércoles» and «Sábado» |
+| The key still matches | clicking the accented toggle flips `aria-pressed` to `true` and relabels to «Miércoles · no puedo asistir», which is the same round trip the blocked-day set uses |
+| No behaviour was broken | zero page errors and zero console errors; the grids read **identically before and after** the restriction (grid 1 `Martes/Jueves`, grid 2 `Martes/Miércoles/Jueves/Viernes`, grid 3 `Lunes…Viernes`) |
+| The mixed-unit phrase | `Cuatrimestrales 3/6 · 1A sin datos` → `· 1A sin oferta publicada`, reusing the wording the codebase already uses at `app.js:602` and `resultados-simulados.js:94` |
+
+**A measurement trap worth recording.** An earlier run appeared to show the first alternative losing its
+Wednesday column after the restriction, which would have been a real defect. It was not: one snapshot was
+taken while the modal was hidden, and `innerText` skips `text-transform` on elements without layout, so the
+two snapshots were not comparable. Comparing a hidden render against a visible one is not a comparison.
+
+### A note on the visual check (U2)
 
 The card-level visual inspection was obstructed: the floating selection panel paints over the plan and
 covered the marked card's right corner, which is where the `MARCADA` stamp lives. That is the documented

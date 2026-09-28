@@ -306,7 +306,7 @@ function renderPanel() {
   const cuatrimestreCap = document.querySelector('[data-cap="cuatrimestre"]');
   if (cuatrimestreCap) {
     const cuatrimestreLimit = Math.min(6, 2 * bimesterLimit);
-    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/${cuatrimestreLimit} · ${siblingBimester()} sin datos`;
+    cuatrimestreCap.textContent = `Cuatrimestrales ${selected.length}/${cuatrimestreLimit} · ${siblingBimester()} sin oferta publicada`;
     cuatrimestreCap.dataset.overCap = String(selected.length > cuatrimestreLimit);
   }
 
@@ -397,7 +397,7 @@ function aulaLabel(aulaId) {
   return data.aulas.find(aula => aula.id === aulaId)?.nombre || aulaId;
 }
 function renderWeeklyGrid(alternative) {
-  const dayOrder = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+  const dayOrder = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
   const franjas = alternative.asignaciones.flatMap(assignment => assignment.franjas.map(franja => ({ ...franja, assignment })));
   if (!franjas.length) return '';
   const days = dayOrder.filter(day => franjas.some(franja => franja.dia === day));

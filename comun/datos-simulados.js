@@ -63,7 +63,7 @@ window.DATOS_SIMULADOS = {
       cupo: 18,
       franjas: [
         { dia: 'lunes', desde: '18:00', hasta: '20:00' },
-        { dia: 'miercoles', desde: '18:00', hasta: '20:00' }
+        { dia: 'miércoles', desde: '18:00', hasta: '20:00' }
       ]
     },
     // C20 conserva dos secciones llenas; los inscriptos fuera de cupo se atribuyen solo a la materia.
@@ -114,7 +114,7 @@ window.DATOS_SIMULADOS = {
       aulaId: 'SIM-1B-C27-01',
       cupo: 19,
       franjas: [
-        { dia: 'miercoles', desde: '20:00', hasta: '22:00' }
+        { dia: 'miércoles', desde: '20:00', hasta: '22:00' }
       ]
     },
     {
@@ -159,7 +159,7 @@ window.DATOS_SIMULADOS = {
       aulaId: 'A-102',
       cupo: 20,
       franjas: [
-        { dia: 'miercoles', desde: '14:00', hasta: '16:00' }
+        { dia: 'miércoles', desde: '14:00', hasta: '16:00' }
       ]
     },
     {
@@ -182,9 +182,9 @@ window.DATOS_SIMULADOS = {
     { dia: 'lunes', desde: '19:00', hasta: '21:00' },
     { dia: 'martes', desde: '08:00', hasta: '10:00' },
     { dia: 'martes', desde: '18:00', hasta: '20:00' },
-    { dia: 'miercoles', desde: '14:00', hasta: '16:00' },
-    { dia: 'miercoles', desde: '18:00', hasta: '20:00' },
-    { dia: 'miercoles', desde: '20:00', hasta: '22:00' },
+    { dia: 'miércoles', desde: '14:00', hasta: '16:00' },
+    { dia: 'miércoles', desde: '18:00', hasta: '20:00' },
+    { dia: 'miércoles', desde: '20:00', hasta: '22:00' },
     { dia: 'jueves', desde: '10:00', hasta: '12:00' },
     { dia: 'jueves', desde: '18:00', hasta: '20:00' },
     { dia: 'viernes', desde: '16:00', hasta: '18:00' }
