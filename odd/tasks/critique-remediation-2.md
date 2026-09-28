@@ -78,4 +78,13 @@ verificación renderizada —no con el reporte del que escribe— en cada tarea.
 
 | Tarea | Commit | Verificación |
 | --- | --- | --- |
-| — | — | (pendiente) |
+| T1 · confirmación visible | `9a118e0` | Medición renderizada: franja visible tras confirmar, 12px, `--green-soft` sobre la barra oscura a **10,97:1**, 1 línea en 1400×900 y 3 líneas envueltas en 390×844 sin recorte ni scroll horizontal, y `display:none` en reposo (`barHeight` 73 en escritorio y 243 en móvil, sin cambio respecto de antes de la feature). |
+| T2 · contador sin corte | — | (pendiente) |
+| T3 · polaridad de días | — | (pendiente) |
+| T4 · plano angosto | — | **bloqueada por decisión del autor** |
+| T5 · borde dorado | — | (pendiente) |
+| T6 · `DESIGN.md` | — | (pendiente) |
+
+## Efectos medidos que quedan abiertos
+
+- **La barra crece cuando aparece un anuncio**: 73 → 114 px en 1400×900 (una línea) y 243 → 301 px en 390×844 (tres líneas). El salto ocurre una sola vez en escritorio (los mensajes miden una línea) y **oscila en móvil** entre 1 y 3 líneas según el mensaje. Las dos salidas son reservar la línea siempre (barra más alta y estable, sin espacio muerto cuando no hay mensaje) o dejarlo como está (barra más baja, salto de una línea al aparecer el primer anuncio). Es una decisión de presupuesto de la barra y se resuelve junto con **T4**, que es la dueña de ese presupuesto en pantallas angostas.
