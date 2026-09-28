@@ -50,6 +50,7 @@ const data = window.DATOS_SIMULADOS || { catedras: [], docentes: [], aulas: [] }
 const resultsData = window.RESULTADOS_SIMULADOS || { periodos: {} };
 const columns = document.querySelector('#columns');
 const status = document.querySelector('#selection-status');
+const announcement = document.querySelector('#selection-announcement');
 const selectionPanel = document.querySelector('#selection-panel');
 const graphFrame = document.querySelector('#graph-frame');
 const primaryAction = document.querySelector('#primary-action');
@@ -340,7 +341,14 @@ function updateInterface() {
   renderPanel();
   drawConnections();
 }
-function announceSelection(message) { status.textContent = message; }
+// La franja visible vive en la barra de período, que se vuelve `inert` mientras el diálogo de
+// resultados está abierto, y un subárbol inerte sale del árbol de accesibilidad: ahí un anuncio
+// no existe para la tecnología asistiva. El anuncio va a una región fuera de esas ramas y la
+// franja visible es su espejo. Un canal, dos presentaciones.
+function announceSelection(message) {
+  status.textContent = message;
+  if (announcement) announcement.textContent = message;
+}
 function markCourse(id) {
   const course = courses.find(item => item.id === id);
   if (currentDraft().has(id)) {
