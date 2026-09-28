@@ -154,6 +154,38 @@ Wednesday column after the restriction, which would have been a real defect. It 
 taken while the modal was hidden, and `innerText` skips `text-transform` on elements without layout, so the
 two snapshots were not comparable. Comparing a hidden render against a visible one is not a comparison.
 
+### U4 — the legend (`bc2a151`)
+
+Rendered at 1400×900 and 390×844.
+
+| Claim | Evidence |
+| --- | --- |
+| The content matches the code | 8 states, each swatch's computed background resolving to its token (`--approved-bg` #dcfce7 … `--review-bg` #eeeafd) with the symbol and label taken from the `states` map; 4 categories with their border colours (Proceso #046353, Req. SA #be123c, Req. PP #c2410c, General #6d6e71) |
+| It opens and closes | opens by click and by `Enter` after Tab; closes with `Esc`, with a click outside and with its own button; `aria-expanded` tracks the state and focus returns to the toggle |
+| It is anchored, not loose | panel `top: 81px` (the bar is 73px), `parent: .period-bar`, page `scrollY = 0`, bar `top = 0`; inside the viewport at 1400 (400×574) and at 390 (366×473) |
+| The bar is intact | height 73px before and after; the primary action still visible |
+| It does not break the plan | a real mouse click on an enabled card still marks it (0 → 1) **with the legend open**, and the legend closes at the same time |
+| No noise | zero page errors, zero console errors, `node --check` passes |
+
+**Two defects I introduced and fixed before committing.** The panel was first written as a sibling of the
+header, so `top: calc(100% + 8px)` resolved against the viewport: it landed at 908px, and focusing its close
+button scrolled the page 582px and pushed the period bar off-screen. It is now a child of the bar. And the
+outside-close ran on `click`, which never reaches the document when the click lands on a course card —
+that card re-renders itself and the event's target is detached — so the legend stayed open over the plan.
+It now runs on `pointerdown` in the capture phase.
+
+### An open finding: the two arrow strokes have no rule
+
+The plan draws 12 continuous and 14 dashed correlativity arrows. Nothing in the repository documents the
+difference, and the data does not contain one: `C14→C19` is dashed while `C17→C22` is continuous, with
+identical structural signatures (same column gap, same year transition, same vertical offset). Across all
+26 edges, both strokes occur at column gaps of 1 and 2 and across the same year transitions.
+
+So the legend labels the strokes as what they are — «Trazo continuo» and «Trazo punteado» — and claims no
+meaning, because there is none to claim. Naming the difference would be inventing it. This is a decision
+for the author: make the fixture consistent, document a criterion and fix the fixture to match it, or
+accept the strokes as visual variety.
+
 ### A note on the visual check (U2)
 
 The card-level visual inspection was obstructed: the floating selection panel paints over the plan and
