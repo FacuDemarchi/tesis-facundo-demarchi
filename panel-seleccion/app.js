@@ -701,3 +701,28 @@ window.addEventListener('resize', () => {
   fitGraphToViewport();
   updatePanelSide();
 });
+
+// Leyenda del plano (U4): un popover desde la barra de período.
+const legendToggle = document.querySelector('#legend-toggle');
+const legendPanel = document.querySelector('#legend-panel');
+const legendClose = document.querySelector('#legend-close');
+function setLegendOpen(open, restoreFocus = true) {
+  legendPanel.hidden = !open;
+  legendToggle.setAttribute('aria-expanded', String(open));
+  if (restoreFocus) {
+    if (open) legendClose.focus(); else legendToggle.focus();
+  }
+}
+legendToggle.addEventListener('click', () => setLegendOpen(legendPanel.hidden));
+legendClose.addEventListener('click', () => setLegendOpen(false));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !legendPanel.hidden) setLegendOpen(false);
+});
+// Capture phase on pointerdown: a click on a course card re-renders that card, and the
+// resulting click event never reaches the document, so a click-phase handler would leave
+// the legend open on top of the plan.
+document.addEventListener('pointerdown', event => {
+  if (legendPanel.hidden) return;
+  if (event.target.closest('#legend-panel, #legend-toggle')) return;
+  setLegendOpen(false, false);
+}, true);

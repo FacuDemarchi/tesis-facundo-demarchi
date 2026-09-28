@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel de selección · Mapa de correlatividades</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <header class="period-bar">
@@ -21,7 +21,36 @@
       </div>
       <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
       <button type="button" id="primary-action" class="primary-action">Iniciar la inscripción</button>
+      <button type="button" id="legend-toggle" aria-expanded="false" aria-controls="legend-panel">Leyenda</button>
     </nav>
+
+    <div id="legend-panel" class="legend-panel" hidden aria-labelledby="legend-title">
+      <h2 id="legend-title">Leyenda del plano</h2>
+      <h3>Estado de una materia</h3>
+      <ul class="legend-states">
+        <li><span class="legend-swatch approved" aria-hidden="true">✓</span> Aprobada</li>
+        <li><span class="legend-swatch available" aria-hidden="true">•</span> Disponible</li>
+        <li><span class="legend-swatch no-offer" aria-hidden="true">—</span> Sin cátedra</li>
+        <li><span class="legend-swatch blocked" aria-hidden="true">×</span> Bloqueada</li>
+        <li><span class="legend-swatch enrolled" aria-hidden="true">I</span> Inscripta</li>
+        <li><span class="legend-swatch no-capacity" aria-hidden="true">0</span> Sin cupo</li>
+        <li><span class="legend-swatch planned" aria-hidden="true">P</span> Planificada</li>
+        <li><span class="legend-swatch review" aria-hidden="true">R</span> Solicitud en revisión</li>
+      </ul>
+      <h3>Categoría de la materia</h3>
+      <ul class="legend-categories">
+        <li><span class="legend-category category-process" aria-hidden="true"></span> Proceso</li>
+        <li><span class="legend-category category-sa" aria-hidden="true"></span> Req. SA</li>
+        <li><span class="legend-category category-pp" aria-hidden="true"></span> Req. PP</li>
+        <li><span class="legend-category category-general" aria-hidden="true"></span> General</li>
+      </ul>
+      <h3>Correlatividades</h3>
+      <ul class="legend-arrows">
+        <li><span class="legend-arrow solid" aria-hidden="true"></span> Trazo continuo</li>
+        <li><span class="legend-arrow routed" aria-hidden="true"></span> Trazo punteado</li>
+      </ul>
+      <button type="button" id="legend-close" class="legend-close">Cerrar la leyenda</button>
+    </div>
   </header>
 
   <main class="canvas">
