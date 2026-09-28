@@ -36,7 +36,7 @@ body{margin:0;background:var(--paper);color:var(--ink);display:flex;flex-directi
 button{font:inherit}
 button:focus-visible{outline:3px solid var(--focus);outline-offset:2px;box-shadow:0 0 0 2px var(--focus-inner)}
 .period-bar{flex:0 0 auto;min-height:64px;padding:9px 18px;background:var(--ink);color:var(--c-white);display:flex;align-items:center;justify-content:space-between;gap:24px}
-.period-context{display:grid;gap:2px}.period-context span,.period-display span{color:var(--line-strong);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.period-context span,.period-display span{color:var(--c-slate-teal)}.period-title{display:grid;gap:2px;margin:0;font-size:14px;font-weight:800}.period-context .period-title-name{font-size:14px;font-weight:800;letter-spacing:normal;text-transform:none;color:var(--c-white)}.period-context .simulation-notice{color:var(--green-soft);font-size:10px;font-weight:700;letter-spacing:0;text-transform:none}
+.period-context{display:grid;gap:2px}.period-context span,.period-display span{color:var(--line-strong);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.period-context span,.period-display span{color:var(--c-slate-teal)}.period-title{display:grid;gap:2px;margin:0;font-size:14px;font-weight:800}.period-context .period-title-name{font-size:14px;font-weight:800;letter-spacing:normal;text-transform:none;color:var(--c-white)}.period-context .simulation-notice{color:var(--green-soft);font-size:12px;font-weight:700;letter-spacing:0;text-transform:none}
 .period-navigation{display:flex;align-items:center;gap:10px}.period-navigation button{min-height:38px;padding:8px 12px;border:1px solid var(--line-strong);border-radius:7px;background:var(--deep);color:var(--c-white);cursor:pointer}.period-navigation button:hover:not(:disabled){background:var(--green-deep)}.period-navigation button.primary-action:hover:not(:disabled){background:var(--gold-hover);border-color:var(--gold-hover);color:var(--ink-on-gold)}.period-navigation button:disabled{cursor:not-allowed;opacity:.38}
 .period-display{min-width:210px;padding:4px 20px;text-align:center;display:grid;gap:2px}.period-display strong{font-size:15px}
 .canvas{width:100%;height:auto;min-height:0;flex:1;padding:8px;overflow-x:auto;overflow-y:hidden;background:var(--paper)}
@@ -44,18 +44,18 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:2px;box-shado
 .graph-region{transform-origin:top left}
 .graph-region{position:absolute;top:0;left:0;width:3520px;margin:0;padding:0 38px 22px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
 .year-row{height:38px;display:grid;grid-template-columns:repeat(5,1fr);gap:44px;padding:0 0}
-.year-row span{height:20px;padding-top:4px;border-radius:0 0 8px 8px;background:var(--line);text-align:center;text-transform:uppercase;font-size:10px}
+.year-row span{height:20px;padding-top:4px;border-radius:0 0 8px 8px;background:var(--line);text-align:center;text-transform:uppercase;font-size:11px;letter-spacing:.03em}
 .graph-stage{position:relative;width:3444px;min-height:930px}
 .columns{position:relative;z-index:2;display:grid;grid-template-columns:repeat(10,300px);gap:49px;height:930px}
 .term{height:930px;padding:10px 14px;border-radius:12px;background:var(--green-soft)}
-.term h2{height:34px;margin:0;text-transform:uppercase;font-size:10px;letter-spacing:.03em}
+.term h2{height:34px;margin:0;text-transform:uppercase;font-size:11px;letter-spacing:.03em}
 .term-grid{display:grid;grid-template-rows:repeat(6,118px);gap:24px}
 .course{grid-row:var(--slot);width:272px;height:118px;padding:11px 12px;border:2px solid currentColor;border-left-width:7px;border-radius:10px;background:var(--course-bg);color:var(--course-color);box-shadow:0 6px 14px var(--shadow-card);text-align:left;display:flex;flex-direction:column;justify-content:space-between;position:relative}
 .course:hover:not(:disabled):focus-visible{box-shadow:0 0 0 2px var(--focus-inner),0 10px 22px var(--shadow-card-hover)}
 .course.marked:focus-visible{box-shadow:0 0 0 2px var(--focus-inner),0 0 0 4px var(--green),0 10px 22px var(--shadow-card-marked)}
 .course strong{color:var(--ink);font-size:12px;line-height:1.25}.course strong span{color:var(--course-color)}
 .course small{color:var(--muted);font-size:9px}.course small span{color:var(--course-color)}
-.course-state{align-self:flex-end;color:var(--ink);font-size:8px;font-weight:800;text-transform:uppercase}
+.course-state{align-self:flex-end;color:var(--ink);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
 .course.approved{--course-bg:var(--approved-bg);--course-color:var(--approved);background:var(--approved-bg);color:var(--approved)}
 .course.available{--course-bg:var(--available-bg);--course-color:var(--available);background:var(--available-bg);color:var(--available)}
 .course.no-offer{--course-bg:var(--no-offer-bg);--course-color:var(--no-offer);background:repeating-linear-gradient(135deg,var(--no-offer-bg),var(--no-offer-bg) 10px,var(--stripe-no-offer) 10px,var(--stripe-no-offer) 13px);color:var(--no-offer)}
