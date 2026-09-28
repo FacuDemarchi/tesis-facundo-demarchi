@@ -106,4 +106,76 @@ notice is Body at 12px; the redundant-floor rule is restated with the new functi
 
 ## Evidence
 
-_(filled by T5)_
+Base for every comparison: `c1a60a7`, the tip of the parent branch. Change commit: `50508de` (four
+stylesheets + `DESIGN.md` + sidecar); waiver commit: `b86ec16` (`.impeccable/config.json`).
+
+### The nine declarations, as they exist on disk
+
+| # | Selector | Result | Surfaces |
+| --- | --- | --- | --- |
+| 1 | `.period-context span, .period-display span` | `font-size:11px`, `letter-spacing:.06em` | all four |
+| 2 | `.year-row span` | `font-size:11px`, `letter-spacing:.03em` | all four |
+| 3 | `.term h2` | `font-size:11px`, `letter-spacing:.03em` | all four |
+| 4 | `.period-context .simulation-notice` | `font-size:12px`, `letter-spacing:0` | all four |
+| 5 | `.course-state` | `font-size:8px`, `letter-spacing:.04em` | all four |
+| 6 | `.course.marked::after` | `font-size:8px`, `letter-spacing:.04em` | panel |
+| 7 | `.alternative-index` | `font-size:12px`, `letter-spacing:.04em` | panel |
+| 8 | `.subject-meta,.subject-motive` | `font-size:11px` | panel |
+
+### Verification, arithmetic
+
+Each of the four stylesheets was compared against its base revision with the target rules masked on
+both sides, so property order cannot hide an edit made elsewhere:
+
+- `mockup/`, `periodo-2A/`, `periodo-2B/`: bytes outside the five target rules are **identical** to
+  `c1a60a7`.
+- `panel-seleccion/`: bytes outside the eight target rules are **identical** to `c1a60a7`.
+- `font-size:10px` occurrences: **0** in all four files.
+- Distinct `font-size` values, before → after: `[8,9,10,12,14,15]` → `[8,9,11,12,14,15]` in the three
+  scenario sheets; `[8,9,10,11,12,13,14,15,16,22]` → `[8,9,11,12,13,14,15,16,22]` in the panel. Nine
+  steps in the widest surface, which is what `DESIGN.md` now states.
+- Cross-surface agreement: the five shared roles resolve to the same size and tracking in all four
+  files. No new drift between surfaces.
+
+### Detector: base against current
+
+```
+git worktree add --detach /tmp/base-plan c1a60a7
+impeccable detect .                                             # both sides
+impeccable detect --scope type mockup/ panel-seleccion/ periodo-2A/ periodo-2B/
+```
+
+| | Base `c1a60a7` | Current |
+| --- | --- | --- |
+| Repository anti-patterns | 33 | **11** |
+| Repository advisory notes | 8 | 8 |
+| Type findings in the four surfaces (scope `type`) | 20 | **0** |
+
+Per-rule delta over the whole repository, and nothing else moves: `overused-font` **−10** (closed by the
+recorded waiver, not by code), `tiny-text` **−4** and `undersized-ui-text` **−8** (closed by the
+change). No rule appears that was not there before.
+
+### What the writer caught that this plan missed
+
+The first version of the change table listed eight declarations. `panel-seleccion/` carries **five** 10px
+declarations, not four: `.subject-meta,.subject-motive` was absent from the table while the acceptance
+criteria already required `font-size:10px` to reach zero. The bounded writer stopped and reported the
+contradiction instead of inventing a value; row 9 was added and the file completed by hand. A plan whose
+table and whose acceptance criteria disagree is a plan defect, and the acceptance criterion is what
+caught it.
+
+### Limitations
+
+- **No rendered verification.** This machine has no browser and no remote debugging port. Nothing here
+  was checked in a viewport: no screenshot, no computed style, no overflow measurement. The 20 type
+  findings are gone from a static scan and the four files are provably unchanged outside nine
+  declarations; that is not the same as having looked at the result.
+- **The responsive overrides are untouched on purpose.** `.period-navigation button` still drops to 12px
+  at ≤640px (≤760px in the panel). That is text shrinking at a narrower viewport, and every fix changes
+  a narrow layout that cannot be verified here.
+- **The reading measure of the results modal is still open.** `.outcome-summary p` reaches ~150ch,
+  `.results-simulated` ~115–120ch, `.results-confirmation-hint` ~95–100ch at 12px. Constraining prose to
+  70ch means a ~450px column inside a 1140px modal: a composition decision for the author, not a
+  defect the detector reports.
+- **The 8px state tag and 9px card metadata stay**, by the author's decision, on the strength of the
+  fixed 272×118px card and the four redundant state signals.
