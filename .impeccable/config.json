@@ -31,15 +31,6 @@
         "rule": "side-tab",
         "value": "*",
         "files": [
-          "*/styles.css"
-        ],
-        "createdAt": "2026-09-28T16:39:37.418Z",
-        "reason": "El borde izquierdo no decora: codifica la categoria de la materia (Proceso, Req. SA, Req. PP, General) y el estado, y la leyenda del plano ahora lo nombra. Las reglas de 3 a 5px marcan bloques de explicacion y avisos; DESIGN.md lo documenta en La Regla del Borde que Informa."
-      },
-      {
-        "rule": "side-tab",
-        "value": "*",
-        "files": [
           "*/index.html"
         ],
         "createdAt": "2026-09-28T16:39:37.439Z",
@@ -53,6 +44,15 @@
         ],
         "createdAt": "2026-09-28T16:41:31.794Z",
         "reason": "Es la sombra de elevacion de la leyenda flotante (--shadow-panel, la misma del panel y del modal), y cae sobre el papel del lienzo, no sobre la barra. DESIGN.md exige que las capas flotantes se definan por su sombra: sin ella son un borde, que la misma regla prohibe. El detector la lee como glow porque su ancestro es la barra verde."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "*/*.css"
+        ],
+        "createdAt": "2026-09-28T19:50:07.266Z",
+        "reason": "El borde izquierdo no decora: codifica la categoria de la materia (Proceso, Req. SA, Req. PP, General) y el estado, y la leyenda del plano ahora lo nombra. Las reglas de 3 a 5px marcan bloques de explicacion y avisos; DESIGN.md lo documenta en La Regla del Borde que Informa. El alcance cubre tambien comun/escenario.css, donde vive la hoja compartida del plano."
       }
     ]
   }

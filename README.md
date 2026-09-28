@@ -24,7 +24,7 @@ Desde la raíz del repositorio:
 python3 -m http.server 8080
 ```
 
-Luego abrir `http://localhost:8080/mockup/` o el escenario correspondiente. No hay dependencias ni paso de compilación: son páginas HTML que cargan `app.js` y `styles.css`.
+Luego abrir `http://localhost:8080/mockup/` o el escenario correspondiente. No hay dependencias ni paso de compilación: son páginas HTML que cargan `app.js` y la hoja compartida de `comun/`.
 
 ## Estructura
 
@@ -34,12 +34,18 @@ Luego abrir `http://localhost:8080/mockup/` o el escenario correspondiente. No h
 ├── decisiones.md                      # registro autoritativo de decisiones de diseño
 ├── propuesta-capitulos-6-y-7.md       # propuesta de avance, pendiente de aprobación
 ├── Mapa horizontal · ... .svg         # mapa original de la carrera (referencia visual)
+├── comun/                             # hoja compartida del plano, tokens y datos simulados
 ├── mockup/                            # escenario previo a las inscripciones de 2A
 ├── periodo-2A/                        # escenario 2A
-└── periodo-2B/                        # escenario 2B
+├── periodo-2B/                        # escenario 2B
+├── panel-seleccion/                   # el recorrido del estudiante: selección y resultados
+└── institucional-demanda/             # la vista institucional de demanda agregada
 ```
 
-Cada escenario contiene `index.html`, `styles.css`, `app.js`, `README.md` y `discoveries.md`. Los datos de materias y correlatividades están escritos directamente en el arreglo `courses` y `edges` de `app.js`.
+Cada escenario contiene `index.html`, `app.js`, `README.md` y `discoveries.md`. La hoja de estilos es
+compartida —`comun/tokens.css` para los tokens y `comun/escenario.css` para el plano—, igual que los datos
+simulados y los módulos de `comun/`. Los datos de materias y correlatividades están escritos directamente en
+el arreglo `courses` y `edges` de `app.js`.
 
 ## Alcance
 
