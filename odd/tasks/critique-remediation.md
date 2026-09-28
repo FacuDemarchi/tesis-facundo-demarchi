@@ -174,20 +174,80 @@ outside-close ran on `click`, which never reaches the document when the click la
 that card re-renders itself and the event's target is detached — so the legend stayed open over the plan.
 It now runs on `pointerdown` in the capture phase.
 
-### An open finding: the two arrow strokes have no rule
+### The two arrow strokes: from an open finding to a rule (`0d7520b`)
 
-The plan draws 12 continuous and 14 dashed correlativity arrows. Nothing in the repository documents the
-difference, and the data does not contain one: `C14→C19` is dashed while `C17→C22` is continuous, with
+The plan drew 12 continuous and 14 dashed correlativity arrows. Nothing in the repository documented the
+difference, and the data did not contain one: `C14→C19` was dashed while `C17→C22` was continuous, with
 identical structural signatures (same column gap, same year transition, same vertical offset). Across all
-26 edges, both strokes occur at column gaps of 1 and 2 and across the same year transitions.
+26 edges, both strokes occurred at column gaps of 1 and 2 and across the same year transitions. The first
+version of the legend therefore labelled the strokes as what they were — «Trazo continuo» and «Trazo
+punteado» — and claimed no meaning, because there was none to claim.
 
-So the legend labels the strokes as what they are — «Trazo continuo» and «Trazo punteado» — and claims no
-meaning, because there is none to claim. Naming the difference would be inventing it. This is a decision
-for the author: make the fixture consistent, document a criterion and fix the fixture to match it, or
-accept the strokes as visual variety.
+**The author supplied the criterion**: the stroke says one thing only, whether the arrow crosses over other
+columns of the plan. Dashed spans two columns or more; continuous joins adjacent columns, including the
+same one. Thirteen of the twenty-six edges were wrong under it — twelve single-column edges were dashed and
+one two-column edge was continuous.
+
+| After the fix | Count | Rendered evidence |
+| --- | --- | --- |
+| Continuous | 23 | `strokeDasharray: none` |
+| Dashed | 3 | `strokeDasharray: 9px, 7px` — exactly the long spans: C31→C39, C32→C41, C36→C44 |
+
+`DESIGN.md` records it as **La Regla del Trazo que Cruza**, mirrored in the sidecar's `narrative.rules`, and
+the legend now names the meaning instead of only the stroke. **Writing the legend is what exposed the
+debt**: the attempt to name what the dashed stroke distinguished revealed that it distinguished nothing.
+
+### U5 — mobile (`3e9dc2a`)
+
+| Claim | Rendered evidence at 390×844 |
+| --- | --- |
+| The sheet rests lower | panel 405px → **287px** (`max-height: 34vh`) |
+| It folds away | collapsed → **162px**, with `.panel-section` and `.panel-actions` hidden; the handle label flips and `aria-expanded` tracks it; opening a stage resets it to expanded |
+| The student gains plan | visible plan height 364px expanded → **489px** collapsed |
+| The buttons stop shrinking | period buttons now **16px** at 390px (were 12px); no overflow in the navigation or the page |
+| Desktop is untouched | handle `display: none` above 760px, where the panel floats and there is nothing to fold |
+
+### U6 — the modal (`dcd114`)
+
+| Claim | Rendered evidence |
+| --- | --- |
+| The control left the dialog | `.results-simulator` inside the modal: **0** |
+| The strip is reachable | `#demo-strip` not inert, at top 828px against the modal's bottom 816px → **12px of clearance**; it cannot live in the period bar or the canvas because both are `inert` while the results are open |
+| It works | switching the strip to «infactible» re-renders the modal into the explained infeasibility with its recovery action |
+| The grids fold | 3 `details`, **0 open** by default, summary «Grilla semanal · 2 días · 3 franjas»; the modal's content drops from 1039px to **818px**, and opening one grid adds its 142px back on demand |
+| It hides again | closing the results hides the strip |
+
+**A defect of my own, fixed before committing:** selecting an alternative re-renders the modal, which replaced
+the `details` node, and the native toggle then fired on a detached element — the grid closed itself right after
+being opened. The click is handled in the capture phase, applying the state before the re-render.
+
+### U7 — polish and the detector's end state (`2ccb372`)
+
+| Detector | Before the remediation | After |
+| --- | --- | --- |
+| Command line, whole repository | 11 anti-patterns + 8 advisories | **0 anti-patterns + 4 advisories** |
+| In the rendered page, `panel-seleccion/` | 98 findings | **5**, all explained below |
+
+The five that remain in the page, and why they stand:
+
+| Rule | Why it stands |
+| --- | --- |
+| `side-tab` | The left border encodes category and state, and the new legend names it. Waived in the config with that reason |
+| `repeating-stripes-gradient` | The diagonal hatch is the fourth redundant signal of an unavailable state. Waived |
+| `edge-flush-cards` | The canvas is a scroll container: at rest the edge column is half-visible, and at the end of the range there are **52px of air and zero cut cards**. Measured at both ends. Waived |
+| `dark-glow` | The legend's elevation shadow, which `DESIGN.md` requires on floating layers and which falls on the paper, not on the bar. The detector reads it as a glow because its ancestor is the dark bar. Waived |
+| `flat-type-hierarchy` | **A real signal, kept visible on purpose**: the plan's h2 column headings are 11px while the card titles inside them are 12px and the alternative headings are 16px. The heuristic wants a 1.25 step; the plan is a dense operating surface where structural headings are labels. A flagged the same inversion independently. It is a design decision, not a defect, and it is not waived |
+
+One in-page finding was a **false positive**: `line-length` reported ~171 characters per line, which comes from
+the `<select>`'s option labels being read as a rendered line of prose. The strip's `innerText` is 273 characters
+with no line anywhere near that width, and the hint itself wraps at 68ch in two lines.
+
+**Five findings were waived with written reasons** in `.impeccable/config.json`: the overused Inter, the state
+stripes, the category borders, the flush cards at a scrolling edge, and the legend's elevation shadow. Every
+one of them is a deliberate choice the design record already explains — a waiver records the decision so the
+detector stops re-litigating it, and a waiver is never counted as a fix.
 
 ### A note on the visual check (U2)
-
 The card-level visual inspection was obstructed: the floating selection panel paints over the plan and
 covered the marked card's right corner, which is where the `MARCADA` stamp lives. That is the documented
 behaviour («las capas flotan, no reservan») and, at the same time, the extraneous cognitive load A
