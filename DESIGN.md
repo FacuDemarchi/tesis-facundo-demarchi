@@ -323,6 +323,13 @@ piso funcional es 11 px, y el sótano de 8 px existe solo porque el estado tiene
 redundantes; en la lectura no hay señal redundante que rescate a un texto más chico que el piso, así
 que el piso sube.
 
+**La Regla de la Medida.** La prosa se mide en caracteres y el dato en píxeles. El texto corrido del
+modal de resultados se limita con `--measure-prose` (`65ch`), un solo número para todos sus bloques:
+avisos, resumen de desenlace, explicación de causas, nota de simulador y nota al pie de alternativa.
+Las tablas, las grillas y las métricas siguen ocupando el ancho que necesitan. Un párrafo que comparte
+el ancho de una tabla de 1140 px no se vuelve legible por tener el tamaño correcto: la medida es una
+regla, no un accidente del layout.
+
 ## Layout
 
 El lienzo es un contenedor flexible con desplazamiento propio que ocupa todo el ancho disponible, con

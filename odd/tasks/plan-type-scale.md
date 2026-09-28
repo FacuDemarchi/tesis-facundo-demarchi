@@ -75,10 +75,8 @@ notice is Body at 12px; the redundant-floor rule is restated with the new functi
 - **The responsive overrides** (`.period-navigation button` drops to 12px at ≤640px, ≤760px in the
   panel). Real drift, but every fix is a layout change at a narrow viewport and this machine has no
   browser: unverifiable, therefore not touched.
-- **The reading measure inside the results modal**: `.outcome-summary p` reaches ~150ch,
-  `.results-simulated` ~115–120ch at `max-width:820px`, `.results-confirmation-hint` ~95–100ch at
-  `680px`. Constraining prose to 70ch at 12px means a ~450px column inside a 1140px modal: that is a
-  composition decision, not a defect the detector sees, so it stays open for the author.
+- **The reading measure inside the results modal** was open when this plan was written, as a
+  composition decision for the author. It is closed in **T6** below.
 - **The px ramp is not tokenized.** The rem surface got tokens because it carried fifteen near-identical
   values; this ramp is ten deliberate, documented steps and satisfies `design-system-font-size` already.
   Token extraction belongs to `/extract`, not here.
@@ -103,6 +101,49 @@ notice is Body at 12px; the redundant-floor rule is restated with the new functi
 3. In each of the four stylesheets, only the declarations listed above differ from `c1a60a7`.
 4. The four surfaces agree on every shared role after the change: no new drift between them.
 5. `impeccable ignores list` shows exactly one value waiver, with its reason.
+
+## T6 — The reading measure, decided after the floor
+
+The author closed the open composition decision: prose gets a measure. The independent assessment had
+measured `.outcome-summary p` at ~130–150 characters per line, `.results-simulated` at ~115–120
+(`max-width:820px`) and `.results-confirmation-hint` at ~95–100 (`680px`) — three different widths for
+the same job, all of them past the 45–75 band the craft floor asks for.
+
+**One token, six rules**, in `panel-seleccion/styles.css`: `--measure-prose:65ch` in `:root`, carried
+by `.results-simulated`, `.results-confirmation-hint`, `.outcome-summary`, `.outcome-explanation`,
+`.results-simulator p` and `.alternative-note`. Data keeps the width it needs: tables, grids and metrics
+are untouched, and the two hardcoded widths are gone.
+
+**Why 65ch and not 70.** `ch` is the advance width of the digit zero, which in Inter is wider than the
+average lowercase letter, so a line of N characters is narrower than N `ch`. Setting the measure at the
+bottom of the documented 65–75ch band errs narrow, which is the safe direction for prose, and one value
+keeps every prose block in the modal on the same column. This is reasoned from the unit's definition,
+**not** measured: with no browser on this machine the rendered character count was never observed.
+
+**This change came after the type floor was approved and its authority burned.** It therefore sits on a
+new candidate tree that the burned receipt does not cover, and it needs its own review.
+
+### Evidence
+
+- Arithmetic: masking the token line and the six rule bodies on both sides, **every other byte** of
+  `panel-seleccion/styles.css` is identical to `7967f97`. The token is declared exactly once, inside
+  `:root`; all six rules carry it; `max-width:820px` and `max-width:680px` have **0** occurrences.
+- The other four stylesheets are untouched.
+- Detector, before → after this change: **11 + 8 → 11 + 8**, identical per-rule histogram. The measure is
+  a craft rule, not a detector rule: it neither closes nor opens a finding, and it is reported as such
+  instead of being counted as an improvement.
+- Sidecar consistency: `narrative.rules` was carrying **pre-change** text for two rules — the 10px floor,
+  and the rem ramp still described as "trabajo pendiente" — stale since the two earlier features. Both
+  were rewritten to match the built world, and the measure rule was added.
+
+### Limitations
+
+- No rendered verification, for the same reason as everywhere in this document: no browser. The measure
+  was not seen, and neither was the interaction between a 65ch prose column and the modal's wide tables
+  and grids.
+- `.alternative-note` lives inside an alternative card that can span the whole modal at the
+  single-column breakpoint. Constraining the note while the card stays wide is a deliberate consistency
+  choice — all prose shares one measure — but it was not seen either.
 
 ## Evidence
 
@@ -173,9 +214,9 @@ caught it.
 - **The responsive overrides are untouched on purpose.** `.period-navigation button` still drops to 12px
   at ≤640px (≤760px in the panel). That is text shrinking at a narrower viewport, and every fix changes
   a narrow layout that cannot be verified here.
-- **The reading measure of the results modal is still open.** `.outcome-summary p` reaches ~150ch,
-  `.results-simulated` ~115–120ch, `.results-confirmation-hint` ~95–100ch at 12px. Constraining prose to
-  70ch means a ~450px column inside a 1140px modal: a composition decision for the author, not a
-  defect the detector reports.
+- **The reading measure of the results modal was still open at this commit.** `.outcome-summary p`
+  reached ~150ch, `.results-simulated` ~115–120ch, `.results-confirmation-hint` ~95–100ch at 12px.
+  **Closed afterwards in T6**, by the author's decision; this bullet records the state the reviewed
+  candidate was in.
 - **The 8px state tag and 9px card metadata stay**, by the author's decision, on the strength of the
   fixed 272×118px card and the four redundant state signals.
