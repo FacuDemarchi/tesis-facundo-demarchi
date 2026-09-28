@@ -57,11 +57,15 @@ const canvas = document.querySelector('.canvas');
 const periodBar = document.querySelector('.period-bar');
 const resultsScrim = document.querySelector('#results-scrim');
 const resultsModal = document.querySelector('#results-modal');
+const demoStrip = document.querySelector('#demo-strip');
 const resultsClose = document.querySelector('#results-close');
 let periodIndex = 0;
 let selectionOpen = false;
 let resultsOpen = false;
 let outcomeId = 'alternativas';
+// Grillas semanales abiertas (U6), por alternativa: el modal se re-renderiza al elegir una
+// alternativa, y sin esto la grilla que el estudiante acaba de abrir se cerraría sola.
+const openGrids = new Set();
 let selectedAlternative = null;
 let panelSide = 'right';
 let wheelScrollTarget = null;
@@ -403,10 +407,10 @@ function renderWeeklyGrid(alternative) {
   const days = dayOrder.filter(day => franjas.some(franja => franja.dia === day));
   const rows = [...new Map(franjas.map(franja => [`${franja.desde}–${franja.hasta}`, franja])).values()]
     .sort((a, b) => a.desde.localeCompare(b.desde));
-  return `<table class="weekly-grid"><caption>Distribución semanal: ${alternative.titulo}</caption><thead><tr><th scope="col">Franja</th>${days.map(day => `<th scope="col">${day}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr><th scope="row">${row.desde}–${row.hasta}</th>${days.map(day => {
+  return `<details class="weekly-details" data-alt="${alternative.id}"${openGrids.has(alternative.id) ? ' open' : ''}><summary>Grilla semanal · ${days.length} días · ${rows.length} franjas</summary><table class="weekly-grid"><caption>Distribución semanal: ${alternative.titulo}</caption><thead><tr><th scope="col">Franja</th>${days.map(day => `<th scope="col">${day}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr><th scope="row">${row.desde}–${row.hasta}</th>${days.map(day => {
     const occupied = franjas.find(franja => franja.dia === day && franja.desde === row.desde && franja.hasta === row.hasta);
     return `<td>${occupied ? `${occupied.assignment.materiaId}<span class="sr-only">${courses.find(course => course.id === occupied.assignment.materiaId)?.name || occupied.assignment.materiaId}</span>` : ''}</td>`;
-  }).join('')}</tr>`).join('')}</tbody></table>`;
+  }).join('')}</tr>`).join('')}</tbody></table></details>`;
 }
 function recoveryAction(outcome) {
   const actions = {
@@ -512,6 +516,8 @@ function openResults() {
   resultsScrim.hidden = false;
   resultsScrim.setAttribute('aria-hidden', 'false');
   resultsModal.hidden = false;
+  demoStrip.hidden = false;
+  if (!legendPanel.hidden) setLegendOpen(false, false);
   canvas.inert = true;
   periodBar.inert = true;
   renderResults();
@@ -546,6 +552,7 @@ function hideResults() {
   resultsScrim.hidden = true;
   resultsScrim.setAttribute('aria-hidden', 'true');
   resultsModal.hidden = true;
+  demoStrip.hidden = true;
   canvas.inert = false;
   periodBar.inert = false;
   resultsOpen = false;
@@ -712,6 +719,21 @@ function setPanelCollapsed(collapsed) {
   panelHandle.textContent = collapsed ? 'Mostrar el panel de selección' : 'Ocultar el panel de selección';
 }
 panelHandle.addEventListener('click', () => setPanelCollapsed(selectionPanel.dataset.collapsed !== 'true'));
+
+// El modal se re-renderiza al elegir una alternativa, y eso reemplaza el nodo: el `toggle`
+// nativo llega a un elemento ya desprendido y el estado se pierde. Se escucha el clic en
+// captura, se aplica el estado a mano y se anula la acción por defecto, para que el render
+// siguiente ya lo encuentre abierto.
+document.querySelector('#alternatives').addEventListener('click', event => {
+  const summary = event.target.closest('summary');
+  if (!summary) return;
+  const details = summary.parentElement;
+  if (!details.classList || !details.classList.contains('weekly-details')) return;
+  const next = !details.open;
+  if (next) openGrids.add(details.dataset.alt); else openGrids.delete(details.dataset.alt);
+  details.open = next;
+  event.preventDefault();
+}, true);
 
 // Leyenda del plano (U4): un popover desde la barra de período.
 const legendToggle = document.querySelector('#legend-toggle');

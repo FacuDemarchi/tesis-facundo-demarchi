@@ -100,6 +100,12 @@
   </main>
 
   <div id="results-scrim" class="results-scrim" hidden aria-hidden="true"></div>
+
+  <div id="demo-strip" class="demo-strip" hidden>
+    <label for="outcome-select">Desenlace simulado</label>
+    <select id="outcome-select"></select>
+    <span class="demo-strip-hint">Mesa del demostrador. En el prototipo real el desenlace lo determina CP-SAT, no el estudiante.</span>
+  </div>
   <section id="results-modal" class="results-modal" role="dialog" aria-modal="true" aria-labelledby="results-title" hidden>
     <header class="results-header">
       <h2 id="results-title">Alternativas de cursado</h2>
@@ -108,11 +114,6 @@
       <p id="results-granularity" class="results-granularity"></p>
       <button type="button" id="results-close" class="results-close" aria-label="Cerrar los resultados y volver a la selección">Cerrar</button>
     </header>
-    <div class="results-simulator">
-      <label for="outcome-select">Desenlace simulado</label>
-      <select id="outcome-select"></select>
-      <p>Control de la maqueta: en el prototipo real el desenlace lo determina CP-SAT, no el estudiante.</p>
-    </div>
     <article class="outcome-summary">
       <h3 id="outcome-title"></h3>
       <p id="outcome-summary"></p>
