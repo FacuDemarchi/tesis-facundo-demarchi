@@ -277,7 +277,7 @@ está instalada, sin `@font-face` ni descarga de red.
 - **Title small** (400–800, 13px): el encabezado y el texto del resumen de desenlace.
 - **Body** (400–700, 12px, alto de línea 1.4): el grueso de la interfaz. Es el tamaño dominante del sistema, con 23 usos.
 - **Body small** (700, 11px): alternadores de día y encabezados de la grilla semanal.
-- **Label** (700, 11px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, columnas de la grilla semanal.
+- **Label** (700, 11px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, encabezados de columna del plano y columnas de la grilla semanal.
 - **Meta** (400, 11px): el renglón de cuatrimestre de la tarjeta de materia.
 - **Micro** (800, 11px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema.
 
@@ -285,6 +285,15 @@ está instalada, sin `@font-face` ni descarga de red.
 peso, caja, tracking y color, no por tamaño. Es la consecuencia buscada: el sistema perdió su sótano de 8 px
 y la rampa en píxeles pasó de diez valores a siete. Un texto que baja de 11 px no está en la rampa, sin
 excepción y sin señal redundante que lo rescate.
+
+**El encabezado de columna es etiqueta, no título.** En el plano, los encabezados de columna (`h2`, 11 px) son
+más chicos que el título de la tarjeta que contienen (12 px) y que los encabezados de alternativa del modal
+(16 px). No es una inversión por descuido y **es una decisión tomada**: el plano es una superficie densa de
+operación, la estructura se dice con etiquetas en mayúsculas —posición, caja, tracking y color—, y lo que el
+estudiante lee es el contenido de la tarjeta. Un revisor automático lo marca como jerarquía plana; la decisión
+de conservarlo es del autor, y pesa además un costo que los números no muestran: **el plano está fotografiado
+en el manuscrito y en el documento vivo**, así que subir esos encabezados invalidaría las capturas de las
+figuras 6 y 7 y obligaría a rehacerlas.
 
 **Escala de lectura (`rem`).** La vista institucional es una superficie de lectura, así que su rampa se
 mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como token en el `:root` de

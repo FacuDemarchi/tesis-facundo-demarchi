@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-28T17:05:00Z",
+  "generatedAt": "2026-09-28T19:40:00Z",
   "title": "Design System: Planificador académico para Ingeniería en Software",
   "extensions": {
     "colorMeta": {
@@ -69,7 +69,7 @@
       "title-sm": { "displayName": "Title pequeño", "purpose": "Encabezado del resumen de desenlace. 13px." },
       "subhead": { "displayName": "Subhead", "purpose": "El nombre del plan y de la carrera dentro del h1 de la barra de período. 14px, peso 800." },
       "title-lg": { "displayName": "Title grande", "purpose": "Encabezado de alternativa dentro del modal. 16px, peso 800." },
-      "label": { "displayName": "Label", "purpose": "Etiquetas en mayúsculas espaciadas de la barra de período, encabezados de sección y grilla semanal. 11px." },
+      "label": { "displayName": "Label", "purpose": "Etiquetas en mayúsculas espaciadas de la barra de período, encabezados de sección, encabezados de columna del plano y grilla semanal. 11px. Los encabezados de columna son deliberadamente más chicos que el título de la tarjeta que contienen: el plano es una superficie densa donde la estructura se dice con etiquetas, no con títulos." },
       "micro": { "displayName": "Micro", "purpose": "Etiqueta de estado de la tarjeta y sello MARCADA. 11px, peso 800, mayúsculas: es el piso del sistema." },
       "reading-micro": { "displayName": "Lectura: micro", "purpose": "Etiquetas en mayúsculas y piso de la escala de lectura. .75rem = 12px, peso 800." },
       "reading-label": { "displayName": "Lectura: etiqueta", "purpose": "Cromo de control y etiquetas secundarias: etiqueta de período, controles, tooltip. .8rem = 12.8px." },
