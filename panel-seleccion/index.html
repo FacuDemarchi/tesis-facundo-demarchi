@@ -77,7 +77,8 @@
 
       <section class="panel-section availability-section" aria-labelledby="availability-title">
         <h2 id="availability-title">Restricción</h2>
-        <div id="unavailable-days" class="day-toggles" aria-label="Días en los que no puede asistir">
+        <p class="availability-hint" id="availability-hint">Días en los que no puedo asistir.</p>
+        <div id="unavailable-days" class="day-toggles" role="group" aria-labelledby="availability-title availability-hint">
           <button type="button" data-unavailable-day="lunes" aria-pressed="false">lunes</button>
           <button type="button" data-unavailable-day="martes" aria-pressed="false">martes</button>
           <button type="button" data-unavailable-day="miércoles" aria-pressed="false">miércoles</button>
