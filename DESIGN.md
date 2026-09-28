@@ -69,7 +69,7 @@ typography:
     fontSize: "9px"
   label:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
-    fontSize: "10px"
+    fontSize: "11px"
     fontWeight: 700
     letterSpacing: "0.06em"
   title-sm:
@@ -277,7 +277,7 @@ está instalada, sin `@font-face` ni descarga de red.
 - **Title small** (400–800, 13px): el encabezado y el texto del resumen de desenlace.
 - **Body** (400–700, 12px, alto de línea 1.4): el grueso de la interfaz. Es el tamaño dominante del sistema, con 23 usos.
 - **Body small** (700, 11px): alternadores de día y encabezados de la grilla semanal.
-- **Label** (700, 10px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, columnas de la grilla semanal.
+- **Label** (700, 11px, tracking .06em, mayúsculas): etiquetas de la barra de período, encabezados de sección del panel, columnas de la grilla semanal.
 - **Meta** (400, 9px): el renglón de cuatrimestre de la tarjeta de materia.
 - **Micro** (800, 8px, mayúsculas): la etiqueta de estado de la tarjeta y el sello «MARCADA». Es el piso del sistema y existe solo porque el estado tiene cuatro señales redundantes.
 
@@ -297,14 +297,18 @@ mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como t
 **La Regla de una Sola Voz.** No hay fuente de display decorativa. Si algo necesita destacarse, sube de
 peso o de tamaño, o pasa a mayúsculas espaciadas.
 
-**La Regla del Piso Redundante.** Ningún texto de 8 px puede ser la única señal de nada. Si baja de 10
-px, tiene que venir acompañado de color, forma y patrón.
+**La Regla del Piso Redundante.** Ningún texto funcional del plano baja de 11 px. La única excepción es
+la etiqueta de estado de la tarjeta de materia: 8 px dentro de una caja fija de 272×118 px, y solo
+porque el estado se dice cuatro veces —color, borde, símbolo y rayado—. Bajar del piso exige traer esa
+redundancia encima; sin ella, el texto sube. El metadato de 9 px de la misma tarjeta es el otro
+habitante del sótano, por la misma razón: comparte una caja que no puede crecer.
 
 **La Regla de las Dos Escalas.** El plano del estudiante se mide en píxeles y su rampa es deliberada:
-diez pasos, de 8 a 22 px, con el 12 px como centro de gravedad. La vista institucional se mide en `rem`
-porque es una superficie de lectura, no un plano: siete pasos, cada uno nombrable por su propósito. Las
-dos escalas se encuentran en 12 px, y ese encuentro es lo que sostiene una sola voz entre el plano y la
-lectura.
+nueve pasos, de 8 a 22 px, con el 12 px como centro de gravedad y el 11 px como piso de todo texto
+funcional. El 10 px quedó retirado: no había rol que no pudiera nombrarse un paso más arriba. La vista
+institucional se mide en `rem` porque es una superficie de lectura, no un plano: siete pasos, cada uno
+nombrable por su propósito. Las dos escalas se encuentran en 12 px, y ese encuentro es lo que sostiene
+una sola voz entre el plano y la lectura.
 
 **La Regla del Paso Nombrable.** Un paso existe si se puede nombrar por su propósito. La rampa de
 lectura llegó a tener quince valores distintos; se consolidó a siete. Los vecinos que se separaban por
@@ -315,8 +319,9 @@ distinguirse en el uso, sobra el que no tenga propósito propio — hoy se sosti
 prosa.
 
 **La Regla del Piso de 12 px.** Ningún texto de la superficie de lectura baja de 12 px. En el plano el
-piso es 8 px y existe solo porque el estado tiene cuatro señales redundantes; en la lectura no hay
-señal redundante que rescate a un texto más chico que el piso, así que el piso sube.
+piso funcional es 11 px, y el sótano de 8 px existe solo porque el estado tiene cuatro señales
+redundantes; en la lectura no hay señal redundante que rescate a un texto más chico que el piso, así
+que el piso sube.
 
 ## Layout
 
