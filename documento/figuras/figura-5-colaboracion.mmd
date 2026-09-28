@@ -1,15 +1,29 @@
+%% Diagrama de colaboración (UML) aproximado con flowchart: Mermaid no tiene el
+%% tipo nativo (mermaid-js/mermaid#2647). Cada rectángulo es una lifeline con su
+%% identificador subrayado —:Clase, sin nombre de objeto—, cada arista es un
+%% mensaje con su número de secuencia y su flecha de dirección, y el orden se lee
+%% desde el actor que inicia, arriba. El espaciado se fija acá y no en el config
+%% compartido porque los rótulos de los once mensajes se pisaban entre sí.
+%%{init: {"flowchart": {"nodeSpacing": 20, "rankSpacing": 20, "diagramPadding": 8}}}%%
 flowchart TB
-  P1["1 · Estudiante → Interfaz · declara materias y preferencias"]
-  P2["2 · Interfaz → API · envía la solicitud con el escenario"]
-  P3["3 · API → Dominio académico · verifica restricciones duras"]
-  P4["4 · Dominio → Interfaz · advertencias inmediatas"]
-  P5["5 · API → Planificación · construye el escenario y registra su origen"]
-  P6["6 · Planificación → Adaptador CP-SAT · traduce el modelo"]
-  P7["7 · Adaptador → Solver · ejecuta la optimización"]
-  P8["8 · Solver → Planificación · devuelve alternativas y estado"]
-  P9["9 · Explicación · traduce conflictos y exclusiones"]
-  P10["10 · API → Interfaz · presenta alternativas y explicaciones"]
-  P11["11 · API → Persistencia · registra escenario, intención y demanda"]
-  P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> P10 --> P11
-  classDef adv fill:#fef3c7,stroke:#d97706,color:#0f172a
-  class P4 adv
+  E["<u>:Estudiante</u>"]
+  I["<u>:Interfaz de selección</u>"]
+  A["<u>:API</u>"]
+  D["<u>:Dominio académico</u>"]
+  P["<u>:Planificación de escenarios</u>"]
+  X["<u>:Explicación de conflictos</u>"]
+  AD["<u>:Adaptador CP-SAT</u>"]
+  S["<u>:Solver CP-SAT</u>"]
+  R["<u>:Persistencia</u>"]
+
+  E -->|"1: declara materias y preferencias"| I
+  I -->|"2: solicita alternativas"| A
+  A -->|"3: verifica restricciones duras"| D
+  D -->|"4: advertencias inmediatas"| I
+  A -->|"5: construye el escenario"| P
+  P -->|"6: traduce el modelo"| AD
+  AD -->|"7: ejecuta la optimización"| S
+  S -->|"8: devuelve alternativas y estado"| P
+  P -->|"9: traduce conflictos y exclusiones"| X
+  A -->|"10: presenta alternativas y explicaciones"| I
+  A -->|"11: registra la demanda agregada"| R

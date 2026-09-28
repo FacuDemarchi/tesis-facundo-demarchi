@@ -1,0 +1,111 @@
+# Figure 5: redraw the collaboration diagram
+
+## Goal
+
+Replace `documento/figuras/figura-5-colaboracion.mmd`, which is not a collaboration diagram but a
+vertical chain of eleven text boxes (`flowchart TB`, one node per message sentence). Redraw it as a
+real UML communication diagram: lifelines, links, and numbered messages with their direction.
+
+## Why the current figure fails
+
+- It is a chain of sentences, so there is no participant, no link and no direction — a reader cannot
+  tell who talks to whom.
+- Its aspect ratio makes it unusable: 472 × 2178 px, so it inserts at 140 pt wide by a full 648 pt
+  tall. A narrow ribbon down an entire page, next to figures that read as pages.
+- One message (9 · «Explicación · traduce conflictos y exclusiones») has no sender or receiver at all,
+  which a collaboration diagram cannot even express.
+
+## Notation, from the sources
+
+- **Frame.** Optional rectangle with the name in a compartment in the upper-left corner; long form
+  `interaction`, short form `sd`. Communication diagrams are the free-form counterpart of sequence
+  diagrams: no time axis, so order lives in the numbers. (uml-diagrams.org, «UML communication
+  diagrams overview»; IBM, «Communication diagrams», RSAS 7.5)
+- **Lifeline.** A rectangle with no tail, holding `name [selector] : class-name`; the usual anonymous
+  form is `:ClassName`. The whole identification is underlined. (uml-diagrams.org)
+- **Link.** One line between two lifelines. **Multiple messages, in both directions, travel along the
+  same single link** — there is not one line per message (Larman, *Applying UML and Patterns*, ch. 15.5
+  «Basic Communication Diagram Notation», InformIT).
+- **Message.** A line with the sequence expression and a small arrow above it, showing direction:
+  `sequence: message-name`, with dot-separated nesting (`2`, `2.1`, `2.3b [x>y]`, `*[i=1..n]` for
+  iteration, `[guard]` for conditions). (uml-diagrams.org; Larman ch. 15.5)
+- **Reading order.** Left to right or top to bottom, always starting from the initiating actor
+  (draw.io, «UML communication diagrams»).
+- **No native support anywhere in our toolchain.** Mermaid has no communication diagram type (issue
+  mermaid-js/mermaid#2647, still open), and PlantUML neither (plantuml#2707), so the honest
+  approximation is a `flowchart` with lifeline-shaped nodes and numbered message labels. Underlined
+  lifeline identifiers were verified to survive `mmdc` 11.17.0 with our `mermaid-config.json`.
+
+## Decisions
+
+- **Flat numbering 1 to 11.** Larman's guideline is not to number the starting message and to nest the
+  rest, and that is the more standard reading; the manuscript narrates a flat sequence and never
+  asserts nesting, so inventing it would add information the text does not carry. Kept as the current
+  figure has it, and reported as an option for the author.
+- **One node per participant, nine participants:** `:Estudiante`, `:Interfaz de selección`, `:API`,
+  `:Dominio académico`, `:Planificación de escenarios`, `:Adaptador CP-SAT`, `:Solver CP-SAT`,
+  `:Explicación de conflictos`, `:Persistencia`.
+- **Message 9 gains its missing endpoints.** The old figure gave none. The translation of conflicts and
+  exclusions is attributed to `:Planificación de escenarios` asking `:Explicación de conflictos`, both
+  backend modules in Figure 1. Flagged to the author, not presented as a fact of the text.
+- **Message wording stays as the manuscript has it**, trimmed to fit the labels.
+- **No frame.** Figures 1 to 4 have no frame and the caption already names the collaboration; a frame
+  would repeat it. Revisit if the author wants the classic look.
+
+## Geometry budget (from `documento/figuras/verificar-tamanos.py`)
+
+The insertion area is 468 × 648 pt and the verifier computes, with the 17 px font at scale 2:
+
+    ancho_insercion = min(468, 648 x ancho / alto)
+    texto_pt        = 34 x ancho_insercion / ancho_px        # minimo 8,5 pt
+
+So the rendered width in pixels is the binding constraint, not the file size: a wider diagram inserts
+at a fixed 468 pt and its text shrinks. To read comfortably we want `ancho_px` under ~1700 and an
+aspect ratio of at least ~1.4, which lands the figure around 16,5 cm wide by 10-12 cm tall at 9-11 pt.
+The old figure's 472 px width is what turned it into a ribbon with a full-page height.
+
+## Tasks
+
+- [x] **T1 — Redraw the source** `figura-5-colaboracion.mmd` and render the PNG.
+      Nine lifelines with underlined identifiers, eleven messages as numbered arrows with their
+      direction, reading order from the actor at the top. Spacing is set inside the figure with an
+      `init` directive rather than in the shared config, because the eleven labels collided at the
+      config's `nodeSpacing: 16` / `rankSpacing: 18`.
+
+      **Evidencia**: `render.sh` reproduce `figura-1` byte a byte con mmdc 11.17.0, así que el pipeline
+      compartido era seguro de correr; el PNG pasó de 472 x 2178 px a 1556 x 1348 px.
+- [x] **T2 — Verify** with `verificar-tamanos.py` and by looking at the rendered PNG.
+
+      **Evidencia**: la inserción queda en 468 x 405 pt (16,5 x 14,3 cm) con 10,2 pt de texto aparente,
+      contra el mínimo de 8,5; la figura anterior insertaba 140 x 648 pt, una cinta de ancho 4,9 cm y
+      alto de página completa. El PNG renderizado se miró: sin rótulos superpuestos.
+
+      **Hallazgo que produjo**: `figura-3-entidades-academicas.png` queda en 8,3 pt, por debajo del
+      mínimo del propio verificador (1924 x 1118 px: demasiado ancha para su contenido). Es previo a
+      este cambio y queda fuera de alcance. Además, `figura-2-casos-de-uso.png` no reproduce byte a
+      byte —mismas dimensiones, 954 x 2190—, así que su re-renderización se revirtió para no meter un
+      cambio ajeno en el commit.
+- [x] **T3 — Propagate to the live Doc.** Replaced the inline image in §7.2.4: inserted the new PNG
+      first and verified it, then deleted the old object, keeping the paragraph centred and the caption
+      and note untouched below it.
+
+      **Evidencia**: el objeto nuevo es `kix.mz1yohs195w9`, 16,51 x 14,30 cm, centrado, con «Figura 5.
+      Colaboración del escenario «Solicitar alternativas de cursado».» y su nota justo debajo; la imagen
+      vieja (4,94 x 22,79 cm) ya no está; el documento sigue con 10 imágenes; el texto no cambió; y desde
+      §1 el Doc es idéntico a `main` más las leyendas de §7.2.5. Revisión `ANLCKQlrZj7y…`.
+      Se bajó el PNG del `contentUri` del documento y se miró: es el diagrama nuevo.
+
+      **Mecánica, para repetirla**: la subida a Drive necesita permiso abierto (`type=anyone`,
+      `role=reader`) porque la API busca la imagen de forma anónima; se cerró con `drive_unshare` apenas
+      el Doc quedó con su propia copia. La copia vieja en Drive (id `1Ol7EqJ…`) quedó obsoleta y no se
+      borró: son dos archivos con el mismo nombre en la carpeta de la app.
+
+## Out of scope
+
+- Figures 1 to 4, which are not part of this complaint.
+- The author's document index.
+
+## Criterio de cierre
+
+Cada tarea cierra con al menos un commit de unidad de trabajo en la rama de la funcionalidad. El PNG se
+commitea junto a su fuente, como el resto de las figuras.
