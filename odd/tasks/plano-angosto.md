@@ -10,7 +10,7 @@ Rama: `feat/narrow-plan-navigation`, sobre `main` = `7e493b9`.
 
 1. Un **índice de los diez cuatrimestres** en la barra de período, sólo en pantallas angostas, que salta
    al cuatrimestre y dice en cuál estás.
-2. La **barra angosta comprimida** a tres bandas.
+2. La **barra angosta comprimida a dos bandas**, con el contexto del plan —título y aviso de datos simulados— fuera de la vista.
 3. El plano **a su escala de autor** en pantallas angostas (deja de encogerse), con la guarda de rueda
    que eso exige.
 4. La documentación que diga la verdad sobre las tres cosas: `DESIGN.md` y `panel-seleccion/README.md`.
@@ -91,11 +91,10 @@ estado real: la traducción vale **mientras el plano no desborde en vertical**; 
 vertical mantiene su ruta nativa y las filas de abajo siguen alcanzables. Arriba de 760 px el plano sigue
 encogido, no desborda y la regla documentada no cambia ni un píxel.
 
-**D5 · La barra angosta, tres bandas.** Contexto (título y aviso de datos simulados), navegación de
-períodos, índice. Medido a 390×844: **243 → 197 px** (28,79 % → 23,34 %; con mensaje de estado visible
-268 → 219,8 px, 26,04 %). A 760×900 queda en 134 contra 126: la barra crece 8 px y a cambio entra el
-índice. El aviso de datos simulados y la franja de confirmación de T1 siguen visibles: son reglas con
-nombre del sistema, no cromo opcional.
+**D5 · La barra angosta, dos bandas.** Navegación de períodos e índice. Medido a 390×844: **243 → 136 px**
+(28,79 % → 16,11 %; con mensaje de estado visible 268 → 158,8 px, 18,81 %). A 760×900 queda en 90 contra
+126. La franja de confirmación de T1 sigue visible: es una regla con nombre del sistema, no cromo
+opcional.
 
 **D5b · La compresión es de layout, no de tamaño de texto.** La primera versión bajaba los botones de la
 barra al paso `Body` (12 px, 34 px de alto mínimo) y daba 185 px. **Estaba revirtiendo una decisión del
@@ -106,6 +105,17 @@ salida la indicó el autor: **sacar de la vista la etiqueta «Período actual» 
 el árbol de accesibilidad, así que la región viva del período lo sigue anunciando y el valor `1B · 2026`
 queda visible— con lo que las dos flechas y el período entran en un renglón. Resultado: **197 px con los
 16 px intactos** y la decisión previa respetada.
+
+**D5c · El contexto del plan también sale de la vista angosta, y eso tensiona una regla del sistema.**
+Segunda instrucción del autor el mismo día: «saca lo del plan académico… y la leyenda de datos simulados».
+Con el título y el aviso fuera, la barra baja a **136 px a 390×844 (16,11 %)** y a **90 px a 760×900**,
+contra los 243/126 de antes de la feature; el `h1`, el aviso y la etiqueta del período siguen en el árbol
+de accesibilidad. **La tensión queda declarada, no legitimada:** `DESIGN.md` pide en su «Do» declarar en
+texto visible que los datos son simulados y que el prototipo no es el sistema oficial, y el componente
+«Aviso de datos simulados» decía por escrito «no desaparece en pantallas angostas». En reposo, la pantalla
+angosta ya no lo declara; la declaración visible sobrevive en la barra de escritorio y en el modal de
+resultados. La hoja queda anotada con el pendiente: relajar el «Do», o recuperar una línea en el teléfono
+—17 px de alto a 12 px de tamaño—.
 
 **D6 · Fuera de alcance, medido y reportado.** El mismo encogido deja el plano por debajo del piso en
 escritorio y en ventanas bajas (1024×768: 7,83/7,17 px; 1366×768: 0,667 → 8,00/7,34 px). En una defensa
@@ -128,9 +138,8 @@ comportamiento que el autor ya vio y aprobó en escritorio: **decisión del auto
 
 ### T2 — La barra angosta en tres bandas  ·  D5, D5b
 - **Archivos**: `panel-seleccion/styles.css`.
-- **Esperado**: a 390×844 la barra baja de 243 px a ~197 px sin perder el aviso de datos simulados ni la
-  franja de confirmación, con los botones en sus 16 px; a 760×900 no crece más que el índice; a 1400×900
-  queda igual (73 px).
+- **Esperado**: a 390×844 la barra baja de 243 px a ~136 px sin perder la franja de confirmación y con
+  los botones en sus 16 px; a 760×900 baja a ~90 px; a 1400×900 queda igual (73 px).
 - **Evidencia de cierre**: alturas de la barra y de cada banda medidas en 390, 760 y 1400, en reposo y con
   mensaje de estado.
 
@@ -155,12 +164,12 @@ recién cargada en cada ancho.
 
 | Qué | 390×844 | 760×900 | 1400×900 |
 | --- | --- | --- | --- |
-| Barra de período | **243 → 197 px** (23,34 %) | 126 → 134 px (14,89 %) | **73 px, sin cambio** |
-| Bandas de la barra | contexto 55 + navegación 86 + índice 28 | 38 + 40 + 28 | 55 + 45 (sin índice) |
+| Barra de período | **243 → 136 px** (16,11 %) | 126 → 90 px (10 %) | **73 px, sin cambio** |
+| Bandas de la barra | navegación 86 + índice 28 (contexto fuera de la vista, 1 px) | 40 + 28 (contexto fuera) | 55 + 45 (sin índice) |
 | Escala del plano | **0,5897 → 1** | 0,7641 → 1 | **0,8024, sin cambio** |
 | Título de tarjeta dibujado (autor 12 px) | **7,08 → 12 px** | 9,17 → 12 px | 9,63 px (D6) |
 | Metadato dibujado (autor 11 px) | **6,49 → 11 px** | 8,41 → 11 px | 8,83 px (D6) |
-| Desplazamiento del lienzo (X / Y) | 3146 / 361 | 2776 / 242 | 1441 / 0, sin cambio |
+| Desplazamiento del lienzo (X / Y) | 3146 / 300 | 2776 / 198 | 1441 / 0, sin cambio |
 | Índice | visible, 10 botones, **una fila**, sin desborde | igual | **`display:none`**, 0 paradas nuevas |
 | Salto al cuatrimestre 7 | borde izquierdo a **0 px**, columna entera visible, foco en `term-7` (`h2`, `tabindex="-1"`, «Cuatrimestre 7»), `aria-current` = 7 | igual | no aplica |
 | `aria-current` en los extremos | 1 al inicio, 10 al final | 1 / 9 (a 760 se ven dos columnas) | no aplica |
@@ -182,6 +191,9 @@ recién cargada en cada ancho.
   piso tipográfico para justificar una decisión y romper la rampa en otra parte.**
 - **El encogido del plano en escritorio y ventanas bajas** (D6): sigue midiendo 9,63/8,83 px a 1400×900 y
   7,83/7,17 px a 1024×768. Devuelto al autor con el costo de arreglarlo.
+- **El aviso de datos simulados fuera de la vista angosta** (D5c): `DESIGN.md` lo pide visible y el
+  componente decía «no desaparece en pantallas angostas». La hoja quedó anotada con ese pendiente y el
+  aviso sigue visible en la barra de escritorio y en el modal de resultados. **Decisión abierta del autor.**
 - **El 16 px heredado de los botones de la barra** (D5b): no es un paso de la rampa con rol declarado,
   pero **se conserva** porque es lo que decidió `3e9dc2a` al retirar el override de 12 px. No se toca.
 - **`?v=20` en `index.html`:** el cache-busting no se mantiene desde `d9338a2` —los commits posteriores de
@@ -197,7 +209,8 @@ recién cargada en cada ancho.
 | --- | --- | --- |
 | Doc de seguimiento | `fa7d262` | — |
 | T1 · índice de cuatrimestres | `3209b61` | Índice visible a 390 y 760 en una fila sin desborde, 10 botones en el orden de foco, `display:none` y 0 paradas nuevas a 1400; salto con el borde izquierdo de la columna a 0 px, foco en `term-7` y `aria-current` correcto en los extremos. |
-| T2 · barra angosta en tres bandas | `3209b61` | 243 → 185 px a 390×844 (21,92 %) y 268 → 207,8 con mensaje; 126 → 128 a 760×900; 73 px sin cambio a 1400×900. |
+| T2 · barra angosta en tres bandas | `3209b61` | 243 → 197 px a 390×844 (23,34 %) y 268 → 219,8 con mensaje; 126 → 134 a 760×900; 73 px sin cambio a 1400×900. |
+| T2b · el contexto fuera de la vista angosta | ver «barra» | 197 → **136 px** a 390×844 (16,11 %) y 134 → **90 px** a 760×900, con el `h1`, el aviso y la etiqueta del período todavía en el árbol de accesibilidad. |
 | T3 · escala de autor y guarda de rueda | `3209b61` | Escala 0,5897 → 1 y texto dibujado 7,08/6,49 → 12/11 px a 390; sin cambio a 1400 (0,8024 y 9,63/8,83 px, D6). Rueda: `preventDefault` `false` y sin movimiento donde hay desborde vertical (349 px), `true` y 0 → 120 px donde no lo hay. |
 | T4 · documentación | `3209b61` | `DESIGN.md` (Layout y Navigation), `README.md` (Alcance y Edición) y las dos entradas del sidecar dicen lo medido; la deriva de 48 vh → 34 vh corregida en las dos copias. |
 
@@ -208,6 +221,8 @@ recién cargada en cada ancho.
   de T4 en el padre. Las decisiones D1-D5 son de esta sesión; **D6 queda explícitamente devuelta al autor**.
 - 2026-09-29, durante la implementación: **«sacale el período actual en el header para que no se baje el
   botón de siguiente»** — cierra D5b sin bajar el texto de los botones y sin perder el valor del período.
+- 2026-09-29, después: **«saca lo del plan académico… y la leyenda de datos simulados»** — D5c, con la
+  tensión contra el «Do» del aviso declarada en la hoja y devuelta como decisión abierta.
 
 ## Desvío de ruteo, declarado
 
