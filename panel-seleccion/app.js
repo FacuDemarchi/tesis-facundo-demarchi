@@ -169,6 +169,7 @@ function renderColumns() {
     return `<section class="term" aria-labelledby="term-${term}"><h2 id="term-${term}">Cuatrimestre ${term}</h2><div class="term-grid">${cards}</div></section>`;
   }).join('');
   document.querySelectorAll('.course').forEach(card => card.addEventListener('click', () => markCourse(card.dataset.course)));
+  measureTermCenters();
 }
 
 function drawConnections() {
@@ -272,15 +273,22 @@ function translateVerticalWheelToHorizontalScroll(event) {
   scrollCanvasHorizontallyTo((wheelScrollTarget ?? canvas.scrollLeft) + normalizedVerticalWheelDelta(event));
 }
 
-// El índice marca la columna más cercana al centro del lienzo: la que el lector está mirando.
-// La comparación se hace en coordenadas del desplazamiento, así vale con cualquier escala.
-function currentTermIndex() {
-  const center = canvas.scrollLeft + canvas.clientWidth / 2;
+// Los centros de las columnas, en coordenadas del desplazamiento, se miden una vez por render y por
+// redimensionado: el seguimiento del índice no lee layout en cada evento de scroll.
+let termCenters = [];
+function measureTermCenters() {
   const canvasLeft = canvas.getBoundingClientRect().left;
-  let current = 0;
-  for (const [index, term] of [...columns.children].entries()) {
+  termCenters = [...columns.children].map(term => {
     const rect = term.getBoundingClientRect();
-    const termCenter = rect.left - canvasLeft + canvas.scrollLeft + rect.width / 2;
+    return canvas.scrollLeft + (rect.left - canvasLeft) + rect.width / 2;
+  });
+}
+// El índice marca la columna más cercana al centro del lienzo: la que el lector está mirando.
+function currentTermIndex() {
+  if (!termCenters.length) return 0;
+  const center = canvas.scrollLeft + canvas.clientWidth / 2;
+  let current = 0;
+  for (const [index, termCenter] of termCenters.entries()) {
     if (termCenter > center) break;
     current = index;
   }
@@ -447,6 +455,7 @@ function fitGraphToViewport() {
   frame.style.width = `${Math.ceil(region.offsetWidth * scale)}px`;
   frame.style.height = `${Math.floor(region.offsetHeight * scale)}px`;
   drawConnections();
+  measureTermCenters();
 }
 function minutesSinceMidnight(time) {
   const [hours, minutes] = time.split(':').map(Number);
