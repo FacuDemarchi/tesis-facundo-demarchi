@@ -96,3 +96,24 @@
   .selection-panel[data-collapsed="true"] .panel-section{display:none}
   .selection-panel[data-collapsed="true"] .panel-actions{display:none}
 }
+/* Índice de cuatrimestres: sólo en pantallas angostas, donde el plano no entra entero
+   y el salto reemplaza el recorrido a ciegas. Arriba de 760 px no existe: sin foco y
+   fuera del árbol de accesibilidad. */
+.term-index{display:none}
+@media(max-width:760px){
+  /* Dos bandas: navegación de períodos e índice. El contexto del plan —el título y el aviso de datos
+     simulados— sale de la vista angosta porque el plano necesita el alto, y la etiqueta del período
+     sale para que las dos flechas y el valor entren en un renglón. Los tres siguen en el árbol de
+     accesibilidad: el h1, el aviso y la etiqueta. Los botones conservan sus 16 px: bajarlos a 12 fue
+     justamente lo que se sacó en su momento. */
+  .period-bar{align-items:stretch;flex-direction:column;gap:6px;padding:8px 12px}
+  .period-context,#period-kind{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .period-display{display:flex;align-items:baseline;gap:5px;min-width:0;padding:0 4px}
+  .period-navigation{width:100%;flex-wrap:wrap;gap:6px 8px}
+  .term-index{display:flex;align-items:center;gap:7px;min-width:0}
+  .term-index-label{flex:0 0 auto;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--c-slate-teal)}
+  .term-index-list{display:flex;gap:3px;min-width:0;margin:0;padding:0;list-style:none}
+  .term-index-list li:nth-child(even){margin-right:7px}
+  .term-index-list button{min-width:24px;min-height:28px;padding:0 5px;border:1px solid var(--line-strong);border-radius:6px;background:var(--deep);color:var(--c-white);font-size:12px;font-weight:800}
+  .term-index-list button[aria-current="true"]{border-color:var(--green);background:var(--green-deep)}
+}

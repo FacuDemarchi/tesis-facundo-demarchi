@@ -56,6 +56,7 @@ const graphFrame = document.querySelector('#graph-frame');
 const primaryAction = document.querySelector('#primary-action');
 const canvas = document.querySelector('.canvas');
 const periodBar = document.querySelector('.period-bar');
+const termIndex = document.querySelector('.term-index');
 const resultsScrim = document.querySelector('#results-scrim');
 const resultsModal = document.querySelector('#results-modal');
 const demoStrip = document.querySelector('#demo-strip');
@@ -215,6 +216,17 @@ function maxCanvasScrollLeft() {
 function clampCanvasScrollLeft(value) {
   return Math.min(maxCanvasScrollLeft(), Math.max(0, value));
 }
+// Un solo mecanismo para el desplazamiento horizontal animado: lo comparten la rueda
+// vertical traducida y el salto del índice de cuatrimestres.
+function scrollCanvasHorizontallyTo(left) {
+  wheelScrollTarget = clampCanvasScrollLeft(left);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    canvas.scrollLeft = wheelScrollTarget;
+    wheelScrollTarget = null;
+    return;
+  }
+  if (wheelAnimationFrame === null) wheelAnimationFrame = requestAnimationFrame(animateWheelScroll);
+}
 function cancelWheelScrollAnimation() {
   if (wheelAnimationFrame !== null) cancelAnimationFrame(wheelAnimationFrame);
   wheelAnimationFrame = null;
@@ -242,21 +254,64 @@ function animateWheelScroll() {
   }
   wheelAnimationFrame = requestAnimationFrame(animateWheelScroll);
 }
+// La rueda vertical se traduce a desplazamiento horizontal mientras el plano no desborde en
+// vertical. El ajuste al alto garantiza que no desborde, así que esta guarda no debería cumplirse
+// nunca: está para que la traducción no encierre al lector si el plano deja de entrar completo.
+function planOverflowsVertically() {
+  return canvas.scrollHeight > canvas.clientHeight + 1;
+}
 function translateVerticalWheelToHorizontalScroll(event) {
   const preservesNativeInteraction = event.deltaX !== 0 || event.shiftKey || event.ctrlKey || event.metaKey || event.deltaY === 0
+    || planOverflowsVertically()
     || (event.target instanceof Element && event.target.closest('#selection-panel, #results-modal, #results-scrim'));
   if (preservesNativeInteraction) {
     cancelWheelScrollAnimation();
     return;
   }
-  wheelScrollTarget = clampCanvasScrollLeft((wheelScrollTarget ?? canvas.scrollLeft) + normalizedVerticalWheelDelta(event));
   event.preventDefault();
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    canvas.scrollLeft = wheelScrollTarget;
-    wheelScrollTarget = null;
-    return;
+  scrollCanvasHorizontallyTo((wheelScrollTarget ?? canvas.scrollLeft) + normalizedVerticalWheelDelta(event));
+}
+
+// El índice marca la columna más cercana al centro del lienzo: la que el lector está mirando.
+// La comparación se hace en coordenadas del desplazamiento, así vale con cualquier escala.
+function currentTermIndex() {
+  const center = canvas.scrollLeft + canvas.clientWidth / 2;
+  const canvasLeft = canvas.getBoundingClientRect().left;
+  let current = 0;
+  for (const [index, term] of [...columns.children].entries()) {
+    const rect = term.getBoundingClientRect();
+    const termCenter = rect.left - canvasLeft + canvas.scrollLeft + rect.width / 2;
+    if (termCenter > center) break;
+    current = index;
   }
-  if (wheelAnimationFrame === null) wheelAnimationFrame = requestAnimationFrame(animateWheelScroll);
+  return current;
+}
+// El marcado arranca sin `aria-current`, así que el valor inicial tiene que forzar la primera
+// escritura cuando el índice se hace visible.
+let currentTerm = -1;
+function updateCurrentTerm() {
+  // Arriba de 760 px el índice no existe: no hay nada que marcar.
+  if (termIndex.offsetParent === null) return;
+  const current = currentTermIndex();
+  if (current === currentTerm) return;
+  currentTerm = current;
+  for (const button of termIndex.querySelectorAll('button')) {
+    if (Number(button.dataset.term) === current + 1) button.setAttribute('aria-current', 'true');
+    else button.removeAttribute('aria-current');
+  }
+}
+// Salta a la columna y deja el foco en su cabecera: el índice es un salto, no una navegación
+// por pasos, así el recorrido siguiente entra por las materias de esa columna y no por las de
+// la primera.
+function goToTerm(term) {
+  const column = columns.children[term - 1];
+  if (!column) return;
+  const canvasLeft = canvas.getBoundingClientRect().left;
+  scrollCanvasHorizontallyTo(canvas.scrollLeft + column.getBoundingClientRect().left - canvasLeft);
+  const heading = column.querySelector('h2');
+  if (!heading) return;
+  heading.setAttribute('tabindex', '-1');
+  heading.focus({ preventScroll: true });
 }
 
 function teacherLabel(teacherId) {
@@ -384,6 +439,8 @@ function fitGraphToViewport() {
   const styles = getComputedStyle(canvas);
   const verticalPadding = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
   frame.style.width = `${region.offsetWidth}px`;
+  // El plano entra completo en el alto: no hay desplazamiento vertical del grafo, y ese ajuste es
+  // lo que hace segura la traducción de la rueda vertical a horizontal más abajo.
   const scale = region.offsetHeight ? Math.min(1, Math.max(0, canvas.clientHeight - verticalPadding) / region.offsetHeight) : 1;
   region.dataset.scale = String(scale);
   region.style.transform = `scale(${scale})`;
@@ -707,8 +764,12 @@ document.querySelector('#selected-subjects').addEventListener('change', event =>
 });
 updateInterface();
 updatePanelSide();
-requestAnimationFrame(fitGraphToViewport);
+requestAnimationFrame(() => {
+  fitGraphToViewport();
+  updateCurrentTerm();
+});
 canvas.addEventListener('scroll', updatePanelSide, { passive: true });
+canvas.addEventListener('scroll', updateCurrentTerm, { passive: true });
 canvas.addEventListener('wheel', translateVerticalWheelToHorizontalScroll, { passive: false });
 resultsModal.addEventListener('wheel', cancelWheelScrollAnimation, { passive: true });
 resultsScrim.addEventListener('wheel', cancelWheelScrollAnimation, { passive: true });
@@ -716,6 +777,7 @@ canvas.addEventListener('pointerdown', cancelWheelScrollAnimation);
 window.addEventListener('resize', () => {
   fitGraphToViewport();
   updatePanelSide();
+  updateCurrentTerm();
 });
 
 // Panel colapsable en pantalla angosta (U5). La manija solo existe a <=760px: arriba, el
@@ -727,6 +789,10 @@ function setPanelCollapsed(collapsed) {
   panelHandle.textContent = collapsed ? 'Mostrar el panel de selección' : 'Ocultar el panel de selección';
 }
 panelHandle.addEventListener('click', () => setPanelCollapsed(selectionPanel.dataset.collapsed !== 'true'));
+termIndex.addEventListener('click', event => {
+  const button = event.target.closest('button[data-term]');
+  if (button) goToTerm(Number(button.dataset.term));
+});
 
 // El modal se re-renderiza al elegir una alternativa, y eso reemplaza el nodo: el `toggle`
 // nativo llega a un elemento ya desprendido y el estado se pierde. Se escucha el clic en

@@ -355,17 +355,29 @@ px con 24 px de separación, donde cada materia ocupa su fila mediante `grid-row
 **El desplazamiento es horizontal por diseño.** El plano no se ajusta al ancho: se recorre. La rueda
 vertical pura sobre el grafo se traduce a desplazamiento horizontal con una única animación suavizada,
 y se respetan los gestos de trackpad, Shift, Ctrl/Cmd y el desplazamiento nativo dentro del panel y del
-modal.
+modal. **El desplazamiento horizontal es el de por defecto**, y la traducción de la rueda lleva una
+condición: si el lienzo llegara a desbordar en vertical, la rueda conserva su recorrido nativo, porque
+entonces sería la única vía a las filas que quedaron fuera de la vista. Con el plano entrando completo en
+el alto —la regla que sigue— esa condición no se cumple nunca: la guarda está para que el atajo no
+encierre al lector si algún día el plano deja de entrar.
+
+**El plano entra completo en el alto.** Se escala una sola vez para que todo el año entre verticalmente
+—0,98 en 1920×1080, 0,80 en 1440×900, 0,65 en 1024×768— y el lienzo se recorre **sólo en horizontal**: no
+hay desplazamiento vertical del grafo. El precio es que el piso de la rampa se dibuja por debajo de su
+valor —al 65 % los 11 px se dibujan a 7,2 px— y es una decisión del autor del 2026-09-29: «no quiero
+desplazamiento vertical para el grafo, tiene que mostrarse verticalmente completo». El ajuste al alto es
+un zoom de vista, y el piso de 11 px rige la rampa escrita, no los píxeles dibujados.
 
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
-—12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 48 vh—. No reserva
+—12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 34 vh—. No reserva
 ancho: las tarjetas pueden quedar detrás de él. El modal de resultados se abre sobre un velo que
 arranca debajo de la barra.
 
 **Breakpoints observados:** 760 px en el panel de selección y en la vista institucional (que además
 colapsa su grilla a una columna en 470 px), y 640 px en la familia de escenarios. En los tres casos la
-barra pasa a columna.
+barra pasa a columna. En 760 px la barra de período se organiza además en dos bandas —navegación de
+períodos e índice de cuatrimestres, con el contexto del plan fuera de la vista—.
 
 **Ritmo:** los grupos internos son apretados (6 a 10 px de separación) y las secciones se separan con 13
 a 16 px y una línea. Siempre hay más aire arriba de un encabezado que abajo.
@@ -453,6 +465,23 @@ La barra de período es una franja verde profunda con tres zonas: el contexto de
 centro, y la navegación a la derecha con botones de 38 px de alto mínimo. Sus flechas se deshabilitan
 durante la transacción de selección en lugar de permitir un cambio a mitad de camino.
 
+**En pantallas angostas la barra se apila en dos bandas** —navegación de períodos e índice de
+cuatrimestres— y el contexto del plan sale de la vista: el plano necesita el alto, y en un teléfono el
+título y el aviso de datos simulados quedan sólo en el árbol de accesibilidad. La etiqueta del período
+(«Período actual» / «Período siguiente») también sale de la vista, para que las dos flechas y el valor
+entren en un renglón y el botón «Siguiente» no caiga a una fila propia; la región viva del período sigue
+anunciándola. Los botones de la barra **conservan sus 16 px y sus 38 px de alto mínimo**: bajarlos a 12 px
+en pantallas chicas es exactamente lo que se retiró en su momento, y la compresión se hace con layout, no
+con tamaño de texto. La barra mide 136 px a 390×844 —16,1 % del alto— contra los 243 px del apilado
+anterior, e incluye el índice.
+
+**El índice de cuatrimestres** es la única pieza de la barra que existe sólo abajo de 760 px: un `<nav>`
+con diez botones numerados —`1`…`10`, con el nombre accesible «Cuatrimestre N»— agrupados de a dos por
+año. Es un salto, no una navegación por pasos: manda el lienzo a esa columna, deja el foco en su cabecera
+`h2` para que el recorrido siguiente entre por sus materias, y marca con `aria-current="true"` la columna
+más cercana al centro del lienzo, que es la orientación que el plano encogido daba gratis. Arriba de
+760 px no existe: `display:none`, sin foco y fuera del árbol de accesibilidad.
+
 ### Chip de estado (institucional)
 Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsculas en `--fs-micro`
 (12 px); cuando la demanda queda insatisfecha pasan al fondo de advertencia con tinta `#8e3608`.
@@ -460,7 +489,13 @@ Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsc
 ### Aviso de datos simulados
 Bloque con regla izquierda de 5 px, fondo `#eeeafd` y tinta `#6a2482` en la vista institucional; línea
 compacta en mayúsculas espaciadas dentro del contexto del plan en las superficies del estudiante. Es
-texto real del documento, nunca un tooltip, y no desaparece en pantallas angostas.
+texto real del documento, nunca un tooltip. **En pantallas angostas sale de la vista**, por decisión del
+autor del 2026-09-29: se va con todo el contexto del plan —título y aviso— y queda sólo en el árbol de
+accesibilidad. Eso **tensiona el «Do» de esta misma hoja**, que pide declarar en texto visible que los
+datos son simulados y que el prototipo no es el sistema oficial: en reposo, la pantalla angosta ya no lo
+dice en ningún lado, aunque la declaración visible sobrevive en la barra de escritorio y en el modal de
+resultados. Queda **pendiente del autor**: relajar el «Do», o recuperar una línea en el teléfono, que a
+12 px de tamaño mide 17 px de alto.
 
 ## Do's and Don'ts
 
