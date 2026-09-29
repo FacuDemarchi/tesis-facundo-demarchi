@@ -92,10 +92,20 @@ vertical mantiene su ruta nativa y las filas de abajo siguen alcanzables. Arriba
 encogido, no desborda y la regla documentada no cambia ni un píxel.
 
 **D5 · La barra angosta, tres bandas.** Contexto (título y aviso de datos simulados), navegación de
-períodos, índice. Medido a 390×844: **243 → 182,69 px** (28,79 % → 21,65 %; con mensaje de estado visible
-268 → 205,48 px, 24,35 %). A 760×900 queda en 127,84 contra 126 de hoy: la barra no crece en ningún ancho
-angosto y el índice entra sin costo. El aviso de datos simulados y la franja de confirmación de T1 siguen
-visibles: son reglas con nombre del sistema, no cromo opcional.
+períodos, índice. Medido a 390×844: **243 → 197 px** (28,79 % → 23,34 %; con mensaje de estado visible
+268 → 219,8 px, 26,04 %). A 760×900 queda en 134 contra 126: la barra crece 8 px y a cambio entra el
+índice. El aviso de datos simulados y la franja de confirmación de T1 siguen visibles: son reglas con
+nombre del sistema, no cromo opcional.
+
+**D5b · La compresión es de layout, no de tamaño de texto.** La primera versión bajaba los botones de la
+barra al paso `Body` (12 px, 34 px de alto mínimo) y daba 185 px. **Estaba revirtiendo una decisión del
+repositorio:** `3e9dc2a` («buttons that stop shrinking») había sacado justamente el override de 12 px de
+las cuatro media queries para que los botones conserven sus 16 px, y `DESIGN.md` documenta 38 px de alto
+mínimo. Con los 16 px intactos y sólo layout, el wrap partía las flechas y dejaba «Leyenda» sola. La
+salida la indicó el autor: **sacar de la vista la etiqueta «Período actual» del header angosto** —sigue en
+el árbol de accesibilidad, así que la región viva del período lo sigue anunciando y el valor `1B · 2026`
+queda visible— con lo que las dos flechas y el período entran en un renglón. Resultado: **197 px con los
+16 px intactos** y la decisión previa respetada.
 
 **D6 · Fuera de alcance, medido y reportado.** El mismo encogido deja el plano por debajo del piso en
 escritorio y en ventanas bajas (1024×768: 7,83/7,17 px; 1366×768: 0,667 → 8,00/7,34 px). En una defensa
@@ -116,10 +126,11 @@ comportamiento que el autor ya vio y aprobó en escritorio: **decisión del auto
   (`display:none`, sin paradas de tabulación nuevas); salto medido (borde izquierdo de la columna dentro
   del lienzo) y foco en la cabecera; `aria-current` correcto en los dos extremos del recorrido.
 
-### T2 — La barra angosta en tres bandas  ·  D5
+### T2 — La barra angosta en tres bandas  ·  D5, D5b
 - **Archivos**: `panel-seleccion/styles.css`.
-- **Esperado**: a 390×844 la barra baja de 243 px a ~183 px sin perder el aviso de datos simulados ni la
-  franja de confirmación; a 760×900 no crece; a 1400×900 queda igual (73 px).
+- **Esperado**: a 390×844 la barra baja de 243 px a ~197 px sin perder el aviso de datos simulados ni la
+  franja de confirmación, con los botones en sus 16 px; a 760×900 no crece más que el índice; a 1400×900
+  queda igual (73 px).
 - **Evidencia de cierre**: alturas de la barra y de cada banda medidas en 390, 760 y 1400, en reposo y con
   mensaje de estado.
 
@@ -137,17 +148,66 @@ comportamiento que el autor ya vio y aprobó en escritorio: **decisión del auto
   callado sobre el encogido del alto; `README.md` describe el comportamiento del índice y su alcance.
 - **Evidencia de cierre**: lectura contra el código y la medición; sin afirmaciones sin medición detrás.
 
+## Verificación (medición, no reporte)
+
+Chrome for Testing 153 por CDP propio, sobre el árbol final, en tres anchos. A/B de la rueda con página
+recién cargada en cada ancho.
+
+| Qué | 390×844 | 760×900 | 1400×900 |
+| --- | --- | --- | --- |
+| Barra de período | **243 → 197 px** (23,34 %) | 126 → 134 px (14,89 %) | **73 px, sin cambio** |
+| Bandas de la barra | contexto 55 + navegación 86 + índice 28 | 38 + 40 + 28 | 55 + 45 (sin índice) |
+| Escala del plano | **0,5897 → 1** | 0,7641 → 1 | **0,8024, sin cambio** |
+| Título de tarjeta dibujado (autor 12 px) | **7,08 → 12 px** | 9,17 → 12 px | 9,63 px (D6) |
+| Metadato dibujado (autor 11 px) | **6,49 → 11 px** | 8,41 → 11 px | 8,83 px (D6) |
+| Desplazamiento del lienzo (X / Y) | 3146 / 361 | 2776 / 242 | 1441 / 0, sin cambio |
+| Índice | visible, 10 botones, **una fila**, sin desborde | igual | **`display:none`**, 0 paradas nuevas |
+| Salto al cuatrimestre 7 | borde izquierdo a **0 px**, columna entera visible, foco en `term-7` (`h2`, `tabindex="-1"`, «Cuatrimestre 7»), `aria-current` = 7 | igual | no aplica |
+| `aria-current` en los extremos | 1 al inicio, 10 al final | 1 / 9 (a 760 se ven dos columnas) | no aplica |
+| Orden de foco | 3 paradas + 10 del índice | igual | 3 paradas, sin índice |
+| Rueda vertical sobre el plano | maxY 349 → **`preventDefault` `false`**, no mueve el lienzo | igual | maxY 0 → **`preventDefault` `true`**, 0 → 120 px, idéntico a la línea base |
+| Diálogo de resultados abierto | barra `inert`, índice dentro del subárbol inerte, **0 botones alcanzables** | — | — |
+| Consola del navegador | **sin excepciones ni errores** | — | **sin excepciones ni errores** |
+| Detector del proyecto | **`[]` (0 hallazgos)** | — | — |
+
+## Hallazgos laterales (medidos; no corregidos fuera de alcance)
+
+- **Deriva de documentación, corregida:** `DESIGN.md` y `.impeccable/design.json` declaraban que el panel
+  angosto se limita a **48 vh**; el CSS renderiza **34 vh** y la medición da 286,95 px sobre 844. Se
+  corrigieron las dos copias para que digan lo que se dibuja.
+- **Hallazgo del detector, introducido y cerrado en esta misma feature:** la primera versión de la barra
+  bajaba el aviso de datos simulados a 11 px; el detector lo marcó (`tiny-text`) y además violaba «La Regla
+  del Piso de 12 px», que rige las superficies de lectura. Corregido: el aviso se queda en 12 px. El
+  detector vuelve a **0 hallazgos**. La lección vale para el resto de la feature: **no se puede invocar el
+  piso tipográfico para justificar una decisión y romper la rampa en otra parte.**
+- **El encogido del plano en escritorio y ventanas bajas** (D6): sigue midiendo 9,63/8,83 px a 1400×900 y
+  7,83/7,17 px a 1024×768. Devuelto al autor con el costo de arreglarlo.
+- **El 16 px heredado de los botones de la barra** (D5b): no es un paso de la rampa con rol declarado,
+  pero **se conserva** porque es lo que decidió `3e9dc2a` al retirar el override de 12 px. No se toca.
+- **`?v=20` en `index.html`:** el cache-busting no se mantiene desde `d9338a2` —los commits posteriores de
+  estos mismos archivos no lo bumpearon— así que no se bumpea acá.
+- **El catálogo de componentes de `.impeccable/design.json`** no se amplió con el índice: son 8 piezas
+  curadas con su propio escenario `ds-*` y no es exhaustivo (no lista la barra de período, el modal ni los
+  alternadores de día). Sí se corrigieron las dos afirmaciones que quedaban incompletas o falsas:
+  `extensions.breakpoints` y `extensions.motion`.
+
 ## Registro de commits
 
 | Tarea | Commit | Verificación |
 | --- | --- | --- |
-| Doc de seguimiento | — | — |
+| Doc de seguimiento | `fa7d262` | — |
+| T1 · índice de cuatrimestres | `3209b61` | Índice visible a 390 y 760 en una fila sin desborde, 10 botones en el orden de foco, `display:none` y 0 paradas nuevas a 1400; salto con el borde izquierdo de la columna a 0 px, foco en `term-7` y `aria-current` correcto en los extremos. |
+| T2 · barra angosta en tres bandas | `3209b61` | 243 → 185 px a 390×844 (21,92 %) y 268 → 207,8 con mensaje; 126 → 128 a 760×900; 73 px sin cambio a 1400×900. |
+| T3 · escala de autor y guarda de rueda | `3209b61` | Escala 0,5897 → 1 y texto dibujado 7,08/6,49 → 12/11 px a 390; sin cambio a 1400 (0,8024 y 9,63/8,83 px, D6). Rueda: `preventDefault` `false` y sin movimiento donde hay desborde vertical (349 px), `true` y 0 → 120 px donde no lo hay. |
+| T4 · documentación | `3209b61` | `DESIGN.md` (Layout y Navigation), `README.md` (Alcance y Edición) y las dos entradas del sidecar dicen lo medido; la deriva de 48 vh → 34 vh corregida en las dos copias. |
 
 ## Decisiones del autor registradas
 
 - 2026-09-28: ante el bloqueo de T4, «no sé» dos veces. Queda sin tocar.
 - 2026-09-29: **«procede, toma las decisiones para este t4»** — el autor delega las decisiones de diseño
   de T4 en el padre. Las decisiones D1-D5 son de esta sesión; **D6 queda explícitamente devuelta al autor**.
+- 2026-09-29, durante la implementación: **«sacale el período actual en el header para que no se baje el
+  botón de siguiente»** — cierra D5b sin bajar el texto de los botones y sin perder el valor del período.
 
 ## Desvío de ruteo, declarado
 
