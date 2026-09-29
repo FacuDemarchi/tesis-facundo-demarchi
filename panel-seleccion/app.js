@@ -8,14 +8,14 @@ let selectedCourseLimit = 3;
 
 const courses = [
   ['C01',1,1,'Herramientas matemáticas I – Álgebra','approved','sa'], ['C02',1,2,'Herramientas matemáticas II – Análisis','approved','sa'], ['C03',1,3,'Introducción a los algoritmos','approved','sa'], ['C04',1,4,'Desarrollo emprendedor','approved','sa'], ['C05',1,5,'Sistemas de información','approved','sa'], ['C06',1,6,'Idioma extranjero I','approved','sa'],
-  ['C07',2,1,'Matemática discreta','approved','sa'], ['C08',2,2,'Cálculo avanzado','approved','sa'], ['C09',2,3,'Arquitectura del computador','approved','sa'], ['C10',2,4,'Programación orientada a objetos','approved','sa'], ['C11',2,6,'Idioma extranjero II','approved','sa'],
-  ['C12',3,1,'Grupo y Liderazgo','approved','sa'], ['C13',3,2,'Lógica Simbólica','approved','sa'], ['C14',3,3,'Algoritmos y estructura de Datos I','approved','sa'], ['C15',3,4,'Taller de algoritmos y estructura de Datos I','approved','sa'], ['C16',3,5,'Herramientas matemáticas III – Estadística I','approved','sa'], ['C17',3,6,'Idioma extranjero III','approved','sa'],
+  ['C07',2,1,'Matemática discreta','approved','sa'], ['C08',2,2,'Cálculo avanzado','approved','sa'], ['C09',2,3,'Arquitectura del computador','approved','sa'], ['C10',3,2,'Programación orientada a objetos','approved','sa'], ['C11',2,6,'Idioma extranjero II','approved','sa'],
+  ['C12',3,1,'Grupo y Liderazgo','approved','sa'], ['C13',2,4,'Lógica Simbólica','approved','sa'], ['C14',3,3,'Algoritmos y estructura de Datos I','approved','sa'], ['C15',3,4,'Taller de algoritmos y estructura de Datos I','approved','sa'], ['C16',3,5,'Herramientas matemáticas III – Estadística I','approved','sa'], ['C17',3,6,'Idioma extranjero III','approved','sa'],
   ['C18',4,1,'Principios de Economía','approved','sa'], ['C19',4,3,'Algoritmos y estructura de Datos II','planned','sa'], ['C20',4,4,'Taller de algoritmos y estructura de Datos II','planned','sa'], ['C21',4,5,'Paradigmas de Programación','approved','sa'], ['C22',4,6,'Idioma extranjero IV','approved','sa'],
   ['C23',5,1,'Ética y Deontología Profesional','available','sa'], ['C24',5,2,'Sistemas operativos','no-offer','sa'], ['C25',5,3,'Análisis y diseño de Software','blocked','pp'], ['C26',5,4,'Taller de Análisis de diseño de Software','blocked','pp'], ['C27',5,5,'Herramientas matemáticas V – Estadística II','planned','sa'], ['C28',5,6,'Idioma extranjero V','approved','sa'],
   ['C29',6,1,'Seminario de práctica de Analista en Software','available','process'], ['C30',6,2,'Taller de Ingeniería de Software','blocked','general'], ['C31',6,3,'Ingeniería de Software','blocked','general'], ['C32',6,4,'Base de datos I','blocked','pp'], ['C33',6,6,'Idioma extranjero VI','approved','general'],
-  ['C34',7,1,'Seguridad informática','blocked','general'], ['C35',7,2,'Sistemas Operativos II (Redes)','blocked','general'], ['C36',7,4,'Calidad de Software','blocked','general'],
+  ['C34',7,1,'Seguridad informática','blocked','general'], ['C35',7,2,'Sistemas Operativos II (Redes)','blocked','general'], ['C36',7,6,'Calidad de Software','blocked','general'],
   ['C37',8,1,'Herramientas matemáticas VI – Modelos de simulación','blocked','general'], ['C38',8,2,'Construcción de Software','blocked','general'], ['C39',8,3,'Taller de Construcción de Software','blocked','general'], ['C40',8,4,'Administración de Proyectos','blocked','general'], ['C41',8,5,'Base de Datos II','blocked','general'],
-  ['C42',9,1,'Emprendimientos universitarios','available','general'], ['C43',9,2,'Métodos Formales','available','general'], ['C44',9,4,'Práctica profesional de Ingeniería en Software','blocked','process'], ['C45',10,1,'Práctica solidaria','available','process'], ['C46',10,4,'Seminario final de Ingeniería en Software','blocked','process']
+  ['C42',9,1,'Emprendimientos universitarios','available','general'], ['C43',9,2,'Métodos Formales','available','general'], ['C44',9,6,'Práctica profesional de Ingeniería en Software','blocked','process'], ['C45',10,1,'Práctica solidaria','available','process'], ['C46',10,6,'Seminario final de Ingeniería en Software','blocked','process']
 ].map(([id, term, slot, name, state, category]) => ({ id, term, slot, name, state, category }));
 
 const edges = [
@@ -186,7 +186,10 @@ function drawConnections() {
     const target = document.querySelector(`[data-course="${to}"]`).getBoundingClientRect();
     const x1 = (source.right - stageBox.left) / scale;
     const y1 = (source.top + source.height / 2 - stageBox.top) / scale;
-    const x2 = (target.left - stageBox.left) / scale;
+    // La punta de la flecha mide ~18 px en unidades del escenario: la arista termina
+    // antes del borde para que la flecha se dibuje entera en el canal y no bajo la tarjeta.
+    const inset = 5 / scale;
+    const x2 = (target.left - stageBox.left - inset) / scale;
     const y2 = (target.top + target.height / 2 - stageBox.top) / scale;
     const bend = Math.max(28, (x2 - x1) * .48);
     return `<path class="edge ${type}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;

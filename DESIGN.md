@@ -348,8 +348,8 @@ ancho que necesitan: la medida es una regla, no un accidente del layout.
 
 El lienzo es un contenedor flexible con desplazamiento propio que ocupa todo el ancho disponible, con
 8 px de relleno y el color de papel de fondo. Adentro, el plano se dibuja fijo y grande: una región de
-3520 px con borde y esquinas de 17 px, un escenario de 3444 px, y diez columnas de 300 px separadas por
-49 px. Cada columna es un cuatrimestre con fondo verde claro y una grilla interna de seis filas de 118
+3708 px con borde y esquinas de 17 px, un escenario de 3630 px, y diez columnas de 300 px separadas por
+70 px. Cada columna es un cuatrimestre con fondo verde claro y una grilla interna de seis filas de 118
 px con 24 px de separación, donde cada materia ocupa su fila mediante `grid-row`.
 
 **El desplazamiento es horizontal por diseño.** El plano no se ajusta al ancho: se recorre. La rueda
@@ -443,6 +443,15 @@ la distinción no tenía regla, catorce de veintiséis flechas iban punteadas y 
 nada; con la regla aplicada quedan tres, y las tres son los tramos largos. Un trazo sin criterio es
 decoración con apariencia de dato, y la leyenda del plano lo delata: si no se puede nombrar qué
 distingue, hay que dejar de distinguir.
+
+**La Regla de la Arista que se Ve.** Las correlatividades son una **capa entre el fondo de la columna y
+las tarjetas**: se dibujan por encima del verde de la columna y por debajo de cada tarjeta, así que una
+arista existe en todo su recorrido y no sólo en el canal. La capa obliga a dos cosas. Primero, **ninguna
+arista pasa por encima de una tarjeta**: las dos que lo hacían se resolvieron abriendo corredores de fila
+libre en las columnas intermedias —tres materias movidas de fila, no el trazo acortado—. Segundo, **cada
+flecha termina 5 px antes de la tarjeta destino**, porque la punta mide 18 px y terminaba cortada por el
+borde. Un plano donde la conexión desaparece al entrar en la columna no dice qué precede a qué: dice
+dónde están las materias, y nada más.
 
 ## Components
 

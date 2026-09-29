@@ -19,10 +19,10 @@ const courses = [
   { id:'C07', term:2, slot:1, name:'Matemática discreta', state:'approved', category:'sa' },
   { id:'C08', term:2, slot:2, name:'Cálculo avanzado', state:'approved', category:'sa' },
   { id:'C09', term:2, slot:3, name:'Arquitectura del computador', state:'approved', category:'sa' },
-  { id:'C10', term:2, slot:4, name:'Programación orientada a objetos', state:'approved', category:'sa' },
+  { id:'C10', term:3, slot:2, name:'Programación orientada a objetos', state:'approved', category:'sa' },
   { id:'C11', term:2, slot:6, name:'Idioma extranjero II', state:'approved', category:'sa' },
   { id:'C12', term:3, slot:1, name:'Grupo y Liderazgo', state:'approved', category:'sa' },
-  { id:'C13', term:3, slot:2, name:'Lógica Simbólica', state:'approved', category:'sa' },
+  { id:'C13', term:2, slot:4, name:'Lógica Simbólica', state:'approved', category:'sa' },
   { id:'C14', term:3, slot:3, name:'Algoritmos y estructura de Datos I', state:'approved', category:'sa' },
   { id:'C15', term:3, slot:4, name:'Taller de algoritmos y estructura de Datos I', state:'approved', category:'sa' },
   { id:'C16', term:3, slot:5, name:'Herramientas matemáticas III – Estadística I', state:'approved', category:'sa' },
@@ -45,7 +45,7 @@ const courses = [
   { id:'C33', term:6, slot:6, name:'Idioma extranjero VI', state:'approved', category:'general' },
   { id:'C34', term:7, slot:1, name:'Seguridad informática', state:'blocked', category:'general' },
   { id:'C35', term:7, slot:2, name:'Sistemas Operativos II (Redes)', state:'blocked', category:'general' },
-  { id:'C36', term:7, slot:4, name:'Calidad de Software', state:'blocked', category:'general' },
+  { id:'C36', term:7, slot:6, name:'Calidad de Software', state:'blocked', category:'general' },
   { id:'C37', term:8, slot:1, name:'Herramientas matemáticas VI – Modelos de simulación', state:'blocked', category:'general' },
   { id:'C38', term:8, slot:2, name:'Construcción de Software', state:'blocked', category:'general' },
   { id:'C39', term:8, slot:3, name:'Taller de Construcción de Software', state:'blocked', category:'general' },
@@ -53,9 +53,9 @@ const courses = [
   { id:'C41', term:8, slot:5, name:'Base de Datos II', state:'blocked', category:'general' },
   { id:'C42', term:9, slot:1, name:'Emprendimientos universitarios', state:'available', category:'general' },
   { id:'C43', term:9, slot:2, name:'Métodos Formales', state:'available', category:'general' },
-  { id:'C44', term:9, slot:4, name:'Práctica profesional de Ingeniería en Software', state:'blocked', category:'process' },
+  { id:'C44', term:9, slot:6, name:'Práctica profesional de Ingeniería en Software', state:'blocked', category:'process' },
   { id:'C45', term:10, slot:1, name:'Práctica solidaria', state:'no-offer', category:'process' },
-  { id:'C46', term:10, slot:4, name:'Seminario final de Ingeniería en Software', state:'blocked', category:'process' }
+  { id:'C46', term:10, slot:6, name:'Seminario final de Ingeniería en Software', state:'blocked', category:'process' }
 ];
 
 const edges = [
@@ -115,7 +115,10 @@ function drawConnections() {
     const target = document.querySelector(`[data-course="${to}"]`).getBoundingClientRect();
     const x1 = (source.right - stageBox.left) / scale;
     const y1 = (source.top + source.height / 2 - stageBox.top) / scale;
-    const x2 = (target.left - stageBox.left) / scale;
+    // La punta de la flecha mide ~18 px en unidades del escenario: la arista termina
+    // antes del borde para que la flecha se dibuje entera en el canal y no bajo la tarjeta.
+    const inset = 5 / scale;
+    const x2 = (target.left - stageBox.left - inset) / scale;
     const y2 = (target.top + target.height / 2 - stageBox.top) / scale;
     const bend = Math.max(28, (x2 - x1) * .48);
     return `<path class="edge ${type}" data-from="${from}" data-to="${to}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;
