@@ -163,7 +163,7 @@
       "name": "Aviso de datos simulados",
       "kind": "custom",
       "refersTo": "notice",
-      "description": "Declara que los datos son simulados, que es un prototipo de tesis y que no es un sistema oficial. Texto real del documento, nunca un tooltip.",
+      "description": "Declara que los datos son simulados, que es un prototipo de tesis y que no es un sistema oficial. Texto real del documento, nunca un tooltip. En pantallas angostas sale de la vista —el plano necesita el alto— y queda en el árbol de accesibilidad, con la declaración visible en la barra de escritorio y en el modal de resultados.",
       "html": "<footer class=\"ds-notice\"><strong>Datos simulados</strong><span>Escenario de prueba sin datos de estudiantes ni datos institucionales reales.</span></footer>",
       "css": ".ds-notice { display: grid; gap: 4px; padding: 15px 17px; border-left: 5px solid #6a2482; border-radius: 8px; background: #eeeafd; color: #6a2482; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: .88rem; line-height: 1.4; }"
     }
@@ -197,7 +197,7 @@
       "Do mantené el anillo de foco de dos tonalidades, y si una regla necesita su propia sombra, incluí 0 0 0 2px #043a31 primero en la lista.",
       "Do reservá la línea fuerte #6d6e71 para delimitar controles y la línea clara #cad5e2 para separar contenido.",
       "Do dejá que el grafo ocupe el ancho y que las capas floten encima: el panel no reserva espacio.",
-      "Do declarar en texto visible que los datos son simulados y que el prototipo no es el sistema oficial de la universidad."
+      "Do declarar que los datos son simulados y que el prototipo no es el sistema oficial de la universidad: en texto visible donde la superficie tenga lugar —la barra de escritorio y el modal de resultados— y al menos en el árbol de accesibilidad donde el alto es escaso, como la barra angosta del plano."
     ],
     "donts": [
       "Don't usar el dorado como color de texto sobre fondos claros: 2.15:1. Es relleno o anillo, nunca tinta.",

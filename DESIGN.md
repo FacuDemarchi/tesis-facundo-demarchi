@@ -368,6 +368,13 @@ valor —al 65 % los 11 px se dibujan a 7,2 px— y es una decisión del autor d
 desplazamiento vertical para el grafo, tiene que mostrarse verticalmente completo». El ajuste al alto es
 un zoom de vista, y el piso de 11 px rige la rampa escrita, no los píxeles dibujados.
 
+**El zoom del navegador no se desactiva en ninguna superficie.** En un teléfono el plano se dibuja entre
+el 45 % y el 70 % para entrar completo en el alto, así que el zoom es su única vía al texto del plano:
+medido, un pellizco de 2,5 lleva el texto dibujado de 8,37 a 20,93 px. Un `user-scalable=no`, un
+`maximum-scale=1` o un `touch-action: none` dejarían al teléfono con un plano ilegible y sin recurso. El
+`meta viewport` se queda llano (`width=device-width, initial-scale=1`) y el manejador de rueda deja pasar
+`Ctrl`/`Cmd`, que conservan el zoom de escritorio.
+
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
 —12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 34 vh—. No reserva
@@ -490,12 +497,11 @@ Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsc
 Bloque con regla izquierda de 5 px, fondo `#eeeafd` y tinta `#6a2482` en la vista institucional; línea
 compacta en mayúsculas espaciadas dentro del contexto del plan en las superficies del estudiante. Es
 texto real del documento, nunca un tooltip. **En pantallas angostas sale de la vista**, por decisión del
-autor del 2026-09-29: se va con todo el contexto del plan —título y aviso— y queda sólo en el árbol de
-accesibilidad. Eso **tensiona el «Do» de esta misma hoja**, que pide declarar en texto visible que los
-datos son simulados y que el prototipo no es el sistema oficial: en reposo, la pantalla angosta ya no lo
-dice en ningún lado, aunque la declaración visible sobrevive en la barra de escritorio y en el modal de
-resultados. Queda **pendiente del autor**: relajar el «Do», o recuperar una línea en el teléfono, que a
-12 px de tamaño mide 17 px de alto.
+autor del 2026-09-29: el plano necesita el alto y la barra se queda con lo que se usa —la navegación de
+períodos y el índice de cuatrimestres—, así que el aviso se va junto con todo el contexto del plan, el
+título incluido. No desaparece del sistema: sigue en el árbol de accesibilidad, y la declaración visible
+sobrevive en la barra de escritorio y en el modal de resultados. El «Do» de esta hoja se relajó en el
+mismo acto, para que la regla diga esto sin contradecirse.
 
 ## Do's and Don'ts
 
@@ -505,7 +511,7 @@ resultados. Queda **pendiente del autor**: relajar el «Do», o recuperar una l�
 - **Do** mantené el anillo de foco de dos tonalidades, y si una regla necesita su propia sombra, incluí `0 0 0 2px #043a31` primero en la lista.
 - **Do** reservá la línea fuerte `#6d6e71` para delimitar controles y la línea clara `#cad5e2` para separar contenido.
 - **Do** dejá que el grafo ocupe el ancho y que las capas floten encima: el panel no reserva espacio.
-- **Do** declarar en texto visible que los datos son simulados y que el prototipo no es el sistema oficial de la universidad.
+- **Do** declarar que los datos son simulados y que el prototipo no es el sistema oficial de la universidad: **en texto visible** donde la superficie tenga lugar —la barra de escritorio y el modal de resultados— y al menos **en el árbol de accesibilidad** donde el alto es escaso, como la barra angosta del plano.
 
 ### Don't:
 - **Don't** usar el dorado como color de texto sobre fondos claros: 2.15:1. Es relleno o anillo, nunca tinta.
