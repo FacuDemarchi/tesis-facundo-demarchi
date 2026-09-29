@@ -60,7 +60,16 @@
       <div id="global-evaluation" class="global-evaluation" hidden>
         <section id="global-evaluation-result" class="global-evaluation-result" aria-label="Resultado de la evaluación global" aria-live="polite" hidden></section>
       </div>
-      <div id="demand-list" class="demand-list" tabindex="-1"></div>
+      <div id="demand-list" class="demand-master" tabindex="-1">
+        <div class="demand-table-scroll">
+          <table class="demand-table">
+            <caption class="sr-only">Demanda simulada por materia del período seleccionado</caption>
+            <thead id="demand-table-head"></thead>
+            <tbody id="demand-table-body"></tbody>
+          </table>
+        </div>
+        <section id="demand-detail" class="demand-detail" aria-labelledby="demand-detail-title"></section>
+      </div>
     </section>
 
     <footer class="page-footer simulation-notice" aria-label="Aviso sobre datos simulados">

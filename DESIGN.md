@@ -493,6 +493,27 @@ más cercana al centro del lienzo, que es la orientación que el plano encogido 
 Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsculas en `--fs-micro`
 (12 px); cuando la demanda queda insatisfecha pasan al fondo de advertencia con tinta `#8e3608`.
 
+### Tabla de demanda y panel de detalle (institucional)
+La consulta institucional no apila tarjetas: **compara** materias, y comparar pide columnas alineadas. Una tabla
+con una fila por materia —`Materia`, las métricas activas del período y `Estado`— ocupa **303 px para cinco
+materias**, y un panel al costado muestra lo que no se compara: el nombre completo, el chip de estado, las
+secciones asignadas, las causas del escenario y, cuando la evaluación global está desplegada, el plan
+simulado de esa materia.
+
+Las métricas son **columnas, no filas apiladas**. Los números se alinean a la derecha con cifras tabulares
+y el valor fuera de cupo se dice con la tinta de advertencia (`--warning-ink`, `#8e3608`), no con el ámbar
+del borde. El marcador de una fila insatisfecha es una barra interior de 3 px en su borde izquierdo, además
+del número: la forma y el dato, nunca sólo el color.
+
+La fila entera es un blanco de clic y su control real es el botón que lleva el código y el nombre, que
+declara el panel con `aria-controls`. El estado de selección viaja **en el nombre accesible**
+(«… (seleccionada)») porque Chrome **no expone `aria-current`** en ese botón —medido, no supuesto—, y cada
+cambio se anuncia en la región viva. La columna `Estado` existe sólo en el período actual: en el siguiente
+todas las filas dirían lo mismo, así que sobra.
+
+Abajo de 520 px útiles el panel baja debajo de la tabla —lo decide la grilla, no un breakpoint—; abajo de
+470 px la columna `Estado` sale de la vista y su chip sobrevive en el panel.
+
 ### Aviso de datos simulados
 Bloque con regla izquierda de 5 px, fondo `#eeeafd` y tinta `#6a2482` en la vista institucional; línea
 compacta en mayúsculas espaciadas dentro del contexto del plan en las superficies del estudiante. Es

@@ -42,10 +42,10 @@ The shared data model validates the metric set, preserved subject count, total r
 
 ## Behavior
 
-- The period select and previous/next controls deterministically render one of the two fixed simulated periods.
-- The summary and every subject card show only the metrics that apply to the selected period; irrelevant metrics are hidden rather than rendered as zero.
-- Current-period cards list each simulated section ID, assigned classroom, and `Cupo`, and identify outside-capacity students as pending section assignment. Following-period cards identify registered future demand without treating it as current enrollment or showing a section/classroom/capacity block.
-- Only the current period with students outside capacity exposes the native global `Evaluar resolución` button. It is keyboard-operable; its read-only global result is announced politely and projects the applicable plan details into the existing subject cards. Changing periods clears expanded results.
+- The period label and the previous/next controls deterministically render one of the two fixed simulated periods. The visible label —`1B Mayo-Junio`, `2A Agosto-Septiembre`— comes from the shared academic calendar in `../comun/datos-simulados.js`.
+- The demand table shows one row per subject with only the metrics that apply to the selected period; an irrelevant metric is absent as a column rather than rendered as zero.
+- Current-period rows carry their simulated section IDs, assigned classroom, and `Cupo` in the detail panel, and identify outside-capacity students as pending section assignment. Following-period rows identify registered future demand without treating it as current enrollment and without a section/classroom/capacity block.
+- Selecting a row opens the detail panel — keyboard operable and announced politely — with the subject's sections, causes, and the applicable global plan details. Only the current period with students outside capacity exposes the native `Evaluar distribución` button; its read-only global result is announced politely. Changing periods clears expanded results.
 - Navigation uses native keyboard-operable controls, visible focus treatment, accessible help tooltips, a skip link, and polite live announcements after a period change.
 - The mockup has a responsive layout for narrow screens.
 
