@@ -252,3 +252,29 @@ Igual que en `critique-remediation-2`: no hay ficha nativa `Agent` usable en est
 `gentle-ai-worker` viene fallando en este repositorio (reporta `files_changed: none` con los cambios en
 disco). El mapeo del código se delegó a `gentle-ai-explore` (read-only); **la escritura y la verificación
 las hace el padre**, con medición propia en el navegador, nunca con el reporte de un writer.
+
+## Seguimiento — rama `fix/narrow-plan-followups` (2026-09-29)
+
+La feature se mergeó: **PR #55 MERGED** (merge `1db87e7`), **issue #54 cerrado**, y `main` contiene
+exactamente el candidato revisado (`git diff --stat bb26ac4 main` vacío); la rama borrada. Después, por
+decisión del autor («merge, pr y relajar la regla»), este cambio cierra los tres pendientes que el PR
+había declarado.
+
+1. **El «Do» del aviso se relajó.** `DESIGN.md` y su sidecar piden ahora la declaración **en texto visible
+   donde la superficie tenga lugar** —la barra de escritorio y el modal de resultados— y **al menos en el
+   árbol de accesibilidad donde el alto es escaso**, como la barra angosta del plano. El componente del
+   aviso deja de anunciar una tensión pendiente y dice la decisión.
+2. **La invariante del zoom quedó escrita** (`DESIGN.md`, Layout): el zoom del navegador no se desactiva en
+   ninguna superficie. Fundamento medido: en un teléfono el plano se dibuja entre el 45 % y el 70 %, y un
+   pellizco de 2,5 lleva el texto dibujado de 8,37 a **20,93 px**; `Ctrl`/`Cmd`+rueda no lo intercepta la
+   página.
+3. **El hallazgo informativo de la revisión, cerrado.** `currentTermIndex` ya no lee layout en cada evento
+   de scroll: `measureTermCenters()` mide los diez centros en coordenadas del desplazamiento una vez por
+   render (`renderColumns`) y por redimensionado (`fitGraphToViewport`), y el seguimiento del índice pasa a
+   ser aritmética sobre el arreglo cacheado.
+
+**Evidencia del punto 3** —el riesgo de un caché es que mienta—: en 390×844 y 760×900, **36 posiciones de
+desplazamiento** comparadas contra un cálculo fresco con `getBoundingClientRect()`, incluido un ida y vuelta
+de redimensionado 390 → 1024 → 390: **0 desacuerdos**. La barra sigue en 136/90/73 px, la escala en
+0,6976/0,8004/0,8024, el salto deja el borde de la columna en 0 px con el foco en `term-7`, la consola no
+reporta excepciones y el detector del proyecto sigue en `[]`.
