@@ -101,13 +101,13 @@
    fuera del árbol de accesibilidad. */
 .term-index{display:none}
 @media(max-width:760px){
-  /* Tres bandas: contexto, navegación e índice. El título deja de apilar la etiqueta y el nombre,
-     y la etiqueta del período sale de la vista —queda para el lector de pantalla— para que las dos
-     flechas y el período entren en un renglón. Los botones conservan sus 16 px: bajarlos a 12 fue
+  /* Dos bandas: navegación de períodos e índice. El contexto del plan —el título y el aviso de datos
+     simulados— sale de la vista angosta porque el plano necesita el alto, y la etiqueta del período
+     sale para que las dos flechas y el valor entren en un renglón. Los tres siguen en el árbol de
+     accesibilidad: el h1, el aviso y la etiqueta. Los botones conservan sus 16 px: bajarlos a 12 fue
      justamente lo que se sacó en su momento. */
   .period-bar{align-items:stretch;flex-direction:column;gap:6px;padding:8px 12px}
-  .period-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
-  #period-kind{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .period-context,#period-kind{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .period-display{display:flex;align-items:baseline;gap:5px;min-width:0;padding:0 4px}
   .period-navigation{width:100%;flex-wrap:wrap;gap:6px 8px}
   .term-index{display:flex;align-items:center;gap:7px;min-width:0}

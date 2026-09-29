@@ -375,8 +375,9 @@ arranca debajo de la barra.
 
 **Breakpoints observados:** 760 px en el panel de selección y en la vista institucional (que además
 colapsa su grilla a una columna en 470 px), y 640 px en la familia de escenarios. En los tres casos la
-barra pasa a columna. En 760 px la barra de período se organiza además en tres bandas —contexto,
-navegación de períodos e índice de cuatrimestres— y el plano deja de encogerse.
+barra pasa a columna. En 760 px la barra de período se organiza además en dos bandas —navegación de
+períodos e índice de cuatrimestres, con el contexto del plan fuera de la vista— y el plano deja de
+encogerse.
 
 **Ritmo:** los grupos internos son apretados (6 a 10 px de separación) y las secciones se separan con 13
 a 16 px y una línea. Siempre hay más aire arriba de un encabezado que abajo.
@@ -464,14 +465,15 @@ La barra de período es una franja verde profunda con tres zonas: el contexto de
 centro, y la navegación a la derecha con botones de 38 px de alto mínimo. Sus flechas se deshabilitan
 durante la transacción de selección en lugar de permitir un cambio a mitad de camino.
 
-**En pantallas angostas la barra se apila en tres bandas** —contexto, navegación de períodos e índice de
-cuatrimestres— y el contexto deja de apilar la etiqueta y el nombre para ponerlos en un renglón. La
-etiqueta del período («Período actual» / «Período siguiente») sale de la vista y queda para el lector de
-pantalla: sin ella las dos flechas y el valor del período entran en un renglón, y el botón «Siguiente» no
-cae a una fila propia. Los botones de la barra **conservan sus 16 px y sus 38 px de alto mínimo**: bajarlos
-a 12 px en pantallas chicas es exactamente lo que se retiró en su momento, y la compresión se hace con
-layout, no con tamaño de texto. La barra mide 197 px a 390×844 —23,3 % del alto— contra los 243 px del
-apilado anterior, e incluye el índice.
+**En pantallas angostas la barra se apila en dos bandas** —navegación de períodos e índice de
+cuatrimestres— y el contexto del plan sale de la vista: el plano necesita el alto, y en un teléfono el
+título y el aviso de datos simulados quedan sólo en el árbol de accesibilidad. La etiqueta del período
+(«Período actual» / «Período siguiente») también sale de la vista, para que las dos flechas y el valor
+entren en un renglón y el botón «Siguiente» no caiga a una fila propia; la región viva del período sigue
+anunciándola. Los botones de la barra **conservan sus 16 px y sus 38 px de alto mínimo**: bajarlos a 12 px
+en pantallas chicas es exactamente lo que se retiró en su momento, y la compresión se hace con layout, no
+con tamaño de texto. La barra mide 136 px a 390×844 —16,1 % del alto— contra los 243 px del apilado
+anterior, e incluye el índice.
 
 **El índice de cuatrimestres** es la única pieza de la barra que existe sólo abajo de 760 px: un `<nav>`
 con diez botones numerados —`1`…`10`, con el nombre accesible «Cuatrimestre N»— agrupados de a dos por
@@ -487,7 +489,13 @@ Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsc
 ### Aviso de datos simulados
 Bloque con regla izquierda de 5 px, fondo `#eeeafd` y tinta `#6a2482` en la vista institucional; línea
 compacta en mayúsculas espaciadas dentro del contexto del plan en las superficies del estudiante. Es
-texto real del documento, nunca un tooltip, y no desaparece en pantallas angostas.
+texto real del documento, nunca un tooltip. **En pantallas angostas sale de la vista**, por decisión del
+autor del 2026-09-29: se va con todo el contexto del plan —título y aviso— y queda sólo en el árbol de
+accesibilidad. Eso **tensiona el «Do» de esta misma hoja**, que pide declarar en texto visible que los
+datos son simulados y que el prototipo no es el sistema oficial: en reposo, la pantalla angosta ya no lo
+dice en ningún lado, aunque la declaración visible sobrevive en la barra de escritorio y en el modal de
+resultados. Queda **pendiente del autor**: relajar el «Do», o recuperar una línea en el teléfono, que a
+12 px de tamaño mide 17 px de alto.
 
 ## Do's and Don'ts
 
