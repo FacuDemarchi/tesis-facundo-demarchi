@@ -355,17 +355,18 @@ px con 24 px de separación, donde cada materia ocupa su fila mediante `grid-row
 **El desplazamiento es horizontal por diseño.** El plano no se ajusta al ancho: se recorre. La rueda
 vertical pura sobre el grafo se traduce a desplazamiento horizontal con una única animación suavizada,
 y se respetan los gestos de trackpad, Shift, Ctrl/Cmd y el desplazamiento nativo dentro del panel y del
-modal. **La traducción vale mientras no haya nada escondido abajo:** si el lienzo desborda en vertical,
-la rueda conserva su recorrido nativo, que es la única vía a las filas que quedaron fuera de la vista.
-Arriba de 760 px el plano entra entero, la condición nunca se cumple y la regla no cambia.
+modal. **El desplazamiento horizontal es el de por defecto**, y la traducción de la rueda lleva una
+condición: si el lienzo llegara a desbordar en vertical, la rueda conserva su recorrido nativo, porque
+entonces sería la única vía a las filas que quedaron fuera de la vista. Con el plano entrando completo en
+el alto —la regla que sigue— esa condición no se cumple nunca: la guarda está para que el atajo no
+encierre al lector si algún día el plano deja de entrar.
 
-**El plano entra en el alto, salvo en pantallas angostas.** Arriba de 760 px el plano se escala una vez
-para entrar en el alto del lienzo —0,80 en 1400×900, 0,65 en 1024×768— y así el año completo se lee de
-un vistazo. Abajo de 760 px ese encogido se desactiva y el plano se dibuja a su escala de autor: a
-390×844 el encogido lo dejaba al 59 % y el texto de 11 px se dibujaba a 6,49 px, por debajo del piso de
-la rampa. El precio declarado es desplazamiento vertical —349 px en 390×844— y su contraparte es el
-índice de cuatrimestres: en un teléfono se ve una columna por vez y la orientación se recupera con el
-índice, no encogiendo el plano.
+**El plano entra completo en el alto.** Se escala una sola vez para que todo el año entre verticalmente
+—0,98 en 1920×1080, 0,80 en 1440×900, 0,65 en 1024×768— y el lienzo se recorre **sólo en horizontal**: no
+hay desplazamiento vertical del grafo. El precio es que el piso de la rampa se dibuja por debajo de su
+valor —al 65 % los 11 px se dibujan a 7,2 px— y es una decisión del autor del 2026-09-29: «no quiero
+desplazamiento vertical para el grafo, tiene que mostrarse verticalmente completo». El ajuste al alto es
+un zoom de vista, y el piso de 11 px rige la rampa escrita, no los píxeles dibujados.
 
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
@@ -376,8 +377,7 @@ arranca debajo de la barra.
 **Breakpoints observados:** 760 px en el panel de selección y en la vista institucional (que además
 colapsa su grilla a una columna en 470 px), y 640 px en la familia de escenarios. En los tres casos la
 barra pasa a columna. En 760 px la barra de período se organiza además en dos bandas —navegación de
-períodos e índice de cuatrimestres, con el contexto del plan fuera de la vista— y el plano deja de
-encogerse.
+períodos e índice de cuatrimestres, con el contexto del plan fuera de la vista—.
 
 **Ritmo:** los grupos internos son apretados (6 a 10 px de separación) y las secciones se separan con 13
 a 16 px y una línea. Siempre hay más aire arriba de un encabezado que abajo.

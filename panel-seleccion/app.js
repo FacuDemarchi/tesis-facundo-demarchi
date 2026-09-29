@@ -77,8 +77,6 @@ function currentPeriod() { return periods[periodIndex]; }
 function configuredBimesterLimit() { return selectedCourseLimit; }
 // Concordancia del singular: el máximo configurable puede ser una sola materia.
 function limitLabel(count) { return count === 1 ? '1 materia' : `${count} materias`; }
-// El mismo corte que usan las media queries de la hoja angosta (ver DESIGN.md, Layout).
-const narrowPlan = window.matchMedia('(max-width: 760px)');
 function siblingBimester(label = currentPeriod().label) {
   const bimester = label.split(' · ')[0];
   const number = bimester.slice(0, -1);
@@ -256,9 +254,9 @@ function animateWheelScroll() {
   }
   wheelAnimationFrame = requestAnimationFrame(animateWheelScroll);
 }
-// La rueda vertical se traduce a desplazamiento horizontal sólo mientras el plano no desborde
-// en vertical. Cuando desborda, la rueda conserva su recorrido nativo para que las filas
-// escondidas sigan siendo alcanzables.
+// La rueda vertical se traduce a desplazamiento horizontal mientras el plano no desborde en
+// vertical. El ajuste al alto garantiza que no desborde, así que esta guarda no debería cumplirse
+// nunca: está para que la traducción no encierre al lector si el plano deja de entrar completo.
 function planOverflowsVertically() {
   return canvas.scrollHeight > canvas.clientHeight + 1;
 }
@@ -441,10 +439,9 @@ function fitGraphToViewport() {
   const styles = getComputedStyle(canvas);
   const verticalPadding = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
   frame.style.width = `${region.offsetWidth}px`;
-  // El piso tipográfico del plano no se negocia: abajo de 760 px el plano se dibuja a su escala
-  // de autor y el lienzo se recorre en los dos ejes, en vez de encogerse hasta dejar el texto
-  // por debajo de 11 px. Arriba de 760 px sigue entrando entero en el alto del lienzo.
-  const scale = narrowPlan.matches ? 1 : (region.offsetHeight ? Math.min(1, Math.max(0, canvas.clientHeight - verticalPadding) / region.offsetHeight) : 1);
+  // El plano entra completo en el alto: no hay desplazamiento vertical del grafo, y ese ajuste es
+  // lo que hace segura la traducción de la rueda vertical a horizontal más abajo.
+  const scale = region.offsetHeight ? Math.min(1, Math.max(0, canvas.clientHeight - verticalPadding) / region.offsetHeight) : 1;
   region.dataset.scale = String(scale);
   region.style.transform = `scale(${scale})`;
   frame.style.width = `${Math.ceil(region.offsetWidth * scale)}px`;
