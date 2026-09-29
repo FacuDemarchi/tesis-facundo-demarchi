@@ -38,10 +38,8 @@ button:focus-visible, select:focus-visible, .skip-link:focus-visible { outline: 
 .brand-title{display:grid;gap:3px;margin:0;font-size:var(--fs-title-sm);font-weight:800}.brand .brand-name{font-size:var(--fs-title-sm);font-weight:800;letter-spacing:normal;text-transform:none;color:var(--c-white)}
 .actor { margin: 0 0 0 auto; padding: 8px 11px; border: 1px solid var(--c-slate-teal); border-radius: 999px; color: var(--blue-soft); font-size: var(--fs-body); }
 .topbar-period { margin-inline: auto; max-width: 100%; flex-wrap: wrap; justify-content: center; }
-.topbar-period .period-kind { margin: 0; color: var(--blue-soft); font-size: var(--fs-label); font-weight: 700; }
-.topbar-period label { color: var(--blue-soft); }
-.period-controls.topbar-period label { color: var(--blue-soft); }
-.topbar-period button, .topbar-period select { border-color: var(--c-slate-teal); }
+.topbar-period .period-label { margin: 0; color: var(--c-white); font-size: var(--fs-title-sm); font-weight: 800; text-align: center; }
+.topbar-period button { border-color: var(--c-slate-teal); }
 .topbar-period button:hover:not(:disabled) { border-color: var(--c-white); }
 
 .page-shell { width: 100%; margin: 0; padding: 0 0 56px; }

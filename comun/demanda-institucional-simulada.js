@@ -8,6 +8,7 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
   periodos: [
     {
       id: '1B-2026',
+      codigo: '1B',
       etiqueta: '1B · 2026',
       tipo: 'Período actual',
       metricas: ['total', 'alumnosInscriptos', 'alumnosInscriptosFueraDeCupo'],
@@ -77,6 +78,7 @@ window.DEMANDA_INSTITUCIONAL_SIMULADA = {
     },
     {
       id: '2A-2026',
+      codigo: '2A',
       etiqueta: '2A · 2026',
       tipo: 'Período siguiente',
       metricas: ['total', 'demandaFutura'],

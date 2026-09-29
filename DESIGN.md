@@ -300,10 +300,10 @@ mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como t
 `institucional-demanda/styles.css`, y ningún `font-size` de esa hoja es un literal:
 
 - **`--fs-micro`** (`.75rem`, 12 px, 800, mayúsculas): etiquetas en mayúsculas y piso de la escala — marca, encabezados de sección, chips de estado.
-- **`--fs-label`** (`.8rem`, 12.80 px): cromo de control y etiquetas secundarias — etiqueta de período, controles, tooltip, código de materia, filas de detalle del plan global.
+- **`--fs-label`** (`.8rem`, 12.80 px): cromo de control y etiquetas secundarias — controles, tooltip, código de materia, filas de detalle del plan global.
 - **`--fs-body-sm`** (`.84rem`, 13.44 px): cuerpo chico — prosa secundaria, listas y filas de definición.
 - **`--fs-body`** (`.9rem`, 14.40 px): cuerpo de lectura — avisos de datos simulados, línea de resumen, actor.
-- **`--fs-title-sm`** (`1rem`, 16 px): título chico — nombre del plan y de la carrera, valores de resumen, título de tarjeta.
+- **`--fs-title-sm`** (`1rem`, 16 px): título chico — nombre del plan y de la carrera, etiqueta del período, valores de resumen, título de tarjeta.
 - **`--fs-value`** (`1.08rem`, 17.28 px): valor destacado — el número que se escanea en la fila de categoría.
 - **`--fs-display`** (`1.35rem`, 21.60 px): display — título de la superficie.
 

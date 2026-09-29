@@ -1,6 +1,6 @@
 const demandModel = window.DEMANDA_INSTITUCIONAL_SIMULADA;
 const simulatedData = window.DATOS_SIMULADOS;
-const periodSelect = document.querySelector('#period-select');
+const periodLabel = document.querySelector('#period-label');
 const previousButton = document.querySelector('#period-prev');
 const nextButton = document.querySelector('#period-next');
 const announcements = document.querySelector('#announcements');
@@ -319,10 +319,17 @@ function renderSummary(period) {
     : 'Total: coincide con la demanda futura.';
 }
 
+// La etiqueta visible del período sale del calendario académico compartido: el
+// código solo no ubica al lector, y el mes es lo que dice en qué parte del año está.
+function etiquetaDePeriodo(period) {
+  const academico = (simulatedData.periodosAcademicos || []).find(item => item.codigo === period.codigo);
+  return academico ? `${academico.codigo} ${academico.meses}` : period.etiqueta;
+}
+
 function renderPeriod({ announce = false } = {}) {
   const period = currentPeriod();
   document.querySelector('#period-kind').textContent = period.tipo;
-  periodSelect.value = String(periodIndex);
+  periodLabel.textContent = etiquetaDePeriodo(period);
   previousButton.disabled = periodIndex === 0;
   nextButton.disabled = periodIndex === demandModel.periodos.length - 1;
 
@@ -336,8 +343,8 @@ function renderPeriod({ announce = false } = {}) {
   if (announce) {
     const total = totalFor(period, 'total');
     announcements.textContent = period.tipo === 'Período actual'
-      ? `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; total ${total}: ${totalFor(period, 'alumnosInscriptos')} alumnos inscriptos y ${totalFor(period, 'alumnosInscriptosFueraDeCupo')} alumnos inscriptos fuera de cupo.`
-      : `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; total ${total} de demanda futura.`;
+      ? `${period.tipo}: ${etiquetaDePeriodo(period)}. ${period.demanda.length} materias consultadas; total ${total}: ${totalFor(period, 'alumnosInscriptos')} alumnos inscriptos y ${totalFor(period, 'alumnosInscriptosFueraDeCupo')} alumnos inscriptos fuera de cupo.`
+      : `${period.tipo}: ${etiquetaDePeriodo(period)}. ${period.demanda.length} materias consultadas; total ${total} de demanda futura.`;
   }
 }
 
@@ -351,22 +358,11 @@ function setPeriod(nextIndex, announce = true) {
   renderPeriod({ announce });
 }
 
-function populatePeriodOptions() {
-  demandModel.periodos.forEach((period, index) => {
-    const option = document.createElement('option');
-    option.value = String(index);
-    option.textContent = `${period.tipo} · ${period.etiqueta}`;
-    periodSelect.append(option);
-  });
-}
-
 assertDemandModel(demandModel);
 assertEvaluationData(simulatedData, demandModel);
-populatePeriodOptions();
 renderPeriod();
 previousButton.addEventListener('click', () => setPeriod(periodIndex - 1));
 nextButton.addEventListener('click', () => setPeriod(periodIndex + 1));
-periodSelect.addEventListener('change', event => setPeriod(Number(event.target.value)));
 globalEvaluationAction.addEventListener('click', evaluateGlobalDistribution);
 
 const summaryItems = document.querySelectorAll('.summary-item');

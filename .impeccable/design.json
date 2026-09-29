@@ -72,10 +72,10 @@
       "label": { "displayName": "Label", "purpose": "Etiquetas en mayúsculas espaciadas de la barra de período, encabezados de sección, encabezados de columna del plano y grilla semanal. 11px. Los encabezados de columna son deliberadamente más chicos que el título de la tarjeta que contienen: el plano es una superficie densa donde la estructura se dice con etiquetas, no con títulos." },
       "micro": { "displayName": "Micro", "purpose": "Etiqueta de estado de la tarjeta y sello MARCADA. 11px, peso 800, mayúsculas: es el piso del sistema." },
       "reading-micro": { "displayName": "Lectura: micro", "purpose": "Etiquetas en mayúsculas y piso de la escala de lectura. .75rem = 12px, peso 800." },
-      "reading-label": { "displayName": "Lectura: etiqueta", "purpose": "Cromo de control y etiquetas secundarias: etiqueta de período, controles, tooltip. .8rem = 12.8px." },
+      "reading-label": { "displayName": "Lectura: etiqueta", "purpose": "Cromo de control y etiquetas secundarias: controles, tooltip. .8rem = 12.8px." },
       "reading-body-sm": { "displayName": "Lectura: cuerpo chico", "purpose": "Prosa secundaria, listas y filas de definición. .84rem = 13.44px." },
       "reading-body": { "displayName": "Lectura: cuerpo", "purpose": "Prosa de lectura: avisos de datos simulados, línea de resumen, actor. .9rem = 14.4px." },
-      "reading-title-sm": { "displayName": "Lectura: título chico", "purpose": "Nombre del plan y de la carrera, valores de resumen, título de tarjeta. 1rem = 16px, peso 800." },
+      "reading-title-sm": { "displayName": "Lectura: título chico", "purpose": "Nombre del plan y de la carrera, etiqueta del período, valores de resumen, título de tarjeta. 1rem = 16px, peso 800." },
       "reading-value": { "displayName": "Lectura: valor", "purpose": "El valor destacado que se escanea en la fila de categoría. 1.08rem = 17.28px, peso 800." },
       "reading-display": { "displayName": "Lectura: display", "purpose": "Título de la superficie de lectura. 1.35rem = 21.6px, peso 800." }
     },

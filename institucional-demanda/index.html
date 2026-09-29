@@ -15,13 +15,12 @@
       <h1 class="brand-title"><span>Plan académico · CU-10</span><span class="brand-name">Consulta de demanda institucional</span></h1>
       <p class="simulation-notice-inline">Datos simulados. Prototipo de tesis. No es un sistema oficial de la universidad.</p>
     </div>
-    <div class="period-controls topbar-period">
+    <div class="period-controls topbar-period" role="group" aria-label="Período académico" aria-describedby="period-description">
       <p id="period-kind" class="period-kind sr-only">Período actual</p>
       <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
-      <label for="period-select" class="sr-only">Elegir período</label>
-      <select id="period-select" aria-describedby="period-description"></select>
+      <p id="period-label" class="period-label">1B Mayo-Junio</p>
       <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
-      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
+      <p id="period-description" class="sr-only">La navegación entre períodos actualiza el resumen y el detalle de demanda simulada.</p>
     </div>
     <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
     <button type="button" id="global-evaluation-action" class="global-evaluation-action" aria-controls="global-evaluation-result" aria-expanded="false">Evaluar distribución global</button>
