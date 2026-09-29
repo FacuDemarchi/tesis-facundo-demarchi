@@ -24,6 +24,7 @@
       <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
     </div>
     <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
+    <button type="button" id="global-evaluation-action" class="global-evaluation-action" aria-controls="global-evaluation-result" aria-expanded="false">Evaluar distribución global</button>
   </header>
 
   <section class="summary" aria-labelledby="summary-title">
@@ -61,7 +62,6 @@
         <p id="outside-capacity-key" class="unsatisfied-key"><span aria-hidden="true"></span> Alumnos inscriptos fuera de cupo</p>
       </div>
       <div id="global-evaluation" class="global-evaluation" hidden>
-        <button type="button" id="global-evaluation-action" class="global-evaluation-action" aria-controls="global-evaluation-result" aria-expanded="false">Evaluar distribución global</button>
         <section id="global-evaluation-result" class="global-evaluation-result" aria-label="Resultado de la evaluación global" aria-live="polite" hidden></section>
       </div>
       <div id="demand-list" class="demand-list" tabindex="-1"></div>
