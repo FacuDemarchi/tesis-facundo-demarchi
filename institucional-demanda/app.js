@@ -334,7 +334,6 @@ function renderPeriod({ announce = false } = {}) {
   nextButton.disabled = periodIndex === demandModel.periodos.length - 1;
 
   renderSummary(period);
-  document.querySelector('#outside-capacity-key').hidden = period.tipo !== 'Período actual';
   renderGlobalEvaluation(period);
 
   const demandList = document.querySelector('#demand-list');

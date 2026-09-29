@@ -211,7 +211,7 @@ dorado de atención, y el espectro de estados académicos que vive por encima de
 
 ### Secondary
 - **Dorado institucional** (`#eba310`): atención y entrada. Es el relleno del CTA de la barra de período —la acción que abre la etapa— y del anillo de foco. **Nunca es texto**: sobre blanco mide 2.15:1, muy por debajo del mínimo. Como relleno lleva tinta oscura encima (`#1e1e1e`, 7.76:1).
-- **Dorado hover** (`#f19f26`): el hover del CTA y el anillo de advertencia de la tarjeta institucional insatisfecha.
+- **Dorado hover** (`#f19f26`): el hover del CTA de la barra de período.
 
 ### Tertiary
 - **Magenta de revisión** (`#6a2482`): el estado «Solicitud en revisión», y el borde izquierdo del aviso de datos simulados en la vista institucional. Sobre blanco mide 9.60:1.
