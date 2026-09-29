@@ -119,14 +119,7 @@ function createSectionDetails(item) {
     list.append(listItem);
   });
 
-  if (item.alumnosInscriptosFueraDeCupo > 0) {
-    const pending = document.createElement('p');
-    pending.className = 'pending-assignment';
-    pending.textContent = `${item.alumnosInscriptosFueraDeCupo} alumnos fuera de cupo pendientes de asignación a una sección.`;
-    sectionBlock.append(title, list, pending);
-  } else {
-    sectionBlock.append(title, list);
-  }
+  sectionBlock.append(title, list);
   return sectionBlock;
 }
 

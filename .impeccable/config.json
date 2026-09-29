@@ -53,6 +53,15 @@
         ],
         "createdAt": "2026-09-28T19:50:07.266Z",
         "reason": "El borde izquierdo no decora: codifica la categoria de la materia (Proceso, Req. SA, Req. PP, General) y el estado, y la leyenda del plano ahora lo nombra. Las reglas de 3 a 5px marcan bloques de explicacion y avisos; DESIGN.md lo documenta en La Regla del Borde que Informa. El alcance cubre tambien comun/escenario.css, donde vive la hoja compartida del plano."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "institucional-demanda/index.html"
+        ],
+        "createdAt": "2026-09-29T17:52:00.000Z",
+        "reason": "Falso positivo verificado. El relleno de esa seccion es `padding: 12px clamp(16px, 4vw, 32px)`: el analisis estatico no puede resolver el clamp() y lo lee como cero. Reemplazado por `32px` en una copia del arbol, el hallazgo desaparece. En el render el hijo con texto queda a 102,5 px del borde a 1400x900 y a 16 px a 390x844: no hay nada pegado al borde."
       }
     ]
   }
