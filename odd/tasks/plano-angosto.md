@@ -11,8 +11,8 @@ Rama: `feat/narrow-plan-navigation`, sobre `main` = `7e493b9`.
 1. Un **índice de los diez cuatrimestres** en la barra de período, sólo en pantallas angostas, que salta
    al cuatrimestre y dice en cuál estás.
 2. La **barra angosta comprimida a dos bandas**, con el contexto del plan —título y aviso de datos simulados— fuera de la vista.
-3. El plano **a su escala de autor** en pantallas angostas (deja de encogerse), con la guarda de rueda
-   que eso exige.
+3. El plano **completo en el alto en todo ancho**: el ajuste al alto se conserva, y la guarda de rueda que
+   lo acompaña queda como red de seguridad.
 4. La documentación que diga la verdad sobre las tres cosas: `DESIGN.md` y `panel-seleccion/README.md`.
 
 ## No entra
@@ -76,20 +76,23 @@ la salida más barata al recorrido a ciegas: 3146 px de rango horizontal en 390 
   del plano (0,8024 → 0,7707), donde el hallazgo no existe, la barra de desplazamiento es visible y el
   plano se lee. Es una decisión reversible: una línea de media query.
 
-**D3 · Abajo de 760 px el plano se dibuja a su escala de autor y el lienzo se recorre en los dos ejes.**
-El encogido es lo que hace ilegible el plano en un teléfono, y el piso tipográfico del sistema no es
-negociable. Medido en el navegador, con la barra candidata: `scale` 0,5897 → **1**, tarjeta 160×70 px →
-**272×118**, título **7,08 → 12 px**, metadato **6,49 → 11 px**. Costo honesto: aparece desplazamiento
-vertical de 347 px en 390×844 (antes 0) y el rango horizontal sube de 1702 a 3146 px — eso es exactamente
-lo que el índice de D2 resuelve por salto.
+**D3 · El plano entra completo en el alto, en todo ancho.** Decisión del autor del 2026-09-29 que
+**revierte la primera versión de esta feature**: «no quiero desplazamiento vertical para el grafo, tiene
+que mostrarse verticalmente completo. No saques el desplazamiento horizontal por defecto.» El ajuste al
+alto se conserva, así que el grafo nunca se desplaza en vertical y la rueda sigue traduciendo a horizontal
+como comportamiento de por defecto. La consecuencia se declara: el piso de 11 px se dibuja por debajo de su
+valor, y eso es un zoom de vista, no un paso de la rampa. **Lo que la feature sí aporta acá es que el
+encogido sea menos severo**: la barra comprimida libera alto de lienzo, y con eso la escala sube de 0,5897
+a **0,6976** a 390×844 —texto dibujado **7,08/6,49 → 8,37/7,67 px**— y de 0,7641 a **0,8004** a 760×900,
+sin desplazamiento vertical en ningún ancho.
 
-**D4 · La rueda conserva su ruta vertical cuando el plano desborda en vertical.** D3 sin esto sería una
-trampa: `translateVerticalWheelToHorizontalScroll()` (`app.js:242-258`) convierte la rueda vertical pura
-en desplazamiento horizontal, y mientras el plano entraba entero en el alto eso era seguro porque **nunca
-había filas escondidas**. Al dibujar el plano a escala 1 sí las hay, así que la regla se acota con el
-estado real: la traducción vale **mientras el plano no desborde en vertical**; cuando desborda, la rueda
-vertical mantiene su ruta nativa y las filas de abajo siguen alcanzables. Arriba de 760 px el plano sigue
-encogido, no desborda y la regla documentada no cambia ni un píxel.
+**D4 · La rueda traduce por defecto, con una guarda que la vuelve segura.**
+`translateVerticalWheelToHorizontalScroll()` convierte la rueda vertical pura en desplazamiento horizontal,
+y eso es seguro **porque el plano entra completo en el alto: nunca hay filas escondidas**. La guarda
+(`planOverflowsVertically`) acota la traducción al caso en que el lienzo sí desborde en vertical, para que
+el atajo no encierre al lector si algún día el plano deja de entrar. Con D3 esa condición no se cumple
+nunca; se probó a propósito con la invariante rota (plano forzado a escala 1): la guarda responde y la
+rueda conserva su ruta vertical.
 
 **D5 · La barra angosta, dos bandas.** Navegación de períodos e índice. Medido a 390×844: **243 → 136 px**
 (28,79 % → 16,11 %; con mensaje de estado visible 268 → 158,8 px, 18,81 %). A 760×900 queda en 90 contra
@@ -117,12 +120,18 @@ angosta ya no lo declara; la declaración visible sobrevive en la barra de escri
 resultados. La hoja queda anotada con el pendiente: relajar el «Do», o recuperar una línea en el teléfono
 —17 px de alto a 12 px de tamaño—.
 
-**D6 · Fuera de alcance, medido y reportado.** El mismo encogido deja el plano por debajo del piso en
-escritorio y en ventanas bajas (1024×768: 7,83/7,17 px; 1366×768: 0,667 → 8,00/7,34 px). En una defensa
-proyectada en 1024×768 o en una notebook de 768 px de alto, el plano se vería así. Arreglarlo en todo
-ancho exige **D4 aplicado en todo ancho** (la rueda dejaría de traducir en esas ventanas) y cuesta
-desplazamiento vertical: 196 px en 1400×900, 330 px en 1024×768. Es un intercambio que cambia el
-comportamiento que el autor ya vio y aprobó en escritorio: **decisión del autor, no de esta feature.**
+**D6 · Cerrada por la decisión de D3.** El encogido en escritorio y en ventanas bajas queda como está: es
+el mecanismo que garantiza el plano completo en el alto. Medido:
+
+| Pantalla | Escala | Título dibujado (autor 12) | Metadato dibujado (autor 11) |
+| --- | --- | --- | --- |
+| 1920×1080 | 0,984 | 11,81 px | 10,82 px |
+| 1440×900 | 0,802 | 9,63 px | 8,83 px |
+| 1366×768 | 0,669 | 8,03 px | 7,36 px |
+| 1024×768 | 0,652 | 7,83 px | 7,17 px |
+
+Queda escrito en `DESIGN.md` como zoom de vista, y la tensión con el piso de 11 px queda declarada en vez de
+silenciada.
 
 ## Tareas
 
@@ -143,13 +152,14 @@ comportamiento que el autor ya vio y aprobó en escritorio: **decisión del auto
 - **Evidencia de cierre**: alturas de la barra y de cada banda medidas en 390, 760 y 1400, en reposo y con
   mensaje de estado.
 
-### T3 — Escala de autor y guarda de rueda  ·  D3, D4
+### T3 — El plano completo en el alto y la guarda de la rueda  ·  D3, D4
 - **Archivos**: `panel-seleccion/app.js`.
-- **Esperado**: a ≤760 px el plano se dibuja a escala 1 y el lienzo se recorre en los dos ejes; arriba de
-  760 px el encogido sigue igual; la rueda vertical traduce a horizontal cuando el plano no desborda y
-  conserva su ruta vertical cuando desborda.
-- **Evidencia de cierre**: escala y tamaño renderizado del texto (título y metadato) en 390, 760 y 1400;
-  rueda vertical medida en los dos estados (¿cambió `scrollTop`? ¿cambió `scrollLeft`?).
+- **Esperado**: el plano entra completo en el alto en todo ancho (cero desplazamiento vertical del grafo) y
+  la rueda vertical traduce a horizontal por defecto; la guarda conserva la ruta nativa si el plano dejara
+  de entrar.
+- **Evidencia de cierre**: escala y texto dibujado en 390, 760 y 1400; desplazamiento vertical del lienzo en
+  cero en los tres; rueda medida con el ajuste al alto (traduce, 0 → 120 px) y con la invariante rota a
+  propósito (no traduce, conserva la ruta vertical).
 
 ### T4 — Documentación  ·  D1-D5
 - **Archivos**: `DESIGN.md`, `panel-seleccion/README.md`.
@@ -166,18 +176,26 @@ recién cargada en cada ancho.
 | --- | --- | --- | --- |
 | Barra de período | **243 → 136 px** (16,11 %) | 126 → 90 px (10 %) | **73 px, sin cambio** |
 | Bandas de la barra | navegación 86 + índice 28 (contexto fuera de la vista, 1 px) | 40 + 28 (contexto fuera) | 55 + 45 (sin índice) |
-| Escala del plano | **0,5897 → 1** | 0,7641 → 1 | **0,8024, sin cambio** |
-| Título de tarjeta dibujado (autor 12 px) | **7,08 → 12 px** | 9,17 → 12 px | 9,63 px (D6) |
-| Metadato dibujado (autor 11 px) | **6,49 → 11 px** | 8,41 → 11 px | 8,83 px (D6) |
-| Desplazamiento del lienzo (X / Y) | 3146 / 300 | 2776 / 198 | 1441 / 0, sin cambio |
+| Escala del plano | **0,5897 → 0,6976** | **0,7641 → 0,8004** | 0,8024, sin cambio |
+| Título de tarjeta dibujado (autor 12 px) | **7,08 → 8,37 px** | **9,17 → 9,60 px** | 9,63 px (D6) |
+| Metadato dibujado (autor 11 px) | **6,49 → 7,67 px** | **8,41 → 8,80 px** | 8,83 px (D6) |
+| Desplazamiento del lienzo (X / Y) | 2082 / **0** | 2074 / **0** | 1441 / **0**, sin cambio |
 | Índice | visible, 10 botones, **una fila**, sin desborde | igual | **`display:none`**, 0 paradas nuevas |
 | Salto al cuatrimestre 7 | borde izquierdo a **0 px**, columna entera visible, foco en `term-7` (`h2`, `tabindex="-1"`, «Cuatrimestre 7»), `aria-current` = 7 | igual | no aplica |
-| `aria-current` en los extremos | 1 al inicio, 10 al final | 1 / 9 (a 760 se ven dos columnas) | no aplica |
+| `aria-current` en los extremos | 1 al inicio, 9 al final | 1 / 9 | no aplica (índice ausente) |
 | Orden de foco | 3 paradas + 10 del índice | igual | 3 paradas, sin índice |
-| Rueda vertical sobre el plano | maxY 349 → **`preventDefault` `false`**, no mueve el lienzo | igual | maxY 0 → **`preventDefault` `true`**, 0 → 120 px, idéntico a la línea base |
+| Rueda vertical sobre el plano | maxY 0 → **`preventDefault` `true`**, 0 → 120 px (el atajo por defecto, intacto) | igual | igual |
 | Diálogo de resultados abierto | barra `inert`, índice dentro del subárbol inerte, **0 botones alcanzables** | — | — |
 | Consola del navegador | **sin excepciones ni errores** | — | **sin excepciones ni errores** |
 | Detector del proyecto | **`[]` (0 hallazgos)** | — | — |
+
+**Guarda de la rueda, probada en los dos estados** (el ajuste al alto garantiza el plano completo, así que
+la guarda es una red de seguridad: se rompió la invariante a propósito para verla responder).
+
+| Estado | ¿Desborda en vertical? | `preventDefault` | ¿Movió el lienzo en horizontal? |
+| --- | --- | --- | --- |
+| Ajuste al alto (lo que se entrega), 390 y 1400 | no | `true` | sí, 0 → 120 px |
+| Plano forzado a escala 1, 390 y 1400 | sí | `false` | no: conserva su ruta vertical |
 
 ## Hallazgos laterales (medidos; no corregidos fuera de alcance)
 
@@ -210,8 +228,8 @@ recién cargada en cada ancho.
 | Doc de seguimiento | `fa7d262` | — |
 | T1 · índice de cuatrimestres | `3209b61` | Índice visible a 390 y 760 en una fila sin desborde, 10 botones en el orden de foco, `display:none` y 0 paradas nuevas a 1400; salto con el borde izquierdo de la columna a 0 px, foco en `term-7` y `aria-current` correcto en los extremos. |
 | T2 · barra angosta en tres bandas | `3209b61` | 243 → 197 px a 390×844 (23,34 %) y 268 → 219,8 con mensaje; 126 → 134 a 760×900; 73 px sin cambio a 1400×900. |
-| T2b · el contexto fuera de la vista angosta | ver «barra» | 197 → **136 px** a 390×844 (16,11 %) y 134 → **90 px** a 760×900, con el `h1`, el aviso y la etiqueta del período todavía en el árbol de accesibilidad. |
-| T3 · escala de autor y guarda de rueda | `3209b61` | Escala 0,5897 → 1 y texto dibujado 7,08/6,49 → 12/11 px a 390; sin cambio a 1400 (0,8024 y 9,63/8,83 px, D6). Rueda: `preventDefault` `false` y sin movimiento donde hay desborde vertical (349 px), `true` y 0 → 120 px donde no lo hay. |
+| T2b · el contexto fuera de la vista angosta | `922dc79` | 197 → **136 px** a 390×844 (16,11 %) y 134 → **90 px** a 760×900, con el `h1`, el aviso y la etiqueta del período todavía en el árbol de accesibilidad. |
+| T3 · plano completo en el alto y guarda de rueda | `3209b61`, revertido en `ad5eb4c` | La primera versión dibujaba el plano a escala 1 abajo de 760 px y abría 300 px de desplazamiento vertical: **revertida por decisión del autor**. Estado final (`ad5eb4c`): escala 0,5897 → **0,6976** a 390 y 0,7641 → **0,8004** a 760, **cero desplazamiento vertical** en los tres anchos, texto dibujado 7,08/6,49 → **8,37/7,67 px**; rueda `preventDefault` `true` y 0 → 120 px en todo ancho, y la guarda probada con la invariante rota a propósito. |
 | T4 · documentación | `3209b61` | `DESIGN.md` (Layout y Navigation), `README.md` (Alcance y Edición) y las dos entradas del sidecar dicen lo medido; la deriva de 48 vh → 34 vh corregida en las dos copias. |
 
 ## Decisiones del autor registradas
@@ -223,6 +241,10 @@ recién cargada en cada ancho.
   botón de siguiente»** — cierra D5b sin bajar el texto de los botones y sin perder el valor del período.
 - 2026-09-29, después: **«saca lo del plan académico… y la leyenda de datos simulados»** — D5c, con la
   tensión contra el «Do» del aviso declarada en la hoja y devuelta como decisión abierta.
+- 2026-09-29, al cerrar: **«no quiero desplazamiento vertical para el grafo, tiene que mostrarse
+  verticalmente completo. No saques el desplazamiento horizontal por defecto»** — revierte la primera
+  versión de D3 y cierra D6: el ajuste al alto se queda en todo ancho, el atajo de la rueda queda como
+  comportamiento por defecto, y el zoom de vista queda declarado en `DESIGN.md`.
 
 ## Desvío de ruteo, declarado
 
