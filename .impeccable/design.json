@@ -94,11 +94,11 @@
     "motion": [
       { "name": "interaction", "value": ".15s", "purpose": "Transición de tarjeta (opacidad, transform, sombra), caret del acordeón y ayuda contextual. No hay animaciones de entrada." },
       { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: reduce)", "purpose": "Desactiva la transición de tarjeta y fuerza scroll-behavior auto en la vista institucional; el desplazamiento del grafo se aplica de inmediato." },
-      { "name": "wheel-to-horizontal", "value": "0.25 per frame", "purpose": "Animación única que aproxima el desplazamiento horizontal del grafo al 25% por cuadro, con límites en los bordes." }
+      { "name": "wheel-to-horizontal", "value": "0.25 per frame", "purpose": "Animación única que aproxima el desplazamiento horizontal del grafo al 25% por cuadro, con límites en los bordes. La traducción de la rueda vertical vale solo mientras el plano no desborde en vertical; cuando desborda, la rueda conserva su recorrido nativo." }
     ],
     "breakpoints": [
       { "name": "scenarios", "value": "640px", "purpose": "Familia de escenarios: la barra de período pasa a columna." },
-      { "name": "panel-and-institutional", "value": "760px", "purpose": "Panel de selección a la parte inferior con máximo 48vh; el topbar institucional pasa a columna y la grilla de demanda a dos columnas." },
+      { "name": "panel-and-institutional", "value": "760px", "purpose": "Panel de selección a la parte inferior con máximo 34vh; el topbar institucional pasa a columna y la grilla de demanda a dos columnas. La barra de período se apila en tres bandas —contexto, navegación de períodos e índice de cuatrimestres—, el plano se dibuja a su escala de autor y aparece el índice de cuatrimestres." },
       { "name": "institutional-narrow", "value": "470px", "purpose": "La grilla de demanda colapsa a una columna." }
     ]
   },

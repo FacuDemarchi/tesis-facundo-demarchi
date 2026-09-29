@@ -355,17 +355,28 @@ px con 24 px de separación, donde cada materia ocupa su fila mediante `grid-row
 **El desplazamiento es horizontal por diseño.** El plano no se ajusta al ancho: se recorre. La rueda
 vertical pura sobre el grafo se traduce a desplazamiento horizontal con una única animación suavizada,
 y se respetan los gestos de trackpad, Shift, Ctrl/Cmd y el desplazamiento nativo dentro del panel y del
-modal.
+modal. **La traducción vale mientras no haya nada escondido abajo:** si el lienzo desborda en vertical,
+la rueda conserva su recorrido nativo, que es la única vía a las filas que quedaron fuera de la vista.
+Arriba de 760 px el plano entra entero, la condición nunca se cumple y la regla no cambia.
+
+**El plano entra en el alto, salvo en pantallas angostas.** Arriba de 760 px el plano se escala una vez
+para entrar en el alto del lienzo —0,80 en 1400×900, 0,65 en 1024×768— y así el año completo se lee de
+un vistazo. Abajo de 760 px ese encogido se desactiva y el plano se dibuja a su escala de autor: a
+390×844 el encogido lo dejaba al 59 % y el texto de 11 px se dibujaba a 6,49 px, por debajo del piso de
+la rampa. El precio declarado es desplazamiento vertical —349 px en 390×844— y su contraparte es el
+índice de cuatrimestres: en un teléfono se ve una columna por vez y la orientación se recupera con el
+índice, no encogiendo el plano.
 
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
-—12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 48 vh—. No reserva
+—12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 34 vh—. No reserva
 ancho: las tarjetas pueden quedar detrás de él. El modal de resultados se abre sobre un velo que
 arranca debajo de la barra.
 
 **Breakpoints observados:** 760 px en el panel de selección y en la vista institucional (que además
 colapsa su grilla a una columna en 470 px), y 640 px en la familia de escenarios. En los tres casos la
-barra pasa a columna.
+barra pasa a columna. En 760 px la barra de período se organiza además en tres bandas —contexto,
+navegación de períodos e índice de cuatrimestres— y el plano deja de encogerse.
 
 **Ritmo:** los grupos internos son apretados (6 a 10 px de separación) y las secciones se separan con 13
 a 16 px y una línea. Siempre hay más aire arriba de un encabezado que abajo.
@@ -452,6 +463,22 @@ La barra de período es una franja verde profunda con tres zonas: el contexto de
 —con las etiquetas en mayúsculas espaciadas y el aviso de datos simulados—, el display del período al
 centro, y la navegación a la derecha con botones de 38 px de alto mínimo. Sus flechas se deshabilitan
 durante la transacción de selección en lugar de permitir un cambio a mitad de camino.
+
+**En pantallas angostas la barra se apila en tres bandas** —contexto, navegación de períodos e índice de
+cuatrimestres— y el contexto deja de apilar la etiqueta y el nombre para ponerlos en un renglón. La
+etiqueta del período («Período actual» / «Período siguiente») sale de la vista y queda para el lector de
+pantalla: sin ella las dos flechas y el valor del período entran en un renglón, y el botón «Siguiente» no
+cae a una fila propia. Los botones de la barra **conservan sus 16 px y sus 38 px de alto mínimo**: bajarlos
+a 12 px en pantallas chicas es exactamente lo que se retiró en su momento, y la compresión se hace con
+layout, no con tamaño de texto. La barra mide 197 px a 390×844 —23,3 % del alto— contra los 243 px del
+apilado anterior, e incluye el índice.
+
+**El índice de cuatrimestres** es la única pieza de la barra que existe sólo abajo de 760 px: un `<nav>`
+con diez botones numerados —`1`…`10`, con el nombre accesible «Cuatrimestre N»— agrupados de a dos por
+año. Es un salto, no una navegación por pasos: manda el lienzo a esa columna, deja el foco en su cabecera
+`h2` para que el recorrido siguiente entre por sus materias, y marca con `aria-current="true"` la columna
+más cercana al centro del lienzo, que es la orientación que el plano encogido daba gratis. Arriba de
+760 px no existe: `display:none`, sin foco y fuera del árbol de accesibilidad.
 
 ### Chip de estado (institucional)
 Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsculas en `--fs-micro`
