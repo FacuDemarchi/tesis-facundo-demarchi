@@ -121,3 +121,8 @@ sabiendo que por conteo tapa más que la alternativa. Lo que no se hace, y queda
 `DESIGN.md` tiene **15** reglas con nombre y `.impeccable/design.json` **13**: faltan en el sidecar
 `La Regla del Paso Nombrable` y `La Regla del Piso de 12 px`. Es preexistente (14/12 en HEAD) y esta unidad
 sumó una a cada copia (15/13), así que no lo empeoró.
+
+## Commit de unidad
+
+**`d3656e6`** — `feat(panel): give the legend the panel's side rule`, sobre `cffb2a0`, en
+`feat/correlatividades-legibles`. Sin empujar, sin PR: la publicación es decisión del autor.
