@@ -439,11 +439,11 @@ Resuelto el 2026-09-16; ubicación de la herramienta actualizada el 2026-09-17. 
 ## Huecos estructurales detectados
 
 - **Granularidad de bimestre: resuelta el 2026-09-18 en el vocabulario, no en los datos.** `courses.term` identifica un **cuatrimestre** (1 a 10, hasta 6 materias por columna) y el grafo rotula esas columnas como "Cuatrimestre N". El atributo que dice en qué bimestre se ofrece cada materia **no existe en el modelo del mockup**, y sin él el tope de 3 por bimestre no puede evaluarse. §3.3 ahora define que el período **es** el bimestre, así que el atributo ya no hace falta en la materia: es una propiedad de la **oferta**, y la capa de datos simulados lo lleva en el período de cada cátedra (`comun/datos-simulados.js`). Consecuencia de diseño que queda anotada: una materia **sin oferta publicada no tiene bimestre conocido**, de modo que el tope de tres solo es verificable para materias con oferta publicada.
-- **Ausencia de comisiones, horarios y cupos.** El modelo actual de cada materia es `id`, `term`, `slot`, `name`, `state`, `category`. No hay horarios ni cupos, por lo que las advertencias de superposición horaria y de cupo simulado no pueden implementarse sin agregar datos simulados y etiquetarlos como tales.
+- **Ausencia de comisiones, horarios y cupos.** El modelo actual de cada materia es `id`, `term`, `slot`, `name`, `state`, `regimen`. No hay horarios ni cupos, por lo que las advertencias de superposición horaria y de cupo simulado no pueden implementarse sin agregar datos simulados y etiquetarlos como tales.
 - **Estados sin uso.** `no-capacity` y `review` están definidos y estilizados pero ninguna materia los usa; falta además un estado para "límite de tiempo sin alternativa", exigido por `discoveries.md`.
 - **Duplicación de este registro.** El mapa y los datos están replicados en `mockup/`, `periodo-2A/` y `periodo-2B/`. Este archivo es única fuente a propósito: las decisiones no deben duplicarse.
 - **Preferencias obligatorias y chequeo local.** D-02 reformulada introduce restricciones duras de cursado (cátedra, profesor, modalidad, días, franjas). Deben entrar en la definición única de restricciones que comparten el chequeo local y CP-SAT (consecuencia de D-01), o la interfaz podrá decir "sin conflictos" y el solver responder infactible.
-- **Granularidad de horarios.** Las preferencias por días y franjas exigen datos de horarios y comisiones que hoy no existen en el modelo de los mockups (solo `id`, `term`, `slot`, `name`, `state`, `category`).
+- **Granularidad de horarios.** Las preferencias por días y franjas exigen datos de horarios y comisiones que hoy no existen en el modelo de los mockups (solo `id`, `term`, `slot`, `name`, `state`, `regimen`).
 
 ---
 

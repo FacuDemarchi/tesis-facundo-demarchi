@@ -49,7 +49,7 @@ Los datos de las materias se encuentran en el arreglo `courses` de `app.js`. Cad
 - posición vertical;
 - nombre;
 - estado;
-- categoría.
+- régimen.
 
 Las correlatividades se encuentran en el arreglo `edges`. Cada conexión define origen, destino y estilo directo o ruteado.
 

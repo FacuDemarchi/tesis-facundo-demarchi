@@ -38,10 +38,9 @@ colors:
   no-capacity-soft: "#ffedd5"
   planned: "#0369a1"
   planned-soft: "#e0f2fe"
-  category-process: "#046353"
-  category-sa: "#be123c"
-  category-pp: "#c2410c"
-  category-general: "#6d6e71"
+  regimen-bimestral: "#046353"
+  regimen-cuatrimestral: "#1d4ed8"
+  regimen-anual: "#eba310"
 typography:
   display:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
@@ -243,9 +242,12 @@ Los ocho pasan AA en texto chico, incluido el peor caso donde un glifo cruza una
 La etiqueta de estado y el nombre usan la tinta institucional sobre el fondo del estado, no el color
 del estado: 10.39:1 a 11.56:1 según el relleno.
 
-### Categorías
-El borde izquierdo de 7 px de cada tarjeta codifica el área de conocimiento: Procesos `#046353`,
-Sistemas y Algoritmos `#be123c`, Programación `#c2410c`, Generales `#6d6e71`.
+### Régimen de cursada
+El borde izquierdo de 7 px de cada tarjeta codifica el régimen de cursada: Bimestral `#046353`,
+Cuatrimestral `#1d4ed8`, Anual `#eba310`. Los tres colores ya existían en la paleta. La etiqueta de la
+tarjeta dice el régimen con la misma palabra, así que el borde no carga información que el texto no diga
+(La Regla del Color Declarado), y en las dos tarjetas cuatrimestrales con estado «Disponible» el borde
+comparte el color del estado: ahí la señal es sólo textual, declarado a propósito.
 
 ### Named Rules
 **La Regla de las Dos Voces.** El dorado llama la atención y nunca confirma; el verde confirma y nunca
@@ -428,8 +430,8 @@ siempre en esa progresión.
 
 Los bordes son finos y funcionan: 1 px para separar filas y celdas, 2 px de color de estado alrededor de
 cada tarjeta, 3 a 5 px para las reglas que marcan un bloque de explicación o un aviso. El borde
-izquierdo de 7 px de la tarjeta es la única forma pesada del sistema, y existe porque codifica la
-categoría de la materia.
+izquierdo de 7 px de la tarjeta es la única forma pesada del sistema, y existe porque codifica el
+régimen de cursada de la materia.
 
 ### Named Rules
 **La Regla del Borde que Informa.** Ningún borde existe solo para decorar. Si un borde se elimina y no
@@ -467,8 +469,8 @@ dónde están las materias, y nada más.
 - **Corner Style:** 10 px.
 - **Background:** el fondo del estado, con el color del estado en el borde y en los `span` anidados.
 - **Shadow Strategy:** ver Elevation & Depth; el hover sube 2 px.
-- **Border:** 2 px de color de estado, 7 px en el lado izquierdo para la categoría.
-- **Internal Padding:** 11 px vertical y 12 px horizontal, en una caja fija de 272 × 118 px, con la etiqueta de estado alineada a la derecha en la primera línea, el nombre de la materia en el medio y el metadato de intención y categoría abajo.
+- **Border:** 2 px de color de estado, 7 px en el lado izquierdo para el régimen de cursada.
+- **Internal Padding:** 11 px vertical y 12 px horizontal, en una caja fija de 272 × 118 px, con la etiqueta de estado alineada a la derecha en la primera línea, el nombre de la materia en el medio y el metadato de intención y régimen abajo.
 - **Disabled:** `filter: saturate(.7)` y `cursor: not-allowed`; nunca usan solo la opacidad para decir «no disponible».
 
 ### Inputs / Fields

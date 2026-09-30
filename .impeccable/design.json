@@ -131,8 +131,8 @@
       "name": "Tarjeta de materia aprobada",
       "kind": "card",
       "refersTo": "course-card",
-      "description": "Un nodo del plano. Caja fija con la etiqueta de estado arriba a la derecha, el nombre de la materia en el medio y el metadato de intención y categoría abajo; la categoría se codifica además en el borde izquierdo de 7px.",
-      "html": "<button class=\"ds-course ds-course-approved ds-course-process\" type=\"button\"><strong>Algoritmos <span>✓</span></strong><small>Cuatrimestre 3 <span>✓</span></small><em>Aprobada ✓</em></button>",
+      "description": "Un nodo del plano. Caja fija con la etiqueta de estado arriba a la derecha, el nombre de la materia en el medio y el metadato de intención y régimen abajo; el régimen se codifica además en el borde izquierdo de 7px.",
+      "html": "<button class=\"ds-course ds-course-approved ds-course-bimestral\" type=\"button\"><strong>Algoritmos <span>✓</span></strong><small>Cuatrimestre 3 <span>✓</span></small><em>Aprobada ✓</em></button>",
       "css": ".ds-course { display: flex; flex-direction: column; justify-content: space-between; width: 272px; height: 118px; padding: 11px 12px; border: 2px solid #15803d; border-left-width: 7px; border-left-color: #046353; border-radius: 10px; background: #dcfce7; color: #15803d; box-shadow: 0 6px 14px #043a3124; text-align: left; font-family: Inter, ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: opacity .15s, transform .15s, box-shadow .15s; } .ds-course strong { color: #043a31; font-size: 12px; line-height: 1.25; } .ds-course strong span, .ds-course small span { color: #15803d; } .ds-course small { color: #006c5b; font-size: 9px; } .ds-course em { align-self: flex-end; color: #043a31; font-size: 8px; font-style: normal; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; } .ds-course:hover { transform: translateY(-2px); box-shadow: 0 10px 22px #043a3130; } .ds-course:focus-visible { outline: 3px solid #eba310; outline-offset: 2px; box-shadow: 0 0 0 2px #043a31, 0 10px 22px #043a3130; }"
     },
     {

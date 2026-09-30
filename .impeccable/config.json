@@ -34,7 +34,7 @@
           "*/index.html"
         ],
         "createdAt": "2026-09-28T16:39:37.439Z",
-        "reason": "Mismo caso que en las hojas: el borde izquierdo informa categoria o estado, documentado en La Regla del Borde que Informa de DESIGN.md."
+        "reason": "Mismo caso que en las hojas: el borde izquierdo informa regimen de cursada o estado, documentado en La Regla del Borde que Informa de DESIGN.md."
       },
       {
         "rule": "dark-glow",
@@ -52,7 +52,7 @@
           "*/*.css"
         ],
         "createdAt": "2026-09-28T19:50:07.266Z",
-        "reason": "El borde izquierdo no decora: codifica la categoria de la materia (Proceso, Req. SA, Req. PP, General) y el estado, y la leyenda del plano ahora lo nombra. Las reglas de 3 a 5px marcan bloques de explicacion y avisos; DESIGN.md lo documenta en La Regla del Borde que Informa. El alcance cubre tambien comun/escenario.css, donde vive la hoja compartida del plano."
+        "reason": "El borde izquierdo no decora: codifica el regimen de cursada de la materia (Bimestral, Cuatrimestral, Anual) y el estado, y la leyenda del plano ahora lo nombra. Las reglas de 3 a 5px marcan bloques de explicacion y avisos; DESIGN.md lo documenta en La Regla del Borde que Informa. El alcance cubre tambien comun/escenario.css, donde vive la hoja compartida del plano."
       },
       {
         "rule": "cramped-padding",
