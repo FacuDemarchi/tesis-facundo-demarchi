@@ -89,6 +89,17 @@ declaradas, y la verificación renderizada a `gentle-ai-verify`. El padre escrib
 controla el resultado con aritmética propia (la partición 36/4/6 y la igualdad de `regimen` por materia
 entre las cuatro copias), porque el reporte del que escribe no es evidencia.
 
+El worker de la escritura corrió y reportó `files_changed` con los catorce archivos y los conteos 36/4/6 en
+los cuatro `app.js`; el padre **no** tomó ese reporte como evidencia y repitió los controles por su cuenta
+(control aritmético y verificación renderizada, abajo). La verificación no se delegó a `gentle-ai-verify`:
+el guion necesita el navegador por CDP y su rol le prohíbe escribirlo, así que el padre lo escribió y lo
+corrió.
+
+## Commit de unidad
+
+**`b04ee82`** — `feat(plano): code the card's edge by regimen de cursada, not knowledge area`, sobre
+`3b6ac51`, en `feat/correlatividades-legibles`. Sin empujar, sin PR: la publicación es decisión del autor.
+
 ## Verificación
 
 ### Control aritmético (del padre, independiente del reporte del writer)
