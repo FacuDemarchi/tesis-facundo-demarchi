@@ -7,16 +7,16 @@ const states = {
 let selectedCourseLimit = 3;
 
 const courses = [
-  ['C01',1,1,'Herramientas matemáticas I – Álgebra','approved','sa'], ['C02',1,2,'Herramientas matemáticas II – Análisis','approved','sa'], ['C03',1,3,'Introducción a los algoritmos','approved','sa'], ['C04',1,4,'Desarrollo emprendedor','approved','sa'], ['C05',1,5,'Sistemas de información','approved','sa'], ['C06',1,6,'Idioma extranjero I','approved','sa'],
-  ['C07',2,1,'Matemática discreta','approved','sa'], ['C08',2,2,'Cálculo avanzado','approved','sa'], ['C09',2,3,'Arquitectura del computador','approved','sa'], ['C10',2,4,'Programación orientada a objetos','approved','sa'], ['C11',2,6,'Idioma extranjero II','approved','sa'],
-  ['C12',3,1,'Grupo y Liderazgo','approved','sa'], ['C13',3,2,'Lógica Simbólica','approved','sa'], ['C14',3,3,'Algoritmos y estructura de Datos I','approved','sa'], ['C15',3,4,'Taller de algoritmos y estructura de Datos I','approved','sa'], ['C16',3,5,'Herramientas matemáticas III – Estadística I','approved','sa'], ['C17',3,6,'Idioma extranjero III','approved','sa'],
-  ['C18',4,1,'Principios de Economía','approved','sa'], ['C19',4,3,'Algoritmos y estructura de Datos II','planned','sa'], ['C20',4,4,'Taller de algoritmos y estructura de Datos II','planned','sa'], ['C21',4,5,'Paradigmas de Programación','approved','sa'], ['C22',4,6,'Idioma extranjero IV','approved','sa'],
-  ['C23',5,1,'Ética y Deontología Profesional','available','sa'], ['C24',5,2,'Sistemas operativos','no-offer','sa'], ['C25',5,3,'Análisis y diseño de Software','blocked','pp'], ['C26',5,4,'Taller de Análisis de diseño de Software','blocked','pp'], ['C27',5,5,'Herramientas matemáticas V – Estadística II','planned','sa'], ['C28',5,6,'Idioma extranjero V','approved','sa'],
-  ['C29',6,1,'Seminario de práctica de Analista en Software','available','process'], ['C30',6,2,'Taller de Ingeniería de Software','blocked','general'], ['C31',6,3,'Ingeniería de Software','blocked','general'], ['C32',6,4,'Base de datos I','blocked','pp'], ['C33',6,6,'Idioma extranjero VI','approved','general'],
-  ['C34',7,1,'Seguridad informática','blocked','general'], ['C35',7,2,'Sistemas Operativos II (Redes)','blocked','general'], ['C36',7,4,'Calidad de Software','blocked','general'],
-  ['C37',8,1,'Herramientas matemáticas VI – Modelos de simulación','blocked','general'], ['C38',8,2,'Construcción de Software','blocked','general'], ['C39',8,3,'Taller de Construcción de Software','blocked','general'], ['C40',8,4,'Administración de Proyectos','blocked','general'], ['C41',8,5,'Base de Datos II','blocked','general'],
-  ['C42',9,1,'Emprendimientos universitarios','available','general'], ['C43',9,2,'Métodos Formales','available','general'], ['C44',9,4,'Práctica profesional de Ingeniería en Software','blocked','process'], ['C45',10,1,'Práctica solidaria','available','process'], ['C46',10,4,'Seminario final de Ingeniería en Software','blocked','process']
-].map(([id, term, slot, name, state, category]) => ({ id, term, slot, name, state, category }));
+  ['C01',1,1,'Herramientas matemáticas I – Álgebra','approved','bimestral'], ['C02',1,2,'Herramientas matemáticas II – Análisis','approved','bimestral'], ['C03',1,3,'Introducción a los algoritmos','approved','bimestral'], ['C04',1,4,'Desarrollo emprendedor','approved','bimestral'], ['C05',1,5,'Sistemas de información','approved','bimestral'], ['C06',1,6,'Idioma extranjero I','approved','anual'],
+  ['C07',2,1,'Matemática discreta','approved','bimestral'], ['C08',2,2,'Cálculo avanzado','approved','bimestral'], ['C09',2,3,'Arquitectura del computador','approved','bimestral'], ['C10',3,2,'Programación orientada a objetos','approved','bimestral'], ['C11',2,6,'Idioma extranjero II','approved','anual'],
+  ['C12',3,1,'Grupo y Liderazgo','approved','bimestral'], ['C13',2,4,'Lógica Simbólica','approved','bimestral'], ['C14',3,3,'Algoritmos y estructura de Datos I','approved','bimestral'], ['C15',3,4,'Taller de algoritmos y estructura de Datos I','approved','bimestral'], ['C16',3,5,'Herramientas matemáticas III – Estadística I','approved','bimestral'], ['C17',3,6,'Idioma extranjero III','approved','anual'],
+  ['C18',4,1,'Principios de Economía','approved','bimestral'], ['C19',4,3,'Algoritmos y estructura de Datos II','planned','bimestral'], ['C20',4,4,'Taller de algoritmos y estructura de Datos II','planned','bimestral'], ['C21',4,5,'Paradigmas de Programación','approved','bimestral'], ['C22',4,6,'Idioma extranjero IV','approved','anual'],
+  ['C23',5,1,'Ética y Deontología Profesional','available','bimestral'], ['C24',5,2,'Sistemas operativos','no-offer','bimestral'], ['C25',5,3,'Análisis y diseño de Software','blocked','bimestral'], ['C26',5,4,'Taller de Análisis de diseño de Software','blocked','bimestral'], ['C27',5,5,'Herramientas matemáticas V – Estadística II','planned','bimestral'], ['C28',5,6,'Idioma extranjero V','approved','anual'],
+  ['C29',6,1,'Seminario de práctica de Analista en Software','available','cuatrimestral'], ['C30',6,2,'Taller de Ingeniería de Software','blocked','bimestral'], ['C31',6,3,'Ingeniería de Software','blocked','bimestral'], ['C32',6,4,'Base de datos I','blocked','bimestral'], ['C33',6,6,'Idioma extranjero VI','approved','anual'],
+  ['C34',7,1,'Seguridad informática','blocked','bimestral'], ['C35',7,2,'Sistemas Operativos II (Redes)','blocked','bimestral'], ['C36',7,6,'Calidad de Software','blocked','bimestral'],
+  ['C37',8,1,'Herramientas matemáticas VI – Modelos de simulación','blocked','bimestral'], ['C38',8,2,'Construcción de Software','blocked','bimestral'], ['C39',8,3,'Taller de Construcción de Software','blocked','bimestral'], ['C40',8,4,'Administración de Proyectos','blocked','bimestral'], ['C41',8,5,'Base de Datos II','blocked','bimestral'],
+  ['C42',9,1,'Emprendimientos universitarios','available','bimestral'], ['C43',9,2,'Métodos Formales','available','bimestral'], ['C44',9,6,'Práctica profesional de Ingeniería en Software','blocked','cuatrimestral'], ['C45',10,1,'Práctica solidaria','available','cuatrimestral'], ['C46',10,6,'Seminario final de Ingeniería en Software','blocked','cuatrimestral']
+].map(([id, term, slot, name, state, regimen]) => ({ id, term, slot, name, state, regimen }));
 
 const edges = [
   ['C02','C08','solid'], ['C03','C09','solid'], ['C09','C10','solid'], ['C06','C11','solid'], ['C11','C17','solid'], ['C14','C19','solid'], ['C15','C20','solid'], ['C16','C21','solid'], ['C17','C22','solid'], ['C19','C25','solid'], ['C20','C26','solid'], ['C21','C27','solid'], ['C22','C28','solid'], ['C24','C30','solid'], ['C25','C31','solid'], ['C26','C32','solid'], ['C28','C33','solid'], ['C29','C34','solid'], ['C30','C35','solid'], ['C31','C39','routed'], ['C32','C41','routed'], ['C34','C37','solid'], ['C35','C38','solid'], ['C36','C40','solid'], ['C36','C44','routed'], ['C44','C46','solid']
@@ -52,6 +52,11 @@ const columns = document.querySelector('#columns');
 const status = document.querySelector('#selection-status');
 const announcement = document.querySelector('#selection-announcement');
 const selectionPanel = document.querySelector('#selection-panel');
+// La leyenda y el panel de selección comparten la regla de lado (updateOverlaySide): las tres
+// referencias se resuelven acá y no al final del archivo, porque updateOverlaySide corre antes.
+const legendPanel = document.querySelector('#legend-panel');
+const legendToggle = document.querySelector('#legend-toggle');
+const legendClose = document.querySelector('#legend-close');
 const graphFrame = document.querySelector('#graph-frame');
 const primaryAction = document.querySelector('#primary-action');
 const canvas = document.querySelector('.canvas');
@@ -69,7 +74,9 @@ let outcomeId = 'alternativas';
 // alternativa, y sin esto la grilla que el estudiante acaba de abrir se cerraría sola.
 const openGrids = new Set();
 let selectedAlternative = null;
-let panelSide = 'right';
+// El lado de los dos overlays flotantes del plano es un solo estado: se recalcula en cada evento de
+// desplazamiento y lo comparten el panel de selección y la leyenda.
+let overlaySide = 'right';
 let wheelScrollTarget = null;
 let wheelAnimationFrame = null;
 
@@ -160,10 +167,10 @@ function renderColumns() {
       const isMarked = currentDraft().has(course.id);
       const intention = isMarked ? intentionFor(course) : '';
       const disabled = !selectionOpen || !isCourseSelectable(course) || (!isMarked && currentDraft().size >= configuredBimesterLimit());
-      return `<button class="course ${presentation.className} category-${course.category}" data-course="${course.id}" type="button" style="--slot:${course.slot}" aria-pressed="${Boolean(intention)}" ${disabled ? 'disabled' : ''}>
+      return `<button class="course ${presentation.className} regimen-${course.regimen}" data-course="${course.id}" type="button" style="--slot:${course.slot}" aria-pressed="${Boolean(intention)}" ${disabled ? 'disabled' : ''}>
         <span class="course-state"><span aria-hidden="true">${presentation.state.symbol}</span> ${presentation.state.label}</span>
         <strong><span>${course.id}</span> · ${course.name}</strong>
-        <small><span aria-hidden="true">●</span> ${intention ? intention : 'Sin marcar'} · ${course.category === 'sa' ? 'Req. SA' : course.category === 'pp' ? 'Req. PP' : course.category === 'process' ? 'Proceso' : 'General'}</small>
+        <small><span aria-hidden="true">●</span> ${intention ? intention : 'Sin marcar'} · ${course.regimen === 'anual' ? 'Anual' : course.regimen === 'cuatrimestral' ? 'Cuatrimestral' : 'Bimestral'}</small>
       </button>`;
     }).join('');
     return `<section class="term" aria-labelledby="term-${term}"><h2 id="term-${term}">Cuatrimestre ${term}</h2><div class="term-grid">${cards}</div></section>`;
@@ -186,7 +193,10 @@ function drawConnections() {
     const target = document.querySelector(`[data-course="${to}"]`).getBoundingClientRect();
     const x1 = (source.right - stageBox.left) / scale;
     const y1 = (source.top + source.height / 2 - stageBox.top) / scale;
-    const x2 = (target.left - stageBox.left) / scale;
+    // La punta de la flecha mide ~18 px en unidades del escenario: la arista termina
+    // antes del borde para que la flecha se dibuje entera en el canal y no bajo la tarjeta.
+    const inset = 5 / scale;
+    const x2 = (target.left - stageBox.left - inset) / scale;
     const y2 = (target.top + target.height / 2 - stageBox.top) / scale;
     const bend = Math.max(28, (x2 - x1) * .48);
     return `<path class="edge ${type}" d="M ${x1} ${y1} C ${x1 + bend} ${y1}, ${x2 - bend} ${y2}, ${x2} ${y2}" marker-end="url(#arrow)"/>`;
@@ -197,14 +207,19 @@ function scrollRatio() {
   const range = canvas.scrollWidth - canvas.clientWidth;
   return range > 0 ? canvas.scrollLeft / range : 0;
 }
-function preferredPanelSide(ratio, currentSide) {
+// Una sola regla de lado para los dos overlays flotantes, con histéresis —20 % para cruzar a la
+// izquierda, 15 % para volver—: pasan la mayor parte del recorrido sobre las columnas que el lector ya
+// dejó atrás en vez de sobre la que está leyendo. Es una mitigación, no una garantía: ninguna de las dos
+// capas reserva ancho.
+function preferredOverlaySide(ratio, currentSide) {
   if (currentSide === 'left') return ratio < .15 ? 'right' : 'left';
   return ratio >= .20 ? 'left' : 'right';
 }
-function updatePanelSide() {
-  panelSide = preferredPanelSide(scrollRatio(), panelSide);
-  selectionPanel.dataset.side = panelSide;
-  canvas.dataset.side = panelSide;
+function updateOverlaySide() {
+  overlaySide = preferredOverlaySide(scrollRatio(), overlaySide);
+  selectionPanel.dataset.side = overlaySide;
+  legendPanel.dataset.side = overlaySide;
+  canvas.dataset.side = overlaySide;
 }
 function normalizedVerticalWheelDelta(event) {
   if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16;
@@ -564,7 +579,7 @@ function openSelection() {
   setPanelCollapsed(false);
   primaryAction.blur();
   canvas.dataset.panel = 'open';
-  updatePanelSide();
+  updateOverlaySide();
   fitGraphToViewport();
   announceSelection(`Selección abierta para ${currentPeriod().label}.`);
   updateInterface();
@@ -772,12 +787,12 @@ document.querySelector('#selected-subjects').addEventListener('change', event =>
   updateInterface();
 });
 updateInterface();
-updatePanelSide();
+updateOverlaySide();
 requestAnimationFrame(() => {
   fitGraphToViewport();
   updateCurrentTerm();
 });
-canvas.addEventListener('scroll', updatePanelSide, { passive: true });
+canvas.addEventListener('scroll', updateOverlaySide, { passive: true });
 canvas.addEventListener('scroll', updateCurrentTerm, { passive: true });
 canvas.addEventListener('wheel', translateVerticalWheelToHorizontalScroll, { passive: false });
 resultsModal.addEventListener('wheel', cancelWheelScrollAnimation, { passive: true });
@@ -785,7 +800,7 @@ resultsScrim.addEventListener('wheel', cancelWheelScrollAnimation, { passive: tr
 canvas.addEventListener('pointerdown', cancelWheelScrollAnimation);
 window.addEventListener('resize', () => {
   fitGraphToViewport();
-  updatePanelSide();
+  updateOverlaySide();
   updateCurrentTerm();
 });
 
@@ -818,10 +833,8 @@ document.querySelector('#alternatives').addEventListener('click', event => {
   event.preventDefault();
 }, true);
 
-// Leyenda del plano (U4): un popover desde la barra de período.
-const legendToggle = document.querySelector('#legend-toggle');
-const legendPanel = document.querySelector('#legend-panel');
-const legendClose = document.querySelector('#legend-close');
+// Leyenda del plano (U4): un popover desde la barra de período. Sus tres elementos se resuelven
+// arriba, con el resto de los lookups.
 function setLegendOpen(open, restoreFocus = true) {
   legendPanel.hidden = !open;
   legendToggle.setAttribute('aria-expanded', String(open));

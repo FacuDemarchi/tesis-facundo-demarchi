@@ -38,10 +38,9 @@ colors:
   no-capacity-soft: "#ffedd5"
   planned: "#0369a1"
   planned-soft: "#e0f2fe"
-  category-process: "#046353"
-  category-sa: "#be123c"
-  category-pp: "#c2410c"
-  category-general: "#6d6e71"
+  regimen-bimestral: "#046353"
+  regimen-cuatrimestral: "#1d4ed8"
+  regimen-anual: "#eba310"
 typography:
   display:
     fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
@@ -243,9 +242,12 @@ Los ocho pasan AA en texto chico, incluido el peor caso donde un glifo cruza una
 La etiqueta de estado y el nombre usan la tinta institucional sobre el fondo del estado, no el color
 del estado: 10.39:1 a 11.56:1 según el relleno.
 
-### Categorías
-El borde izquierdo de 7 px de cada tarjeta codifica el área de conocimiento: Procesos `#046353`,
-Sistemas y Algoritmos `#be123c`, Programación `#c2410c`, Generales `#6d6e71`.
+### Régimen de cursada
+El borde izquierdo de 7 px de cada tarjeta codifica el régimen de cursada: Bimestral `#046353`,
+Cuatrimestral `#1d4ed8`, Anual `#eba310`. Los tres colores ya existían en la paleta. La etiqueta de la
+tarjeta dice el régimen con la misma palabra, así que el borde no carga información que el texto no diga
+(La Regla del Color Declarado), y en las dos tarjetas cuatrimestrales con estado «Disponible» el borde
+comparte el color del estado: ahí la señal es sólo textual, declarado a propósito.
 
 ### Named Rules
 **La Regla de las Dos Voces.** El dorado llama la atención y nunca confirma; el verde confirma y nunca
@@ -348,8 +350,8 @@ ancho que necesitan: la medida es una regla, no un accidente del layout.
 
 El lienzo es un contenedor flexible con desplazamiento propio que ocupa todo el ancho disponible, con
 8 px de relleno y el color de papel de fondo. Adentro, el plano se dibuja fijo y grande: una región de
-3520 px con borde y esquinas de 17 px, un escenario de 3444 px, y diez columnas de 300 px separadas por
-49 px. Cada columna es un cuatrimestre con fondo verde claro y una grilla interna de seis filas de 118
+3708 px con borde y esquinas de 17 px, un escenario de 3630 px, y diez columnas de 300 px separadas por
+70 px. Cada columna es un cuatrimestre con fondo verde claro y una grilla interna de seis filas de 118
 px con 24 px de separación, donde cada materia ocupa su fila mediante `grid-row`.
 
 **El desplazamiento es horizontal por diseño.** El plano no se ajusta al ancho: se recorre. La rueda
@@ -378,8 +380,10 @@ medido, un pellizco de 2,5 lleva el texto dibujado de 8,37 a 20,93 px. Un `user-
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
 —12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 34 vh—. No reserva
-ancho: las tarjetas pueden quedar detrás de él. El modal de resultados se abre sobre un velo que
-arranca debajo de la barra.
+ancho: las tarjetas pueden quedar detrás de él. La leyenda del plano es un popover de la barra, de 320 px
+de ancho máximo, que abajo de 760 px pasa a hoja fija de ancho completo; tampoco reserva ancho, y comparte
+con el panel una sola regla de lado. El modal de resultados se abre sobre un velo que arranca debajo de la
+barra.
 
 **Breakpoints observados:** 760 px en el panel de selección y en la vista institucional (que además
 colapsa su grilla a una columna en 470 px), y 640 px en la familia de escenarios. En los tres casos la
@@ -428,8 +432,8 @@ siempre en esa progresión.
 
 Los bordes son finos y funcionan: 1 px para separar filas y celdas, 2 px de color de estado alrededor de
 cada tarjeta, 3 a 5 px para las reglas que marcan un bloque de explicación o un aviso. El borde
-izquierdo de 7 px de la tarjeta es la única forma pesada del sistema, y existe porque codifica la
-categoría de la materia.
+izquierdo de 7 px de la tarjeta es la única forma pesada del sistema, y existe porque codifica el
+régimen de cursada de la materia.
 
 ### Named Rules
 **La Regla del Borde que Informa.** Ningún borde existe solo para decorar. Si un borde se elimina y no
@@ -443,6 +447,23 @@ la distinción no tenía regla, catorce de veintiséis flechas iban punteadas y 
 nada; con la regla aplicada quedan tres, y las tres son los tramos largos. Un trazo sin criterio es
 decoración con apariencia de dato, y la leyenda del plano lo delata: si no se puede nombrar qué
 distingue, hay que dejar de distinguir.
+
+**La Regla de la Arista que se Ve.** Las correlatividades son una **capa entre el fondo de la columna y
+las tarjetas**: se dibujan por encima del verde de la columna y por debajo de cada tarjeta, así que una
+arista existe en todo su recorrido y no sólo en el canal. La capa obliga a dos cosas. Primero, **ninguna
+arista pasa por encima de una tarjeta**: las dos que lo hacían se resolvieron abriendo corredores de fila
+libre en las columnas intermedias —tres materias movidas de fila, no el trazo acortado—. Segundo, **cada
+flecha termina 5 px antes de la tarjeta destino**, porque la punta mide 18 px y terminaba cortada por el
+borde. Un plano donde la conexión desaparece al entrar en la columna no dice qué precede a qué: dice
+dónde están las materias, y nada más.
+
+**La Regla del Lado que Migra.** Los dos overlays flotantes del plano —el panel de selección y la
+leyenda— comparten **una sola regla de lado**: cuando el desplazamiento horizontal pasa del 20 % cruzan
+al borde izquierdo, y sólo vuelven al derecho por debajo del 15 %, con histéresis para que no oscilen en
+el umbral. El efecto es que pasan la mayor parte del recorrido sobre las columnas que el lector ya dejó
+atrás en vez de sobre la que está leyendo. Es una mitigación, no una garantía: ninguna de las dos capas
+reserva ancho, así que una tarjeta puede quedar detrás. Un solo estado manda sobre las dos, así que nunca
+se contradicen.
 
 ## Components
 
@@ -458,8 +479,8 @@ distingue, hay que dejar de distinguir.
 - **Corner Style:** 10 px.
 - **Background:** el fondo del estado, con el color del estado en el borde y en los `span` anidados.
 - **Shadow Strategy:** ver Elevation & Depth; el hover sube 2 px.
-- **Border:** 2 px de color de estado, 7 px en el lado izquierdo para la categoría.
-- **Internal Padding:** 11 px vertical y 12 px horizontal, en una caja fija de 272 × 118 px, con la etiqueta de estado alineada a la derecha en la primera línea, el nombre de la materia en el medio y el metadato de intención y categoría abajo.
+- **Border:** 2 px de color de estado, 7 px en el lado izquierdo para el régimen de cursada.
+- **Internal Padding:** 11 px vertical y 12 px horizontal, en una caja fija de 272 × 118 px, con la etiqueta de estado alineada a la derecha en la primera línea, el nombre de la materia en el medio y el metadato de intención y régimen abajo.
 - **Disabled:** `filter: saturate(.7)` y `cursor: not-allowed`; nunca usan solo la opacidad para decir «no disponible».
 
 ### Inputs / Fields
