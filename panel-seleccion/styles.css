@@ -75,6 +75,13 @@
 .legend-arrow{flex:0 0 auto;width:26px;height:0;border-top:3px solid var(--green)}
 .legend-arrow.routed{border-top:3px dashed var(--edge-dashed)}
 .legend-close{margin-top:16px;width:100%}
+/* Los dos overlays flotantes comparten la regla de lado (updateOverlaySide): la leyenda se corre al
+   borde opuesto con el desplazamiento del plano, igual que el panel de selección. Arriba de 760 px la
+   leyenda es un popover de la barra; abajo es una hoja fija de ancho completo y el lado no aplica, así
+   que la regla va acotada al ancho en que el lado tiene sentido.
+   La especificidad obliga a la media query: `.legend-panel[data-side="left"]` (0,2,0) le ganaría a
+   `.legend-panel` (0,1,0) de la hoja de 760 px. */
+@media(min-width:761px){.legend-panel[data-side="left"]{left:0;right:auto}}
 @media(max-width:760px){.legend-panel{position:fixed;top:auto;bottom:12px;left:12px;right:12px;width:auto;max-height:56vh}}
 /* Mesa del demostrador: el control del desenlace vive fuera del diálogo del estudiante (U6) */
 .demo-strip{position:fixed;z-index:16;left:24px;right:24px;bottom:24px;display:flex;align-items:center;gap:12px;padding:7px 14px;border-radius:10px;background:var(--deep);color:var(--c-white)}

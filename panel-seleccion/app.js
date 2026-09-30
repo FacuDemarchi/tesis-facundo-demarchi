@@ -52,6 +52,11 @@ const columns = document.querySelector('#columns');
 const status = document.querySelector('#selection-status');
 const announcement = document.querySelector('#selection-announcement');
 const selectionPanel = document.querySelector('#selection-panel');
+// La leyenda y el panel de selección comparten la regla de lado (updateOverlaySide): las tres
+// referencias se resuelven acá y no al final del archivo, porque updateOverlaySide corre antes.
+const legendPanel = document.querySelector('#legend-panel');
+const legendToggle = document.querySelector('#legend-toggle');
+const legendClose = document.querySelector('#legend-close');
 const graphFrame = document.querySelector('#graph-frame');
 const primaryAction = document.querySelector('#primary-action');
 const canvas = document.querySelector('.canvas');
@@ -69,7 +74,9 @@ let outcomeId = 'alternativas';
 // alternativa, y sin esto la grilla que el estudiante acaba de abrir se cerraría sola.
 const openGrids = new Set();
 let selectedAlternative = null;
-let panelSide = 'right';
+// El lado de los dos overlays flotantes del plano es un solo estado: se recalcula en cada evento de
+// desplazamiento y lo comparten el panel de selección y la leyenda.
+let overlaySide = 'right';
 let wheelScrollTarget = null;
 let wheelAnimationFrame = null;
 
@@ -200,14 +207,19 @@ function scrollRatio() {
   const range = canvas.scrollWidth - canvas.clientWidth;
   return range > 0 ? canvas.scrollLeft / range : 0;
 }
-function preferredPanelSide(ratio, currentSide) {
+// Una sola regla de lado para los dos overlays flotantes, con histéresis —20 % para cruzar a la
+// izquierda, 15 % para volver—: pasan la mayor parte del recorrido sobre las columnas que el lector ya
+// dejó atrás en vez de sobre la que está leyendo. Es una mitigación, no una garantía: ninguna de las dos
+// capas reserva ancho.
+function preferredOverlaySide(ratio, currentSide) {
   if (currentSide === 'left') return ratio < .15 ? 'right' : 'left';
   return ratio >= .20 ? 'left' : 'right';
 }
-function updatePanelSide() {
-  panelSide = preferredPanelSide(scrollRatio(), panelSide);
-  selectionPanel.dataset.side = panelSide;
-  canvas.dataset.side = panelSide;
+function updateOverlaySide() {
+  overlaySide = preferredOverlaySide(scrollRatio(), overlaySide);
+  selectionPanel.dataset.side = overlaySide;
+  legendPanel.dataset.side = overlaySide;
+  canvas.dataset.side = overlaySide;
 }
 function normalizedVerticalWheelDelta(event) {
   if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16;
@@ -567,7 +579,7 @@ function openSelection() {
   setPanelCollapsed(false);
   primaryAction.blur();
   canvas.dataset.panel = 'open';
-  updatePanelSide();
+  updateOverlaySide();
   fitGraphToViewport();
   announceSelection(`Selección abierta para ${currentPeriod().label}.`);
   updateInterface();
@@ -775,12 +787,12 @@ document.querySelector('#selected-subjects').addEventListener('change', event =>
   updateInterface();
 });
 updateInterface();
-updatePanelSide();
+updateOverlaySide();
 requestAnimationFrame(() => {
   fitGraphToViewport();
   updateCurrentTerm();
 });
-canvas.addEventListener('scroll', updatePanelSide, { passive: true });
+canvas.addEventListener('scroll', updateOverlaySide, { passive: true });
 canvas.addEventListener('scroll', updateCurrentTerm, { passive: true });
 canvas.addEventListener('wheel', translateVerticalWheelToHorizontalScroll, { passive: false });
 resultsModal.addEventListener('wheel', cancelWheelScrollAnimation, { passive: true });
@@ -788,7 +800,7 @@ resultsScrim.addEventListener('wheel', cancelWheelScrollAnimation, { passive: tr
 canvas.addEventListener('pointerdown', cancelWheelScrollAnimation);
 window.addEventListener('resize', () => {
   fitGraphToViewport();
-  updatePanelSide();
+  updateOverlaySide();
   updateCurrentTerm();
 });
 
@@ -821,10 +833,8 @@ document.querySelector('#alternatives').addEventListener('click', event => {
   event.preventDefault();
 }, true);
 
-// Leyenda del plano (U4): un popover desde la barra de período.
-const legendToggle = document.querySelector('#legend-toggle');
-const legendPanel = document.querySelector('#legend-panel');
-const legendClose = document.querySelector('#legend-close');
+// Leyenda del plano (U4): un popover desde la barra de período. Sus tres elementos se resuelven
+// arriba, con el resto de los lookups.
 function setLegendOpen(open, restoreFocus = true) {
   legendPanel.hidden = !open;
   legendToggle.setAttribute('aria-expanded', String(open));

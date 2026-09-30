@@ -380,8 +380,10 @@ medido, un pellizco de 2,5 lleva el texto dibujado de 8,37 a 20,93 px. Un `user-
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
 —12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 34 vh—. No reserva
-ancho: las tarjetas pueden quedar detrás de él. El modal de resultados se abre sobre un velo que
-arranca debajo de la barra.
+ancho: las tarjetas pueden quedar detrás de él. La leyenda del plano es un popover de la barra, de 400 px
+de ancho máximo, que abajo de 760 px pasa a hoja fija de ancho completo; tampoco reserva ancho, y comparte
+con el panel una sola regla de lado. El modal de resultados se abre sobre un velo que arranca debajo de la
+barra.
 
 **Breakpoints observados:** 760 px en el panel de selección y en la vista institucional (que además
 colapsa su grilla a una columna en 470 px), y 640 px en la familia de escenarios. En los tres casos la
@@ -454,6 +456,14 @@ libre en las columnas intermedias —tres materias movidas de fila, no el trazo 
 flecha termina 5 px antes de la tarjeta destino**, porque la punta mide 18 px y terminaba cortada por el
 borde. Un plano donde la conexión desaparece al entrar en la columna no dice qué precede a qué: dice
 dónde están las materias, y nada más.
+
+**La Regla del Lado que Migra.** Los dos overlays flotantes del plano —el panel de selección y la
+leyenda— comparten **una sola regla de lado**: cuando el desplazamiento horizontal pasa del 20 % cruzan
+al borde izquierdo, y sólo vuelven al derecho por debajo del 15 %, con histéresis para que no oscilen en
+el umbral. El efecto es que pasan la mayor parte del recorrido sobre las columnas que el lector ya dejó
+atrás en vez de sobre la que está leyendo. Es una mitigación, no una garantía: ninguna de las dos capas
+reserva ancho, así que una tarjeta puede quedar detrás. Un solo estado manda sobre las dos, así que nunca
+se contradicen.
 
 ## Components
 
