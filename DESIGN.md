@@ -380,7 +380,7 @@ medido, un pellizco de 2,5 lleva el texto dibujado de 8,37 a 20,93 px. Un `user-
 **Las capas flotan, no reservan.** La barra de período es una franja superior de 64 px de alto mínimo y
 el resto es el lienzo. El panel de selección es fijo, de 360 px de ancho máximo, con 24 px de margen
 —12 px en pantallas angostas, donde además pasa a la parte inferior con un máximo de 34 vh—. No reserva
-ancho: las tarjetas pueden quedar detrás de él. La leyenda del plano es un popover de la barra, de 400 px
+ancho: las tarjetas pueden quedar detrás de él. La leyenda del plano es un popover de la barra, de 320 px
 de ancho máximo, que abajo de 760 px pasa a hoja fija de ancho completo; tampoco reserva ancho, y comparte
 con el panel una sola regla de lado. El modal de resultados se abre sobre un velo que arranca debajo de la
 barra.

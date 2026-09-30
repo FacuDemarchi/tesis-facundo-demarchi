@@ -126,3 +126,40 @@ sumó una a cada copia (15/13), así que no lo empeoró.
 
 **`d3656e6`** — `feat(panel): give the legend the panel's side rule`, sobre `cffb2a0`, en
 `feat/correlatividades-legibles`. Sin empujar, sin PR: la publicación es decisión del autor.
+
+## Ancho de la leyenda: 400 → 320 px (pedido del autor, el mismo día)
+
+«Achicame el ancho de la leyenda.» El ancho no era un número elegido: `min(400px, calc(100vw - 32px))`.
+Se midieron siete candidatos **antes de elegir**, con el contrafáctico de cobertura ya montado (18 casos
+anchos) más la salud del layout:
+
+| Ancho | toca | centros | alto | ítems envueltos | desborde |
+| --- | --- | --- | --- | --- | --- |
+| 400 | 184 | 92 | 549 | 0 | 0 |
+| 380 | 184 | 78 | 549 | 0 | 0 |
+| 360 | 176 | 85 | 566 | 1 | 0 |
+| 340 | 176 | 82 | 566 | 1 | 0 |
+| **320** | **165** | 82 | 566 | 1 | 0 |
+| 300 | 159 | 84 | 583 | 2 | 0 |
+| 280 | 141 | 84 | 566 | 2 | 0 |
+
+**Elegido 320 px**: 20 % menos de ancho, la cobertura baja de 184 a 165 tarjetas tocadas (92 → 82 centros),
+sólo envuelve la etiqueta más larga —«Trazo punteado: cruza por encima de otras columnas», que ya envolvía
+a 360—, cero desborde horizontal en los cuatro anchos, y el popover no necesita scroll propio.
+
+Dos cosas que la tabla deja ver y que hay que decir:
+
+- **«Centros» no es monótona con el ancho**: a 380 da 78, mejor que los 82 de 320. No es ruido: el borde del
+  overlay cae entre límites de tarjeta distintos y el conteo salta. La métrica que decide es «toca», que sí
+  es monótona. Elegir por «centros» habría sido elegir por una discontinuidad.
+- **El alto del contenido sube 549 → 566 px** por esa línea envuelta. Abajo de 760 px no cambia nada en
+  especie: la hoja fija ya venía recortada a `56vh` y con scroll propio (549 > 504 también antes).
+
+**Verificación después del cambio**: ancho computado **320** en 1600×900, 1440×900 y 1024×768; a 760×900 y
+390×844 sigue siendo la hoja de ancho completo (736 y 366 px) sin cambio; detector de Impeccable
+**14 anti-patrones + 1 aviso**, idéntico al baseline de `panel-seleccion` (ninguna regla nueva); regresión
+del régimen de cursada **736/736** en 16 renders. `styles.css?v=23` → `?v=24`.
+
+**Desvío de ruteo declarado**: esta edición es de un solo valor en tres archivos (el ancho en la hoja, el
+`?v=` y el número en `DESIGN.md`), así que se aplicó **inline** en vez de delegarla a un writer; el briefing
+habría sido más largo que el cambio. La unidad anterior sí se delegó.
