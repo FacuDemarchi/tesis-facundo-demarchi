@@ -8,3 +8,5 @@ __pycache__/
 # Salidas de corrida de Impeccable (el registro de diseño sí se versiona)
 .impeccable/critique/
 .impeccable/live/
+.vercel
+.env*

@@ -1,0 +1,17 @@
+# Estado local de herramientas. No forma parte del proyecto y no debe publicarse:
+# contiene índices binarios, sockets y registros de sesión de la máquina local.
+.atl/
+.codegraph/
+.impeccable/critique/
+.impeccable/live/
+
+# Secretos y enlaces locales de Vercel.
+# .env.local lo genera `vercel link` y contiene un VERCEL_OIDC_TOKEN real.
+# El deploy sube el working tree, no el commit: sin esta línea el token se publica.
+.env
+.env.*
+.vercel/
+
+# Caché de bytecode de Python
+__pycache__/
+*.pyc
