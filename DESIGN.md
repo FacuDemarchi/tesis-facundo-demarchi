@@ -210,7 +210,7 @@ dorado de atención, y el espectro de estados académicos que vive por encima de
 
 ### Secondary
 - **Dorado institucional** (`#eba310`): atención y entrada. Es el relleno del CTA de la barra de período —la acción que abre la etapa— y del anillo de foco. **Nunca es texto**: sobre blanco mide 2.15:1, muy por debajo del mínimo. Como relleno lleva tinta oscura encima (`#1e1e1e`, 7.76:1).
-- **Dorado hover** (`#f19f26`): el hover del CTA y el anillo de advertencia de la tarjeta institucional insatisfecha.
+- **Dorado hover** (`#f19f26`): el hover del CTA de la barra de período.
 
 ### Tertiary
 - **Magenta de revisión** (`#6a2482`): el estado «Solicitud en revisión», y el borde izquierdo del aviso de datos simulados en la vista institucional. Sobre blanco mide 9.60:1.
@@ -302,10 +302,10 @@ mide en `rem` sobre una base de 16 px y tiene siete pasos. Cada paso vive como t
 `institucional-demanda/styles.css`, y ningún `font-size` de esa hoja es un literal:
 
 - **`--fs-micro`** (`.75rem`, 12 px, 800, mayúsculas): etiquetas en mayúsculas y piso de la escala — marca, encabezados de sección, chips de estado.
-- **`--fs-label`** (`.8rem`, 12.80 px): cromo de control y etiquetas secundarias — etiqueta de período, controles, tooltip, código de materia, filas de detalle del plan global.
+- **`--fs-label`** (`.8rem`, 12.80 px): cromo de control y etiquetas secundarias — controles, tooltip, código de materia, filas de detalle del plan global.
 - **`--fs-body-sm`** (`.84rem`, 13.44 px): cuerpo chico — prosa secundaria, listas y filas de definición.
 - **`--fs-body`** (`.9rem`, 14.40 px): cuerpo de lectura — avisos de datos simulados, línea de resumen, actor.
-- **`--fs-title-sm`** (`1rem`, 16 px): título chico — nombre del plan y de la carrera, valores de resumen, título de tarjeta.
+- **`--fs-title-sm`** (`1rem`, 16 px): título chico — nombre del plan y de la carrera, etiqueta del período, valores de resumen, título de tarjeta.
 - **`--fs-value`** (`1.08rem`, 17.28 px): valor destacado — el número que se escanea en la fila de categoría.
 - **`--fs-display`** (`1.35rem`, 21.60 px): display — título de la superficie.
 
@@ -513,6 +513,27 @@ más cercana al centro del lienzo, que es la orientación que el plano encogido 
 ### Chip de estado (institucional)
 Píldoras de radio 999 px con fondo verde claro y texto verde apagado en mayúsculas en `--fs-micro`
 (12 px); cuando la demanda queda insatisfecha pasan al fondo de advertencia con tinta `#8e3608`.
+
+### Tabla de demanda y panel de detalle (institucional)
+La consulta institucional no apila tarjetas: **compara** materias, y comparar pide columnas alineadas. Una tabla
+con una fila por materia —`Materia`, las métricas activas del período y `Estado`— ocupa **303 px para cinco
+materias**, y un panel al costado muestra lo que no se compara: el nombre completo, el chip de estado, las
+secciones asignadas, las causas del escenario y, cuando la evaluación global está desplegada, el plan
+simulado de esa materia.
+
+Las métricas son **columnas, no filas apiladas**. Los números se alinean a la derecha con cifras tabulares
+y el valor fuera de cupo se dice con la tinta de advertencia (`--warning-ink`, `#8e3608`), no con el ámbar
+del borde. El marcador de una fila insatisfecha es una barra interior de 3 px en su borde izquierdo, además
+del número: la forma y el dato, nunca sólo el color.
+
+La fila entera es un blanco de clic y su control real es el botón que lleva el código y el nombre, que
+declara el panel con `aria-controls`. El estado de selección viaja **en el nombre accesible**
+(«… (seleccionada)») porque Chrome **no expone `aria-current`** en ese botón —medido, no supuesto—, y cada
+cambio se anuncia en la región viva. La columna `Estado` existe sólo en el período actual: en el siguiente
+todas las filas dirían lo mismo, así que sobra.
+
+Abajo de 520 px útiles el panel baja debajo de la tabla —lo decide la grilla, no un breakpoint—; abajo de
+470 px la columna `Estado` sale de la vista y su chip sobrevive en el panel.
 
 ### Aviso de datos simulados
 Bloque con regla izquierda de 5 px, fondo `#eeeafd` y tinta `#6a2482` en la vista institucional; línea

@@ -1,6 +1,6 @@
 const demandModel = window.DEMANDA_INSTITUCIONAL_SIMULADA;
 const simulatedData = window.DATOS_SIMULADOS;
-const periodSelect = document.querySelector('#period-select');
+const periodLabel = document.querySelector('#period-label');
 const previousButton = document.querySelector('#period-prev');
 const nextButton = document.querySelector('#period-next');
 const announcements = document.querySelector('#announcements');
@@ -10,12 +10,13 @@ const globalEvaluationResult = document.querySelector('#global-evaluation-result
 let globalEvaluation = null;
 let globalEvaluationExpanded = false;
 let periodIndex = 0;
+let selectedSubjectId = null;
 
 const metricDefinitions = [
-  { key: 'total', label: 'Total', className: 'total', valueId: 'demand-total-value' },
-  { key: 'alumnosInscriptos', label: 'Alumnos inscriptos', className: 'eligible', valueId: 'enrolled-value' },
-  { key: 'alumnosInscriptosFueraDeCupo', label: 'Alumnos inscriptos fuera de cupo', className: 'no-capacity', valueId: 'outside-capacity-value' },
-  { key: 'demandaFutura', label: 'Demanda futura', className: 'conditional', valueId: 'future-demand-value' }
+  { key: 'total', label: 'Total', shortLabel: 'Total', className: 'total', valueId: 'demand-total-value' },
+  { key: 'alumnosInscriptos', label: 'Alumnos inscriptos', shortLabel: 'Inscriptos', className: 'eligible', valueId: 'enrolled-value' },
+  { key: 'alumnosInscriptosFueraDeCupo', label: 'Alumnos inscriptos fuera de cupo', shortLabel: 'Fuera de cupo', className: 'no-capacity', valueId: 'outside-capacity-value' },
+  { key: 'demandaFutura', label: 'Demanda futura', shortLabel: 'Demanda futura', className: 'conditional', valueId: 'future-demand-value' }
 ];
 
 const periodContracts = {
@@ -90,17 +91,6 @@ function totalFor(period, key) {
 
 function metricDefinitionsFor(period) {
   return period.metricas.map(key => metricDefinitions.find(definition => definition.key === key));
-}
-
-function createCategoryRow(definition, item) {
-  const row = document.createElement('div');
-  row.className = `category-row ${definition.className}`;
-  const label = document.createElement('dt');
-  label.textContent = definition.label;
-  const value = document.createElement('dd');
-  value.textContent = item[definition.key];
-  row.append(label, value);
-  return row;
 }
 
 function createSectionDetails(item) {
@@ -254,53 +244,151 @@ function evaluateGlobalDistribution() {
   globalEvaluationAction.focus();
 }
 
-function createDemandCard(item, period) {
-  const isCurrentPeriod = period.tipo === 'Período actual';
-  const hasOutsideCapacity = isCurrentPeriod && item.alumnosInscriptosFueraDeCupo > 0;
-  const card = document.createElement('article');
-  card.className = `demand-card${hasOutsideCapacity ? ' is-unsatisfied' : ''}`;
-  const statusText = isCurrentPeriod
-    ? (hasOutsideCapacity ? 'Pendiente de asignación (simulado)' : 'Asignado a sección (simulado)')
-    : 'Demanda futura simulada';
-  card.setAttribute('aria-label', `${item.materiaId}, ${item.materia}, ${statusText.toLowerCase()}`);
+function demandSubjectFor(period, materiaId) {
+  return period.demanda.find(item => item.materiaId === materiaId) || null;
+}
 
-  const header = document.createElement('header');
-  header.className = 'card-header';
-  const titleGroup = document.createElement('div');
-  const code = document.createElement('p');
-  code.className = 'course-code';
-  code.textContent = item.materiaId;
-  const title = document.createElement('h3');
-  title.textContent = item.materia;
-  titleGroup.append(code, title);
-  const status = document.createElement('span');
-  status.className = 'status-chip';
-  status.textContent = statusText;
-  header.append(titleGroup, status);
-
-  const categories = document.createElement('dl');
-  categories.className = 'category-list';
-  metricDefinitionsFor(period).forEach(definition => categories.append(createCategoryRow(definition, item)));
-
+function createCauseBlock(item) {
   const causes = document.createElement('section');
   causes.className = 'cause-block';
-  const causesTitle = document.createElement('h4');
-  causesTitle.textContent = 'Causas del escenario';
-  const causesList = document.createElement('ul');
+  const title = document.createElement('h4');
+  title.textContent = 'Causas del escenario';
+  const list = document.createElement('ul');
   item.causas.forEach(cause => {
     const listItem = document.createElement('li');
     listItem.textContent = cause;
-    causesList.append(listItem);
+    list.append(listItem);
   });
-  causes.append(causesTitle, causesList);
-  card.append(header, categories);
+  causes.append(title, list);
+  return causes;
+}
+
+function createDemandRow(item, period, metrics, isCurrentPeriod) {
+  const hasOutsideCapacity = isCurrentPeriod && item.alumnosInscriptosFueraDeCupo > 0;
+  const isSelected = item.materiaId === selectedSubjectId;
+  const row = document.createElement('tr');
+  row.className = `demand-row${hasOutsideCapacity ? ' is-unsatisfied' : ''}${isSelected ? ' is-selected' : ''}`;
+  row.dataset.materiaId = item.materiaId;
+
+  const subjectCell = document.createElement('th');
+  subjectCell.scope = 'row';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'subject-select';
+  button.dataset.materiaId = item.materiaId;
+  button.setAttribute('aria-controls', 'demand-detail');
+  if (isSelected) button.setAttribute('aria-current', 'true');
+  const code = document.createElement('span');
+  code.className = 'subject-code';
+  code.textContent = item.materiaId;
+  const name = document.createElement('span');
+  name.className = 'subject-name';
+  name.textContent = item.materia;
+  // Chrome no expone `aria-current` en este botón (medido): el estado de selección
+  // viaja en el nombre accesible, que es lo que el lector de pantalla sí lee.
+  const selection = document.createElement('span');
+  selection.className = 'sr-only';
+  selection.textContent = isSelected ? ' (seleccionada)' : '';
+  button.append(code, name, selection);
+  subjectCell.append(button);
+  row.append(subjectCell);
+
+  metrics.forEach(definition => {
+    const cell = document.createElement('td');
+    cell.className = `metric-cell ${definition.className}`;
+    cell.textContent = item[definition.key];
+    row.append(cell);
+  });
+
   if (isCurrentPeriod) {
-    card.append(createSectionDetails(item));
-    const subjectPlan = globalSubjectPlanFor(period, item);
-    if (subjectPlan) card.append(createGlobalPlanDetails(subjectPlan));
+    const statusCell = document.createElement('td');
+    statusCell.className = 'status-cell';
+    const chip = document.createElement('span');
+    chip.className = 'status-chip';
+    chip.textContent = hasOutsideCapacity ? 'Pendiente' : 'Asignado';
+    statusCell.append(chip);
+    row.append(statusCell);
   }
-  card.append(causes);
-  return card;
+
+  row.addEventListener('click', () => selectSubject(item.materiaId));
+  return row;
+}
+
+function selectSubject(materiaId) {
+  const period = currentPeriod();
+  const subject = demandSubjectFor(period, materiaId);
+  if (!subject || materiaId === selectedSubjectId) return;
+  selectedSubjectId = materiaId;
+  renderDemand(period);
+  const selectedButton = document.querySelector(`.subject-select[data-materia-id="${materiaId}"]`);
+  if (selectedButton) selectedButton.focus();
+  announcements.textContent = `Detalle de ${subject.materiaId} · ${subject.materia}.`;
+}
+
+function renderDemandDetail(period) {
+  const container = document.querySelector('#demand-detail');
+  const item = demandSubjectFor(period, selectedSubjectId);
+  if (!item) {
+    container.replaceChildren();
+    return;
+  }
+
+  const isCurrentPeriod = period.tipo === 'Período actual';
+  const hasOutsideCapacity = isCurrentPeriod && item.alumnosInscriptosFueraDeCupo > 0;
+  const title = document.createElement('h3');
+  title.id = 'demand-detail-title';
+  title.className = 'demand-detail-title';
+  const code = document.createElement('span');
+  code.className = 'subject-code';
+  code.textContent = item.materiaId;
+  const name = document.createElement('span');
+  name.className = 'subject-name';
+  name.textContent = item.materia;
+  const status = document.createElement('span');
+  status.className = 'status-chip';
+  status.textContent = isCurrentPeriod
+    ? (hasOutsideCapacity ? 'Pendiente de asignación' : 'Asignado a sección')
+    : 'Demanda futura simulada';
+  title.append(code, name, status);
+
+  container.replaceChildren(title);
+  if (isCurrentPeriod) container.append(createSectionDetails(item));
+  const subjectPlan = globalSubjectPlanFor(period, item);
+  if (subjectPlan) container.append(createGlobalPlanDetails(subjectPlan));
+  container.append(createCauseBlock(item));
+}
+
+function renderDemand(period) {
+  const isCurrentPeriod = period.tipo === 'Período actual';
+  const metrics = metricDefinitionsFor(period);
+  if (!demandSubjectFor(period, selectedSubjectId)) {
+    selectedSubjectId = period.demanda.length ? period.demanda[0].materiaId : null;
+  }
+
+  const headRow = document.createElement('tr');
+  const subjectHead = document.createElement('th');
+  subjectHead.scope = 'col';
+  subjectHead.textContent = 'Materia';
+  headRow.append(subjectHead);
+  metrics.forEach(definition => {
+    const head = document.createElement('th');
+    head.scope = 'col';
+    head.className = `metric-head ${definition.className}`;
+    head.textContent = definition.shortLabel;
+    headRow.append(head);
+  });
+  if (isCurrentPeriod) {
+    const head = document.createElement('th');
+    head.scope = 'col';
+    head.className = 'status-head';
+    head.textContent = 'Estado';
+    headRow.append(head);
+  }
+  document.querySelector('#demand-table-head').replaceChildren(headRow);
+  document.querySelector('#demand-table-body').replaceChildren(
+    ...period.demanda.map(item => createDemandRow(item, period, metrics, isCurrentPeriod))
+  );
+  renderDemandDetail(period);
 }
 
 function renderSummary(period) {
@@ -319,25 +407,30 @@ function renderSummary(period) {
     : 'Total: coincide con la demanda futura.';
 }
 
+// La etiqueta visible del período sale del calendario académico compartido: el
+// código solo no ubica al lector, y el mes es lo que dice en qué parte del año está.
+function etiquetaDePeriodo(period) {
+  const academico = (simulatedData.periodosAcademicos || []).find(item => item.codigo === period.codigo);
+  return academico ? `${academico.codigo} ${academico.meses}` : period.etiqueta;
+}
+
 function renderPeriod({ announce = false } = {}) {
   const period = currentPeriod();
   document.querySelector('#period-kind').textContent = period.tipo;
-  periodSelect.value = String(periodIndex);
+  periodLabel.textContent = etiquetaDePeriodo(period);
   previousButton.disabled = periodIndex === 0;
   nextButton.disabled = periodIndex === demandModel.periodos.length - 1;
 
   renderSummary(period);
-  document.querySelector('#outside-capacity-key').hidden = period.tipo !== 'Período actual';
   renderGlobalEvaluation(period);
 
-  const demandList = document.querySelector('#demand-list');
-  demandList.replaceChildren(...period.demanda.map(item => createDemandCard(item, period)));
+  renderDemand(period);
 
   if (announce) {
     const total = totalFor(period, 'total');
     announcements.textContent = period.tipo === 'Período actual'
-      ? `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; total ${total}: ${totalFor(period, 'alumnosInscriptos')} alumnos inscriptos y ${totalFor(period, 'alumnosInscriptosFueraDeCupo')} alumnos inscriptos fuera de cupo.`
-      : `${period.tipo}: ${period.etiqueta}. ${period.demanda.length} materias consultadas; total ${total} de demanda futura.`;
+      ? `${period.tipo}: ${etiquetaDePeriodo(period)}. ${period.demanda.length} materias consultadas; total ${total}: ${totalFor(period, 'alumnosInscriptos')} alumnos inscriptos y ${totalFor(period, 'alumnosInscriptosFueraDeCupo')} alumnos inscriptos fuera de cupo.`
+      : `${period.tipo}: ${etiquetaDePeriodo(period)}. ${period.demanda.length} materias consultadas; total ${total} de demanda futura.`;
   }
 }
 
@@ -351,22 +444,11 @@ function setPeriod(nextIndex, announce = true) {
   renderPeriod({ announce });
 }
 
-function populatePeriodOptions() {
-  demandModel.periodos.forEach((period, index) => {
-    const option = document.createElement('option');
-    option.value = String(index);
-    option.textContent = `${period.tipo} · ${period.etiqueta}`;
-    periodSelect.append(option);
-  });
-}
-
 assertDemandModel(demandModel);
 assertEvaluationData(simulatedData, demandModel);
-populatePeriodOptions();
 renderPeriod();
 previousButton.addEventListener('click', () => setPeriod(periodIndex - 1));
 nextButton.addEventListener('click', () => setPeriod(periodIndex + 1));
-periodSelect.addEventListener('change', event => setPeriod(Number(event.target.value)));
 globalEvaluationAction.addEventListener('click', evaluateGlobalDistribution);
 
 const summaryItems = document.querySelectorAll('.summary-item');

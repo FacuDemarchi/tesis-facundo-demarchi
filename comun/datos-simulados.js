@@ -11,6 +11,17 @@
 window.DATOS_SIMULADOS = {
   simulado: true,
 
+  // Calendario académico del caso de estudio: convención declarada por el autor
+  // (2026-09-29). El período ES el bimestre, así que 1A y 1B son los dos del primer
+  // cuatrimestre y 2A y 2B los del segundo. Los meses no salen de una fuente
+  // institucional: son parte del dato simulado y se declaran como tales.
+  periodosAcademicos: [
+    { codigo: '1A', meses: 'Marzo-Abril' },
+    { codigo: '1B', meses: 'Mayo-Junio' },
+    { codigo: '2A', meses: 'Agosto-Septiembre' },
+    { codigo: '2B', meses: 'Octubre-Noviembre' }
+  ],
+
   // Índice de materias con alguna oferta; C24 se omite intencionalmente.
   materias: {
     C19: { id: 'C19' },

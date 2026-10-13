@@ -15,15 +15,17 @@
       <h1 class="brand-title"><span>Plan académico · CU-10</span><span class="brand-name">Consulta de demanda institucional</span></h1>
       <p class="simulation-notice-inline">Datos simulados. Prototipo de tesis. No es un sistema oficial de la universidad.</p>
     </div>
-    <div class="period-controls topbar-period">
-      <p id="period-kind" class="period-kind">Período actual</p>
+    <div class="period-controls topbar-period" role="group" aria-label="Período académico" aria-describedby="period-description">
+      <p id="period-kind" class="period-kind sr-only">Período actual</p>
       <button type="button" id="period-prev" aria-label="Ver período anterior">← Anterior</button>
-      <label for="period-select">Elegir período</label>
-      <select id="period-select" aria-describedby="period-description"></select>
+      <p id="period-label" class="period-label">1B Mayo-Junio</p>
       <button type="button" id="period-next" aria-label="Ver período siguiente">Siguiente →</button>
-      <p id="period-description" class="sr-only">La selección actualiza el resumen y el detalle de demanda simulada.</p>
+      <p id="period-description" class="sr-only">La navegación entre períodos actualiza el resumen y el detalle de demanda simulada.</p>
     </div>
-    <p class="actor"><span aria-hidden="true">◉</span> Actor provisional: <strong>Operador institucional</strong></p>
+    <div class="actor-actions">
+      <p class="actor"><span aria-hidden="true">◉</span> <strong>Operador institucional</strong></p>
+      <button type="button" id="global-evaluation-action" class="global-evaluation-action" aria-controls="global-evaluation-result" aria-expanded="false">Evaluar distribución</button>
+    </div>
   </header>
 
   <section class="summary" aria-labelledby="summary-title">
@@ -54,17 +56,20 @@
 
   <main class="page-shell" aria-label="Consulta de demanda institucional">
     <section class="demand-section" aria-labelledby="demand-title">
-      <div class="section-heading">
-        <div>
-          <h2 id="demand-title">Demanda y causas</h2>
-        </div>
-        <p id="outside-capacity-key" class="unsatisfied-key"><span aria-hidden="true"></span> Alumnos inscriptos fuera de cupo</p>
-      </div>
+      <h2 id="demand-title" class="sr-only">Demanda y causas</h2>
       <div id="global-evaluation" class="global-evaluation" hidden>
-        <button type="button" id="global-evaluation-action" class="global-evaluation-action" aria-controls="global-evaluation-result" aria-expanded="false">Evaluar distribución global</button>
         <section id="global-evaluation-result" class="global-evaluation-result" aria-label="Resultado de la evaluación global" aria-live="polite" hidden></section>
       </div>
-      <div id="demand-list" class="demand-list" tabindex="-1"></div>
+      <div id="demand-list" class="demand-master" tabindex="-1">
+        <div class="demand-table-scroll">
+          <table class="demand-table">
+            <caption class="sr-only">Demanda simulada por materia del período seleccionado</caption>
+            <thead id="demand-table-head"></thead>
+            <tbody id="demand-table-body"></tbody>
+          </table>
+        </div>
+        <section id="demand-detail" class="demand-detail" aria-labelledby="demand-detail-title"></section>
+      </div>
     </section>
 
     <footer class="page-footer simulation-notice" aria-label="Aviso sobre datos simulados">
